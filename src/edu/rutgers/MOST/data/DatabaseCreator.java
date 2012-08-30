@@ -3,6 +3,7 @@ package edu.rutgers.MOST.data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -11,8 +12,13 @@ import edu.rutgers.MOST.presentation.GraphicalInterfaceConstants;
 public class DatabaseCreator {
 
 	public void createDatabase(String databaseName) {
-		//public void createDatabase(String databaseName, int numMetaboliteRows, int numReactionRows) {
 
+		String metaString = "";
+		for (int i = 0; i < 15; i++) {
+			String meta = ", meta_" + (i + 1)+ " varchar(500)";
+			metaString += meta;
+		}
+		
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
@@ -28,20 +34,14 @@ public class DatabaseCreator {
 			stat.executeUpdate("drop table if exists metabolites;");
 			stat.executeUpdate("create table metabolites (id INTEGER PRIMARY KEY, " 
 					+ " metabolite_abbreviation varchar(40), metabolite_name varchar(200), "
-					+ " charge varchar(5), compartment varchar(40), boundary varchar(5), meta_1 varchar(500), " 
-					+ " meta_2 varchar(500), meta_3 varchar(500), meta_4 varchar(500), "
-					+ " meta_5 varchar(500), meta_6 varchar(500), meta_7 varchar(500), "
-					+ " meta_8 varchar(500), meta_9 varchar(500), meta_10 varchar(500), used varchar(5));");	
+					+ " charge varchar(5), compartment varchar(40), boundary varchar(5) " 
+					+ metaString + ", used varchar(5));");				
 
 			stat.executeUpdate("drop table if exists reactions;");
 			stat.executeUpdate("create table reactions (id INTEGER PRIMARY KEY, " 
 					+ " knockout varchar(6), flux_value double, reaction_abbreviation varchar(40), reaction_name varchar(500), "
 					+ " reaction_string varchar(500), reversible varchar(6), lower_bound double, " 
-					+ " upper_bound double, biological_objective double, meta_1 varchar(500), " 
-					+ " meta_2 varchar(500), meta_3 varchar(500), meta_4 varchar(500), meta_5 varchar(500), "
-					+ " meta_6 varchar(500), meta_7 varchar(500), meta_8 varchar(500), meta_9 varchar(500), "
-					+ " meta_10 varchar(500), meta_11 varchar(500), meta_12 varchar(500), "
-					+ " meta_13 varchar(500), meta_14 varchar(500), meta_15 varchar(500));");	
+					+ " upper_bound double, biological_objective double" + metaString + ");");
 
 			stat.executeUpdate("drop table if exists reaction_reactants;");
 			stat.executeUpdate("CREATE TABLE reaction_reactants (reaction_id INTEGER, " 
@@ -52,10 +52,10 @@ public class DatabaseCreator {
 					+ " metabolite_id INTEGER, stoic FLOAT);");
 
 			stat.executeUpdate("drop table if exists reactions_meta_info;");		    
-			stat.executeUpdate("CREATE TABLE reactions_meta_info (id INTEGER, meta_column_name varchar(100));");
+			stat.executeUpdate("CREATE TABLE reactions_meta_info (id INTEGER PRIMARY KEY, meta_column_name varchar(100));");
 
 			stat.executeUpdate("drop table if exists metabolites_meta_info;");		    
-			stat.executeUpdate("CREATE TABLE metabolites_meta_info (id INTEGER, meta_column_name varchar(100));");
+			stat.executeUpdate("CREATE TABLE metabolites_meta_info (id INTEGER PRIMARY KEY, meta_column_name varchar(100));");
 
 			conn.close();
 
@@ -121,7 +121,7 @@ public class DatabaseCreator {
 		}				
 	}
 
-	public void addMetaboliteRow(String databaseName, int rowNum) {
+	public void addMetaboliteRow(String databaseName) {
 
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -137,7 +137,7 @@ public class DatabaseCreator {
 			PreparedStatement prep = conn.prepareStatement(
 			"insert into metabolites (id) values (?);");
 
-			prep.setInt(1, rowNum);
+			prep.setInt(1, maxMetaboliteId(databaseName) + 1);
 
 			prep.addBatch();
 
@@ -145,10 +145,15 @@ public class DatabaseCreator {
 			prep.executeBatch();
 			conn.setAutoCommit(true);
 
-			Statement st = conn.createStatement();
-			String str = ("update metabolites set boundary = 'false', used = 'false';");
+			PreparedStatement prep1 = conn.prepareStatement("update metabolites set boundary = 'false', used = 'false' where id=?;");
 
-			st.executeUpdate(str);
+			prep1.setInt(1, maxMetaboliteId(databaseName));
+
+			prep1.addBatch();
+
+			conn.setAutoCommit(false);
+			prep1.executeBatch();
+			conn.setAutoCommit(true);
 
 			conn.close();
 
@@ -159,7 +164,7 @@ public class DatabaseCreator {
 
 	}
 
-	public void addReactionRow(String databaseName, int rowNum) {
+	public void addReactionRow(String databaseName) {
 
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -175,7 +180,7 @@ public class DatabaseCreator {
 			PreparedStatement prep = conn.prepareStatement(
 			"insert into reactions (id) values (?);");
 
-			prep.setInt(1, rowNum);
+			prep.setInt(1, maxReactionId(databaseName) + 1);
 
 			prep.addBatch();
 
@@ -183,10 +188,17 @@ public class DatabaseCreator {
 			prep.executeBatch();
 			conn.setAutoCommit(true);
 
-			Statement st = conn.createStatement();
-			String str = ("update reactions set reversible = 'false', biological_objective = 0.0,lower_bound = -999999.0, upper_bound = 999999.0, knockout = 'false', flux_value = 0.0;");
+			PreparedStatement prep1 = conn.prepareStatement("update reactions set reversible = 'false', biological_objective = 0.0, lower_bound = -999999.0, upper_bound = 999999.0, knockout = 'false', flux_value = 0.0 where id=?;");
 
-			st.executeUpdate(str);
+			prep1.setInt(1, maxReactionId(databaseName));
+
+			prep1.addBatch();
+
+			conn.setAutoCommit(false);
+			prep1.executeBatch();
+			conn.setAutoCommit(true);
+			
+			conn.close();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -352,6 +364,58 @@ public class DatabaseCreator {
 		}
 
 	} 
+	
+	public int maxMetaboliteId(String databaseName) {
+		int maxMetaboliteId = 0;
+		String queryString = "jdbc:sqlite:" + databaseName + ".db"; 
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Connection conn;
+		try {
+			conn = DriverManager.getConnection(queryString);
+			PreparedStatement prep = conn
+			.prepareStatement("SELECT MAX(id) FROM metabolites;");
+			conn.setAutoCommit(true);
+			ResultSet rs1 = prep.executeQuery();
+			maxMetaboliteId = rs1.getInt("MAX(id)"); 
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();			
+		}    
+		return maxMetaboliteId;
+		
+	}
+	
+	public int maxReactionId(String databaseName) {
+		int maxReactionId = 0;
+		String queryString = "jdbc:sqlite:" + databaseName + ".db"; //TODO:DEGEN:Call LocalConfig
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Connection conn;
+		try {
+			conn = DriverManager.getConnection(queryString);
+			PreparedStatement prep = conn
+			.prepareStatement("SELECT MAX(id) FROM reactions;");
+			conn.setAutoCommit(true);
+			ResultSet rs1 = prep.executeQuery();
+			maxReactionId = rs1.getInt("MAX(id)"); 
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();			
+		}    
+		return maxReactionId;
+		
+	}
 
 }
 

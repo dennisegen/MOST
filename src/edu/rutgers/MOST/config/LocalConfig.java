@@ -240,7 +240,7 @@ public class LocalConfig {
 		this.sheetNamesList = sheetNamesList;
 	}
 	
-	Integer progress;
+	private static Integer progress;
 	
 	public void setProgress(Integer progress) {
 		this.progress = progress;
@@ -248,6 +248,36 @@ public class LocalConfig {
 	
 	public Integer getProgress() {
 		return progress;
+	}
+	
+	private static ArrayList<String> invalidReactions = new ArrayList();
+	
+	public ArrayList<String> getInvalidReactions() {
+		return invalidReactions;
+	}
+	
+	public void setInvalidReactions(ArrayList<String> invalidReactions) {
+		this.invalidReactions = invalidReactions;
+	}
+	
+    private static Integer numberCopiedRows;
+	
+	public void setNumberCopiedRows(Integer numberCopiedRows) {
+		this.numberCopiedRows = numberCopiedRows;
+	}
+	
+	public Integer getNumberCopiedRows() {
+		return numberCopiedRows;
+	}
+	
+    private static Integer headerColumnIndex;
+	
+	public void setHeaderColumnIndex(Integer headerColumnIndex) {
+		this.headerColumnIndex = headerColumnIndex;
+	}
+	
+	public Integer getHeaderColumnIndex() {
+		return headerColumnIndex;
 	}
 	
 }
