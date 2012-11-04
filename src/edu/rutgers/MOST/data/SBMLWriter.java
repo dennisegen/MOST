@@ -102,33 +102,10 @@ public class SBMLWriter {
 	
 	public void addReaction(XMLEventWriter eventWriter, String reactionid) throws Exception{
 		/* addReaction will query database or factory using reactionid to attain notes, reactants, products, 
-		 * and stoichemetric properties creating nodes for each occurrence
+		 * and stoichemetric properties creating nodes for each occurrence and add to the ListOfReactions 
+		 * class
 		 */
-		XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		XMLEvent end = eventFactory.createDTD("\n");
 		
-		// Create reaction open tag
-	    StartElement reactionStartElement = eventFactory.createStartElement("",
-	        "", "reaction"); //TODO: Find way of adding attributes regarding id, name, and reversible
-	    
-	    
-	    eventWriter.add(reactionStartElement);
-	    eventWriter.add(end);
-	    
-	    // Write the different nodes
-	    SpeciesRef ref = new SpeciesRef();
-	    
-	    // TODO Create Notes, ListOfSpecies, List 
-	    /*for ()
-	    ref.setValues(specieId, stoic);
-	    
-	    createNode(eventWriter, "mode", "1");
-	    createNode(eventWriter, "unit", "901");
-	    createNode(eventWriter, "current", "0");
-	    createNode(eventWriter, "interactive", "0");
-	     */
-	    
-	    eventWriter.add(eventFactory.createEndElement("", "", "config"));
 	}
 	
 	public class Reaction {
