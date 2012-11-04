@@ -54,8 +54,9 @@ public class SBMLWriter {
 	 * 
 	 */
 	public Connection dbCon;
+	public String databaseName;
 	public Vector<ModelReaction> allReactions;
-	
+	public String sourceType;
 	
 	
 	public SBMLWriter(Connection con) {
@@ -67,6 +68,10 @@ public class SBMLWriter {
 	
 	public void setConnection(Connection con) {
 		this.dbCon = con;
+	}
+	
+	public void setDBName(String name) {
+		this.databaseName = name;
 	}
 	
 	public void setReactions(Vector<ModelReaction> reactions) {
@@ -99,6 +104,15 @@ public class SBMLWriter {
 		 * 
 		 */
 	}
+	
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
+	}
+	
+	public void parseAllReactions(ReactionFactory rFactory) {
+		this.allReactions = rFactory.getAllReactions(this.sourceType, this.databaseName);
+	}
+	
 	
 	public void addReaction(XMLEventWriter eventWriter, String reactionid) throws Exception{
 		/* addReaction will query database or factory using reactionid to attain notes, reactants, products, 
