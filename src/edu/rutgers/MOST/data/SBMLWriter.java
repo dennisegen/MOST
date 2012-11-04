@@ -139,14 +139,34 @@ public class SBMLWriter {
 		public Notes note;
 		public ListOfReactants reactants;
 		public ListOfProducts products;
-		public listOfParameters parameters;
+		public ListOfParameters parameters;
 		
 		public void setId(String id){
 			this.id = id;
 		}
 		
+		public void setName(String name){
+			this.name = name;
+		}
+		
+		public void setReversible(String revers) {
+			this.reversible = reversible;
+		}
+		
 		public void setNotes(Notes note) {
 			this.note = note;
+		}
+		
+		public void ListOfReactants(ListOfReactants reactants) {
+			this.reactants = reactants;
+		}
+		
+		public void ListOfProducts(ListOfProducts products) {
+			this.products = products;
+		}
+		
+		public void ListOfParameters(ListOfParameters parameters) {
+			this.parameters = parameters;
 		}
 		
 	}
@@ -154,6 +174,10 @@ public class SBMLWriter {
 	public class ListOfReactions {
 		public ArrayList<Reaction> reactionList;
 		public XMLEventWriter eventWriter;
+		
+		public void addReaction(Reaction reac) {
+			reactionList.add(reac);
+		}
 	}
 	
 	
@@ -161,8 +185,8 @@ public class SBMLWriter {
 		public ArrayList<Species> speciesList;
 		public XMLEventWriter eventWriter;
 		
-		public void addSpecies(Species species1) {
-			speciesList.add(species1);
+		public void addSpecies(Species spec) {
+			speciesList.add(spec);
 		}
 		
 		public void addEventWriter(XMLEventWriter eventWriter) {
@@ -435,7 +459,7 @@ public class SBMLWriter {
 		}
 	}
 	
-	public class listOfParameters{
+	public class ListOfParameters{
 		public ArrayList<Parameter> parameters;
 		public XMLEventWriter eventWriter;
 		
