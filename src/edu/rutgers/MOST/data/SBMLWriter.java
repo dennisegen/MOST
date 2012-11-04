@@ -173,10 +173,10 @@ public class SBMLWriter {
 			String id = sbmlReact.getReactionAbbreviation();
 			String name = sbmlReact.getReactionName();
 			String reversible = sbmlReact.getReversible();
-			String lowerBound = sbmlReact.getLowerBound(); //TODO convert to string
-			String upperBound = sbmlReact.getUpperBound(); //TODO convert to string
+			String lowerBound = String.valueOf(sbmlReact.getLowerBound()); 
+			String upperBound = String.valueOf(sbmlReact.getUpperBound()); 
 			String objectCoeff = "0.000000"; //TODO Find proper value
-			String fluxValue = sbmlReact.getFluxValue(); //TODO convert to string
+			String fluxValue = String.valueOf(sbmlReact.getFluxValue()); 
 			String reducCost = "0.000000"; //TODO Find proper value
 			
 			
