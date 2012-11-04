@@ -93,6 +93,12 @@ public class SBMLWriter {
 		 */
 	}
 	
+	public void parse() {
+		/* TODO Parse Connection attaining
+		 * listOfSpecies, listOfReactions
+		 * 
+		 */
+	}
 	
 	public void addReaction(XMLEventWriter eventWriter, String reactionid) throws Exception{
 		/* addReaction will query database or factory using reactionid to attain notes, reactants, products, 
@@ -112,7 +118,7 @@ public class SBMLWriter {
 	    // Write the different nodes
 	    SpeciesRef ref = new SpeciesRef();
 	    
-	    // TODO Create Notes, ListofSpecies, List 
+	    // TODO Create Notes, ListOfSpecies, List 
 	    /*for ()
 	    ref.setValues(specieId, stoic);
 	    
@@ -125,7 +131,33 @@ public class SBMLWriter {
 	    eventWriter.add(eventFactory.createEndElement("", "", "config"));
 	}
 	
-	public class ListofSpecies {
+	public class Reaction {
+		
+		public String id;
+		public String name;
+		public String reversible;
+		public Notes note;
+		public ListOfReactants reactants;
+		public ListOfProducts products;
+		public listOfParameters parameters;
+		
+		public void setId(String id){
+			this.id = id;
+		}
+		
+		public void setNotes(Notes note) {
+			this.note = note;
+		}
+		
+	}
+	
+	public class ListOfReactions {
+		public ArrayList<Reaction> reactionList;
+		public XMLEventWriter eventWriter;
+	}
+	
+	
+	public class ListOfSpecies {
 		public ArrayList<Species> speciesList;
 		public XMLEventWriter eventWriter;
 		
@@ -231,7 +263,7 @@ public class SBMLWriter {
 	}
 	
 	
-	public class Note {
+	public class Notes {
 		public ArrayList<String> notes;
 		public XMLEventWriter eventWriter;
 		
@@ -347,7 +379,7 @@ public class SBMLWriter {
 	}
 	
 	public class Parameter{
-		/*Class for easy implementation of Parameter node under listofParamters
+		/*Class for easy implementation of Parameter node under listofParameters
 		 * 
 		 * Example:
 		 * <parameter id="LOWER_BOUND" value="-999999.000000" units="mmol_per_gDW_per_hr"/>
@@ -403,7 +435,7 @@ public class SBMLWriter {
 		}
 	}
 	
-	public class listOfParamters{
+	public class listOfParameters{
 		public ArrayList<Parameter> parameters;
 		public XMLEventWriter eventWriter;
 		
@@ -528,6 +560,7 @@ public class SBMLWriter {
 				eventWriter.add(end);
 			}
 	}
+}
 	
 	public class ListOfProducts{
 		public ArrayList<Product> products;
@@ -766,7 +799,7 @@ public class SBMLWriter {
 		
 	}
 }
-}
+
 	
 
 
