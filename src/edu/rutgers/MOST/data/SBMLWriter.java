@@ -140,6 +140,11 @@ public class SBMLWriter {
 		public ListOfReactants reactants;
 		public ListOfProducts products;
 		public ListOfParameters parameters;
+		public XMLEventWriter eventWriter;
+		
+		public void setEventWriter(XMLEventWriter eventWriter) {
+			this.eventWriter = eventWriter;
+		}
 		
 		public void setId(String id){
 			this.id = id;
@@ -151,6 +156,22 @@ public class SBMLWriter {
 		
 		public void setReversible(String revers) {
 			this.reversible = reversible;
+		}
+		
+		public String[] getKeys() {
+			String[] keys = new String[3];
+			keys[0] = "id";
+			keys[1] = "name";
+			keys[2] = "reversible";
+			return keys;
+		}
+		
+		public String[] getValues() {
+			String[] values = new String[3];
+			values[0] = this.id;
+			values[1] = this.name;
+			values[2] = this.reversible;
+			return values;
 		}
 		
 		public void setNotes(Notes note) {
@@ -169,6 +190,48 @@ public class SBMLWriter {
 			this.parameters = parameters;
 		}
 		
+		public void writeMainTag() throws Exception {
+			XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+			XMLEvent end = eventFactory.createDTD("\n");
+			XMLEvent tab = eventFactory.createDTD("\t");
+			
+				
+			String[] keys = this.getKeys();
+			String[] values = this.getValues();
+			int len = keys.length;
+			Attribute[] attributes = new Attribute[len];
+			
+			for (int i=0; i < len; i++) {
+				attributes[i] = eventFactory.createAttribute(keys[i], values[i]);
+			}
+			
+			List attributeList = Arrays.asList(attributes);
+			List nsList = Arrays.asList();
+			StartElement reacStartElement = eventFactory.createStartElement("", "", "reaction",
+		            attributeList.iterator(), nsList.iterator());
+			eventWriter.add(tab);
+		    eventWriter.add(reacStartElement);
+		    
+		}
+		
+		public void write() throws Exception {
+			XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+			XMLEvent end = eventFactory.createDTD("\n");
+			XMLEvent tab = eventFactory.createDTD("\t");
+			
+			this.writeMainTag();
+			this.note.write();
+			this.reactants.write();
+			this.products.write();
+			KineticLaw kl = new KineticLaw();
+			kl.write();
+			
+			eventWriter.add(eventFactory.createEndElement("", "", "reaction"));
+			
+			eventWriter.add(end);
+			
+		
+		
 	}
 	
 	public class ListOfReactions {
@@ -177,6 +240,12 @@ public class SBMLWriter {
 		
 		public void addReaction(Reaction reac) {
 			reactionList.add(reac);
+		}
+		
+		public void write() {
+			for (Reaction reaction : reactionList) {
+				reaction.write();
+			}
 		}
 	}
 	
@@ -189,7 +258,7 @@ public class SBMLWriter {
 			speciesList.add(spec);
 		}
 		
-		public void addEventWriter(XMLEventWriter eventWriter) {
+		public void setEventWriter(XMLEventWriter eventWriter) {
 			this.eventWriter = eventWriter;
 		}
 		
@@ -658,9 +727,14 @@ public class SBMLWriter {
 	public class KineticLaw {
 		public String xmlns;
 		public XMLEventWriter eventWriter;
+		public ListOfParameters parameters;
 		
 		public KineticLaw() {
 			this.initalize();
+		}
+		
+		public void setParameters(ListOfParameters param) {
+			this.parameters = param;
 		}
 		
 		public void setEventWriter(XMLEventWriter eventWriter) {
@@ -695,6 +769,7 @@ public class SBMLWriter {
 		    
 		    eventWriter.add(eventFactory.createEndElement("", "", "kineticLaw"));
 		    eventWriter.add(end);
+		    this.parameters.write();
 		}
 		
 		private void createNode(XMLEventWriter eventWriter, String name,
