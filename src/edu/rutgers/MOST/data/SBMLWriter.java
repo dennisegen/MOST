@@ -217,7 +217,7 @@ public class SBMLWriter {
 			reactionList.add(reac);
 		}
 		
-		public void write() {
+		public void write() throws Exception {
 			for (Reaction reaction : reactionList) {
 				reaction.write();
 			}
