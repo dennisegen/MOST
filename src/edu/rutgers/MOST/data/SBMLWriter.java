@@ -232,8 +232,6 @@ public class SBMLWriter {
 			this.note = note;
 		}
 		
-		public void setKineticLaw()
-		
 		public void ListOfReactants(ListOfReactants reactants) {
 			this.reactants = reactants;
 		}
