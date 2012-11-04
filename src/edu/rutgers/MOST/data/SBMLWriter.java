@@ -183,7 +183,7 @@ public class SBMLWriter {
 			
 			
 			Parameter redCost = new Parameter();
-			redCost.setId("REDUCED_COST")
+			redCost.setId("REDUCED_COST");
 			
 			
 			parameters.add(lbound);
