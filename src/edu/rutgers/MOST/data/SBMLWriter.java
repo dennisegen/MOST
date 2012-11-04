@@ -122,6 +122,8 @@ public class SBMLWriter {
 		
 	}
 	
+	
+	
 	public class Reaction {
 		
 		public String id;
@@ -130,8 +132,69 @@ public class SBMLWriter {
 		public Notes note;
 		public ListOfReactants reactants;
 		public ListOfProducts products;
+		
 		public ListOfParameters parameters;
 		public XMLEventWriter eventWriter;
+		
+		public SBMLReaction sbmlReact;
+		
+		
+		public void setSBMLReaction(SBMLReaction sbmlReact) {
+			this.sbmlReact = sbmlReact;
+			
+			
+			String id = sbmlReact.getReactionAbbreviation();
+			String name = sbmlReact.getReactionName();
+			String reversible = sbmlReact.getReversible();
+			String lowerBound = sbmlReact.getLowerBound();
+			String upperBound = sbmlReact.getUpperBound();
+			String objectCoeff = "0.000000";
+			String fluxValue = sbmlReact.getFluxValue();
+			String reducCost = "0.000000";
+			
+			
+			this.setId(id);
+			this.setName(name);
+			this.setReversible(reversible);
+			
+			ArrayList reactList = sbmlReact.getReactantsList();
+			ArrayList prodList = sbmlReact.getReactantsList();
+			
+			Parameter lbound = new Parameter();
+			lbound.setId("LOWER_BOUND");
+			lbound.setValue(lowerBound);
+			lbound.setUnits("mmol_per_gDW_per_hr");
+			
+			
+			Parameter ubound = new Parameter();
+			ubound.setId("UPPER_BOUND");
+			ubound.setValue(upperBound);
+			ubound.setUnits("mmol_per_gDW_per_hr");
+
+			
+			Parameter objCoeff = new Parameter();
+			objCoeff.setId("OBJECTIVE_COEFFICIENT");
+			objCoeff.setValue(objectCoeff);
+			
+			Parameter fluxVal = new Parameter();
+			fluxVal.setId("FLUX_VALUE");
+			fluxVal.setValue(fluxValue);
+			fluxVal.setUnits("mmol_per_gDW_per_hr");
+			
+			
+			Parameter redCost = new Parameter();
+			redCost.setId("REDUCED_COST")
+			
+			
+			parameters.add(lbound);
+			parameters.add(ubound);
+			parameters.add(objCoeff);
+			parameters.add(fluxVal);
+			parameters.add(redCost);
+			
+			
+			
+		}
 		
 		public void setEventWriter(XMLEventWriter eventWriter) {
 			this.eventWriter = eventWriter;
@@ -168,6 +231,8 @@ public class SBMLWriter {
 		public void setNotes(Notes note) {
 			this.note = note;
 		}
+		
+		public void setKineticLaw()
 		
 		public void ListOfReactants(ListOfReactants reactants) {
 			this.reactants = reactants;
@@ -215,6 +280,7 @@ public class SBMLWriter {
 			this.reactants.write();
 			this.products.write();
 			KineticLaw kl = new KineticLaw();
+			kl.setParameters(parameters);
 			kl.write();
 			
 			eventWriter.add(eventFactory.createEndElement("", "", "reaction"));
@@ -792,37 +858,6 @@ public class SBMLWriter {
 	
 			
 	
-	
-	private void createNode(XMLEventWriter eventWriter, String name,
-		      String[] attributeKey, String[] attributeValue) throws XMLStreamException {
-
-			assert attributeKey.length == attributeValue.length;
-			
-			int numAttributes = attributeKey.length;
-			
-		    XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		    XMLEvent end = eventFactory.createDTD("\n");
-		    XMLEvent tab = eventFactory.createDTD("\t");
-		    
-		    // Create Start node
-		    StartElement sElement = eventFactory.createStartElement("", "", name);
-		    eventWriter.add(tab);
-		    eventWriter.add(sElement);
-		    
-		    // Create Content
-		    for (int i=0; i < numAttributes ; i++) {
-		    	Attribute atr = eventFactory.createAttribute(attributeKey[i], attributeValue[i]);
-		    	
-		    	eventWriter.add(atr);
-		    			
-		    }
-		    
-		    // Create End node
-		    EndElement eElement = eventFactory.createEndElement("", "", name);
-		    eventWriter.add(eElement);
-		    eventWriter.add(end);
-
-	}
 	
 	public String UnitDefine() {
 		/* UnitDefine should return string for the definition of mmol_per_gDW_per_hr
