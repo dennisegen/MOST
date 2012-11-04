@@ -137,8 +137,31 @@ public class SBMLWriter {
 			this.eventWriter = eventWriter;
 		}
 		
-		public void write() {
+		public void write() throws Exception {
+			XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+			XMLEvent end = eventFactory.createDTD("\n");
+			XMLEvent tab = eventFactory.createDTD("\t");
 			
+			for (Species spe: speciesList) {
+				
+				String[] keys = spe.getKeys();
+				String[] values = spe.getValues();
+				int len = keys.length;
+				Attribute[] attributes = new Attribute[len];
+				
+				for (int i=0; i < len; i++) {
+					attributes[i] = eventFactory.createAttribute(keys[i], values[i]);
+				}
+				
+				List attributeList = Arrays.asList(attributes);
+				List nsList = Arrays.asList();
+				StartElement paramStartElement = eventFactory.createStartElement("", "", "parameter",
+			            attributeList.iterator(), nsList.iterator());
+				eventWriter.add(tab);
+			    eventWriter.add(paramStartElement);
+			    eventWriter.add(eventFactory.createEndElement("", "", "parameter"));
+				
+				eventWriter.add(end);
 		}
 		
 		private void createNode(XMLEventWriter eventWriter, String name,
