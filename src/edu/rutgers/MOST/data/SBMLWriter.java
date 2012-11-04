@@ -163,6 +163,7 @@ public class SBMLWriter {
 				
 				eventWriter.add(end);
 		}
+	}
 		
 		private void createNode(XMLEventWriter eventWriter, String name,
 			      String value) throws XMLStreamException {
