@@ -56,7 +56,27 @@ public class SBMLWriter {
 	public Connection dbCon;
 	public String databaseName;
 	public Vector<ModelReaction> allReactions;
+	public Vector<ModelMetabolite> allMetabolites;
+	
 	public String sourceType;
+	
+	public SBMLWriter() {
+		
+	}
+	
+	public SBMLWriter(ReactionFactory rFactory) {
+		this.parseAllReactions(rFactory);
+	}
+	
+	public SBMLWriter(MetaboliteFactory mFactory) {
+		this.parseAllMetabolites(mFactory);
+	}
+	
+	public SBMLWriter(MetaboliteFactory mFactory, ReactionFactory rFactory) {
+		this.parseAllMetabolites(mFactory);
+		this.parseAllReactions(rFactory);
+	}
+	
 	
 	
 	public SBMLWriter(Connection con) {
@@ -113,6 +133,13 @@ public class SBMLWriter {
 		this.allReactions = rFactory.getAllReactions(this.sourceType, this.databaseName);
 	}
 	
+	public void parseAllMetabolites(MetaboliteFactory mFactory) {
+		int length = mFactory.metaboliteCount(sourceType, databaseName);
+		for (int i=0; i < length; i++) {
+			this.allMetabolites.add(mFactory.getMetaboliteById(i, sourceType, databaseName));
+		}
+	}
+	
 	
 	public void addReaction(XMLEventWriter eventWriter, String reactionid) throws Exception{
 		/* addReaction will query database or factory using reactionid to attain notes, reactants, products, 
@@ -146,19 +173,19 @@ public class SBMLWriter {
 			String id = sbmlReact.getReactionAbbreviation();
 			String name = sbmlReact.getReactionName();
 			String reversible = sbmlReact.getReversible();
-			String lowerBound = sbmlReact.getLowerBound();
-			String upperBound = sbmlReact.getUpperBound();
-			String objectCoeff = "0.000000";
-			String fluxValue = sbmlReact.getFluxValue();
-			String reducCost = "0.000000";
+			String lowerBound = sbmlReact.getLowerBound(); //TODO convert to string
+			String upperBound = sbmlReact.getUpperBound(); //TODO convert to string
+			String objectCoeff = "0.000000"; //TODO Find proper value
+			String fluxValue = sbmlReact.getFluxValue(); //TODO convert to string
+			String reducCost = "0.000000"; //TODO Find proper value
 			
 			
 			this.setId(id);
 			this.setName(name);
 			this.setReversible(reversible);
 			
-			ArrayList reactList = sbmlReact.getReactantsList();
-			ArrayList prodList = sbmlReact.getReactantsList();
+			ArrayList reactList = sbmlReact.getReactantsList(); //Convert elements to Reactant instances
+			ArrayList prodList = sbmlReact.getProductsList(); //Convert elements to Product instances
 			
 			Parameter lbound = new Parameter();
 			lbound.setId("LOWER_BOUND");
