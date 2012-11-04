@@ -206,9 +206,7 @@ public class SBMLWriter {
 			eventWriter.add(eventFactory.createEndElement("", "", "reaction"));
 			
 			eventWriter.add(end);
-			
-		
-		
+		}
 	}
 	
 	public class ListOfReactions {
