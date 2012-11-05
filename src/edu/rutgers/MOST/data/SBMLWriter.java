@@ -65,7 +65,11 @@ public class SBMLWriter {
 	
 	public Vector<SBMLReaction> allReactions;
 	public Vector<SBMLMetabolite> allMetabolites;
-		
+	
+	public ListOfReactions listOfReact;
+	public ListOfMetabolites listOfMeta;
+	
+	
 	public String sourceType;
 	
 	public SBMLWriter() {
@@ -146,6 +150,12 @@ public class SBMLWriter {
 		int length = rFactory.getAllReactions(sourceType, databaseName).size();
 		for (int i=0; i < length; i++) {
 			this.allReactions.add((SBMLReaction) rFactory.getReactionById(i, sourceType, databaseName));
+		}
+		
+		for (SBMLReaction react : allReactions) {
+			Reaction tempReact = new Reaction();
+			tempReact.setSBMLReaction(react);
+			this.listOfReact.addReaction(tempReact);
 		}
 		
 	}
