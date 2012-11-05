@@ -55,8 +55,12 @@ public class SBMLWriter {
 	 */
 	public Connection dbCon;
 	public String databaseName;
+	
 	public Vector<ModelReaction> allReactions;
 	public Vector<ModelMetabolite> allMetabolites;
+	
+	public Vector<SBMLReaction> SBMLReactions;
+	public Vector<SBMLMetabolite> SBMLMetabolites;
 	
 	public String sourceType;
 	
@@ -131,6 +135,7 @@ public class SBMLWriter {
 	
 	public void parseAllReactions(ReactionFactory rFactory) {
 		this.allReactions = rFactory.getAllReactions(this.sourceType, this.databaseName);
+		
 	}
 	
 	public void parseAllMetabolites(MetaboliteFactory mFactory) {
