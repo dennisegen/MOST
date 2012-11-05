@@ -1,6 +1,11 @@
 package edu.rutgers.MOST.data;
 
 
+
+
+import edu.rutgers.MOST.logic.ReactionParser;
+
+
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,12 +61,11 @@ public class SBMLWriter {
 	public Connection dbCon;
 	public String databaseName;
 	
-	public Vector<ModelReaction> allReactions;
-	public Vector<ModelMetabolite> allMetabolites;
+	public ReactionParser rParser; 
 	
-	public Vector<SBMLReaction> SBMLReactions;
-	public Vector<SBMLMetabolite> SBMLMetabolites;
-	
+	public Vector<SBMLReaction> allReactions;
+	public Vector<SBMLMetabolite> allMetabolites;
+		
 	public String sourceType;
 	
 	public SBMLWriter() {
@@ -96,6 +100,10 @@ public class SBMLWriter {
 	
 	public void setDBName(String name) {
 		this.databaseName = name;
+	}
+	
+	public void setReactionInterface(ReactionInterface rInterface) {
+		this.rInterface = rInterface;
 	}
 	
 	public void setReactions(Vector<ModelReaction> reactions) {
@@ -133,15 +141,19 @@ public class SBMLWriter {
 		this.sourceType = sourceType;
 	}
 	
+	
 	public void parseAllReactions(ReactionFactory rFactory) {
-		this.allReactions = rFactory.getAllReactions(this.sourceType, this.databaseName);
+		int length = rFactory.getAllReactions(sourceType, databaseName).size();
+		for (int i=0; i < length; i++) {
+			this.allReactions.add((SBMLReaction) rFactory.getReactionById(i, sourceType, databaseName));
+		}
 		
 	}
 	
 	public void parseAllMetabolites(MetaboliteFactory mFactory) {
 		int length = mFactory.metaboliteCount(sourceType, databaseName);
 		for (int i=0; i < length; i++) {
-			this.allMetabolites.add(mFactory.getMetaboliteById(i, sourceType, databaseName));
+			this.allMetabolites.add((SBMLMetabolite) mFactory.getMetaboliteById(i, sourceType, databaseName));
 		}
 	}
 	
