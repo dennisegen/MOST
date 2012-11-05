@@ -2,10 +2,6 @@ package edu.rutgers.MOST.data;
 
 
 
-
-import edu.rutgers.MOST.logic.ReactionParser;
-
-
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,14 +56,12 @@ public class SBMLWriter {
 	 */
 	public Connection dbCon;
 	public String databaseName;
-	
-	public ReactionParser rParser; 
-	
+		
 	public Vector<SBMLReaction> allReactions;
 	public Vector<SBMLMetabolite> allMetabolites;
 	
 	public ListOfReactions listOfReact;
-	public ListOfMetabolites listOfMeta;
+	public ListOfSpecies listOfSpecies;
 	
 	
 	public String sourceType;
@@ -106,11 +100,8 @@ public class SBMLWriter {
 		this.databaseName = name;
 	}
 	
-	public void setReactionInterface(ReactionInterface rInterface) {
-		this.rInterface = rInterface;
-	}
 	
-	public void setReactions(Vector<ModelReaction> reactions) {
+	public void setReactions(Vector<SBMLReaction> reactions) {
 		this.allReactions = reactions;
 	}
 	
@@ -168,14 +159,8 @@ public class SBMLWriter {
 	}
 	
 	
-	public void addReaction(XMLEventWriter eventWriter, String reactionid) throws Exception{
-		/* addReaction will query database or factory using reactionid to attain notes, reactants, products, 
-		 * and stoichemetric properties creating nodes for each occurrence and add to the ListOfReactions 
-		 * class
-		 */
-		
-	}
 	
+
 	
 	
 	public class Reaction {
@@ -346,12 +331,18 @@ public class SBMLWriter {
 		public ArrayList<Reaction> reactionList;
 		public XMLEventWriter eventWriter;
 		
+		public void setEventWriter(XMLEventWriter eventWriter) {
+			this.eventWriter = eventWriter;
+		}
+		
 		public void addReaction(Reaction reac) {
 			reactionList.add(reac);
 		}
 		
 		public void write() throws Exception {
+			
 			for (Reaction reaction : reactionList) {
+				reaction.setEventWriter(eventWriter);
 				reaction.write();
 			}
 		}
