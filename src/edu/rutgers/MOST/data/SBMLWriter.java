@@ -210,6 +210,7 @@ public class SBMLWriter {
 			
 			
 			Parameter redCost = new Parameter();
+			redCost.setValue(reducCost);
 			redCost.setId("REDUCED_COST");
 			
 			
