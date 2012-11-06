@@ -597,13 +597,13 @@ public class SBMLWriter {
 			if (this.units != null) {
 				keys = new String[3];
 				keys[0] = "id";
-				keys[1] = this.value;
-				keys[2] = this.units;
+				keys[1] = "value";
+				keys[2] = "units";
 			}
 			else {
 				keys = new String[2];
-				keys[0] = this.id;
-				keys[1] = this.value;
+				keys[0] = "id"
+				keys[1] = "value";
 			}
 			return keys;
 			
