@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -129,6 +131,9 @@ public class TextMetabolitesModelReader {
 			Statement stat = conn.createStatement();
 			
 			CSVReader reader;
+			
+			Map<String, Object> metaboliteIdNameMap = new HashMap<String, Object>();
+			
 			try {
 				reader = new CSVReader(new FileReader(file), GraphicalInterface.getSplitCharacter());
 				String [] dataArray;
@@ -141,6 +146,10 @@ public class TextMetabolitesModelReader {
 				reader = new CSVReader(new FileReader(file), GraphicalInterface.getSplitCharacter());
 				
 				int numLines = numberOfLines(file);
+				
+				//sets maximum metabolite id for use in adding metabolites to metaboliteIdNameMap
+				//when reactions contain metabolites not present in file being read
+				LocalConfig.getInstance().setMaxMetaboliteId(numLines - 1 - correction);
 				
 				stat.executeUpdate("BEGIN TRANSACTION");			
 				for (int i = 0; i < numLines; i++) {
@@ -180,7 +189,10 @@ public class TextMetabolitesModelReader {
 							metaboliteAbbreviation = dataArray[LocalConfig.getInstance().getMetaboliteAbbreviationColumnIndex()].replaceAll("'", "''");
 						} else {
 							metaboliteAbbreviation = dataArray[LocalConfig.getInstance().getMetaboliteAbbreviationColumnIndex()];
-						}						
+						}
+						
+						metaboliteIdNameMap.put(metaboliteAbbreviation, new Integer(i - correction));
+						
 						if (dataArray[LocalConfig.getInstance().getMetaboliteNameColumnIndex()].contains("'")) {
 							metaboliteName = dataArray[LocalConfig.getInstance().getMetaboliteNameColumnIndex()].replaceAll("'", "''");
 						} else {
@@ -319,6 +331,7 @@ public class TextMetabolitesModelReader {
 						stat.executeUpdate(insert);	
 					}					
 				}
+				LocalConfig.getInstance().setMetaboliteIdNameMap(metaboliteIdNameMap);
 				stat.executeUpdate("COMMIT");
 			} catch (Exception e) {
 				stat.executeUpdate("ROLLBACK"); // throw away all updates since BEGIN TRANSACTION

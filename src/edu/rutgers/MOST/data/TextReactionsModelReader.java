@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-
 import javax.swing.JOptionPane;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -18,7 +17,7 @@ import edu.rutgers.MOST.logic.ReactionParser1;
 import edu.rutgers.MOST.presentation.GraphicalInterface;
 
 public class TextReactionsModelReader {
-
+	
 	boolean addMetaboliteOption = true;
 	
 	public ArrayList<String> columnNamesFromFile(File file, int row) {
@@ -117,6 +116,7 @@ public class TextReactionsModelReader {
 		//if first row of file in not column names, starts reading after row that contains names
 		int correction = LocalConfig.getInstance().getReactionsNextRowCorrection();
 		int row = 1;
+		int maxMetabId = LocalConfig.getInstance().getMaxMetaboliteId();
 
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
 
@@ -224,6 +224,7 @@ public class TextReactionsModelReader {
 						} else {
 							reactionString = dataArray[LocalConfig.getInstance().getReactionEquationColumnIndex()];
 						}
+						reactionString = reactionString.trim();
 						
 						if (LocalConfig.getInstance().getReversibleColumnIndex() > -1) {
 							if (dataArray[LocalConfig.getInstance().getReversibleColumnIndex()].compareTo("false") == 0 || dataArray[LocalConfig.getInstance().getReversibleColumnIndex()].compareTo("FALSE") == 0 || dataArray[LocalConfig.getInstance().getReversibleColumnIndex()].compareTo("0") == 0 || dataArray[LocalConfig.getInstance().getReversibleColumnIndex()].compareTo("0.0") == 0) {
@@ -239,7 +240,7 @@ public class TextReactionsModelReader {
 							ReactionParser1 parser = new ReactionParser1();
 							boolean valid = true;
 							
-							ArrayList<ArrayList> reactants = parser.reactionList(reactionString).get(0);
+							ArrayList<ArrayList> reactants = parser.reactionList(reactionString.trim()).get(0);
 							//reactions of the type ==> b will be size 1, assigned the value [0] in parser
 							if (reactants.get(0).size() == 1) {
 							} else {
@@ -247,11 +248,9 @@ public class TextReactionsModelReader {
 									if (reactants.get(r).size() == 2) {
 										String stoicStr = (String) reactants.get(r).get(0);
 										String reactant = (String) reactants.get(r).get(1);
-															
-										String countString = "select count(metabolite_abbreviation) from metabolites where metabolite_abbreviation='" + reactant + "';";
-										ResultSet rs = stat.executeQuery(countString);
-										int count = rs.getInt("count(metabolite_abbreviation)");
-										if (count == 0) {
+										String addMetab = "insert into metabolites (metabolite_abbreviation, boundary, used) values('"  + reactant + "', 'false', 'true');";	
+										
+										if (!(LocalConfig.getInstance().getMetaboliteIdNameMap().containsKey(reactant.trim()))) {
 											if (GraphicalInterface.showPrompt) {
 												Object[] options = {"Yes",
 														"Yes to All",
@@ -268,15 +267,17 @@ public class TextReactionsModelReader {
 												// interpret the user's choice	  
 												if (choice == JOptionPane.YES_OPTION)
 												{
-													String addMetab = "insert into metabolites (metabolite_abbreviation, boundary, used) values('"  + reactant + "', 'false', 'true');";
 													stat.executeUpdate(addMetab);
+													maxMetabId += 1;
+													LocalConfig.getInstance().getMetaboliteIdNameMap().put(reactant, new Integer(maxMetabId));
 												}
 												//No option actually corresponds to "Yes to All" button
 												if (choice == JOptionPane.NO_OPTION)
 												{
 													GraphicalInterface.showPrompt = false;
-													String addMetab = "insert into metabolites (metabolite_abbreviation, boundary, used) values('"  + reactant + "', 'false', 'true');";
 													stat.executeUpdate(addMetab);
+													maxMetabId += 1;
+													LocalConfig.getInstance().getMetaboliteIdNameMap().put(reactant, new Integer(maxMetabId));
 												}
 												//Cancel option actually corresponds to "No" button
 												if (choice == JOptionPane.CANCEL_OPTION) {
@@ -285,14 +286,17 @@ public class TextReactionsModelReader {
 													valid = false;
 												}	  
 											} else {
-												String addMetab = "insert into metabolites (metabolite_abbreviation, boundary, used) values('"  + reactant + "', 'false', 'true');";
 												stat.executeUpdate(addMetab);
+												maxMetabId += 1;
+												LocalConfig.getInstance().getMetaboliteIdNameMap().put(reactant, new Integer(maxMetabId));
 											}											
-										}
+										}										
 										
-										String insert = "INSERT INTO reaction_reactants(reaction_id, stoic, metabolite_id) values (" + (i) + ", '" + stoicStr + "', (select id from metabolites where metabolite_abbreviation='" + reactant + "'));";
-										stat.executeUpdate(insert);					
-										String update = "update metabolites set used='true' where id=(select id from metabolites where metabolite_abbreviation='" + reactant + "');";
+										Integer id = (Integer) LocalConfig.getInstance().getMetaboliteIdNameMap().get(reactant);
+										
+										String insert = "INSERT INTO reaction_reactants(reaction_id, stoic, metabolite_id) values (" + (i - correction) + ", " + stoicStr + ", " + id + ");";
+										stat.executeUpdate(insert);
+										String update = "update metabolites set used='true' where id=" + id + ";";
 										stat.executeUpdate(update);
 										
 									} else {
@@ -303,18 +307,16 @@ public class TextReactionsModelReader {
 								}
 							}
 							//reactions of the type a ==> will be size 1, assigned the value [0] in parser
-							ArrayList<ArrayList> products = parser.reactionList(reactionString).get(1);
+							ArrayList<ArrayList> products = parser.reactionList(reactionString.trim()).get(1);
 							if (products.get(0).size() == 1) {
 							} else {
 								for (int p = 0; p < products.size(); p++) {
 									if (products.get(p).size() == 2) {
 										String stoicStr = (String) products.get(p).get(0);
 										String product = (String) products.get(p).get(1);
+										String addMetab = "insert into metabolites (metabolite_abbreviation, boundary, used) values('"  + product + "', 'false', 'true');";
 										
-										String countString = "select count(metabolite_abbreviation) from metabolites where metabolite_abbreviation='" + product + "';";
-										ResultSet rs = stat.executeQuery(countString);
-										int count = rs.getInt("count(metabolite_abbreviation)");
-										if (count == 0) {
+										if (!(LocalConfig.getInstance().getMetaboliteIdNameMap().containsKey(product))) {
 											if (GraphicalInterface.showPrompt) {
 												Object[] options = {"Yes",
 														"Yes to All",
@@ -331,15 +333,17 @@ public class TextReactionsModelReader {
 												// interpret the user's choice	  
 												if (choice == JOptionPane.YES_OPTION)
 												{
-													String addMetab = "insert into metabolites (metabolite_abbreviation, boundary, used) values('"  + product + "', 'false', 'true');";
 													stat.executeUpdate(addMetab);
+													maxMetabId += 1;
+													LocalConfig.getInstance().getMetaboliteIdNameMap().put(product, new Integer(maxMetabId));
 												}
 												//No option actually corresponds to "Yes to All" button
 												if (choice == JOptionPane.NO_OPTION)
 												{
 													GraphicalInterface.showPrompt = false;
-													String addMetab = "insert into metabolites (metabolite_abbreviation, boundary, used) values('"  + product + "', 'false', 'true');";
 													stat.executeUpdate(addMetab);
+													maxMetabId += 1;
+													LocalConfig.getInstance().getMetaboliteIdNameMap().put(product, new Integer(maxMetabId));
 												}
 												//Cancel option actually corresponds to "No" button
 												if (choice == JOptionPane.CANCEL_OPTION) {
@@ -348,14 +352,17 @@ public class TextReactionsModelReader {
 													valid = false;
 												}	  
 											} else {
-												String addMetab = "insert into metabolites (metabolite_abbreviation, boundary, used) values('"  + product + "', 'false', 'true');";
 												stat.executeUpdate(addMetab);
+												maxMetabId += 1;
+												LocalConfig.getInstance().getMetaboliteIdNameMap().put(product, new Integer(maxMetabId));
 											}		
 										}
-
-										String insert = "INSERT INTO reaction_products(reaction_id, stoic, metabolite_id) values (" + (i) + ", '" + stoicStr + "', (select id from metabolites where metabolite_abbreviation='" + product.trim() + "'));";
-										stat.executeUpdate(insert);					
-										String update = "update metabolites set used='true' where id=(select id from metabolites where metabolite_abbreviation='" + product.trim() + "');";
+										
+										Integer id = (Integer) LocalConfig.getInstance().getMetaboliteIdNameMap().get(product);
+										
+										String insert = "INSERT INTO reaction_products(reaction_id, stoic, metabolite_id) values (" + (i - correction) + ", " + stoicStr + ", " + id + ");";
+										stat.executeUpdate(insert);	
+										String update = "update metabolites set used='true' where id=" + id + ";";
 										stat.executeUpdate(update);
 										
 									} else {
@@ -367,9 +374,9 @@ public class TextReactionsModelReader {
 							}
 							
 							if (!valid) {
-								String deleteReac = "delete from reaction_reactants where reaction_id=" + i + ";";
+								String deleteReac = "delete from reaction_reactants where reaction_id=" + (i - correction) + ";";
 								stat.executeUpdate(deleteReac);
-								String deleteProd = "delete from reaction_products where reaction_id=" + i + ";";
+								String deleteProd = "delete from reaction_products where reaction_id=" + (i - correction) + ";";
 								stat.executeUpdate(deleteProd);
 								if (reactionString != null || reactionString.length() > 0) {
 									LocalConfig.getInstance().getInvalidReactions().add(reactionString);
@@ -379,8 +386,6 @@ public class TextReactionsModelReader {
 							
 						}
 						
-						
-						//string cannot be cast to double but valueOf works, from http://www.java-examples.com/convert-java-string-double-example							
 						if (LocalConfig.getInstance().getLowerBoundColumnIndex() > -1) {
 							if (dataArray[LocalConfig.getInstance().getLowerBoundColumnIndex()].compareTo("") != 0) {
 								lowerBound = Double.valueOf(dataArray[LocalConfig.getInstance().getLowerBoundColumnIndex()]);							

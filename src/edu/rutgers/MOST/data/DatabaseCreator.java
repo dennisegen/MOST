@@ -1,5 +1,6 @@
 package edu.rutgers.MOST.data;
 
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,6 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import au.com.bytecode.opencsv.CSVReader;
+
+import edu.rutgers.MOST.config.LocalConfig;
+import edu.rutgers.MOST.presentation.GraphicalInterface;
 import edu.rutgers.MOST.presentation.GraphicalInterfaceConstants;
 
 public class DatabaseCreator {
@@ -76,49 +81,32 @@ public class DatabaseCreator {
 		try {
 			Connection conn =
 				DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db");
-
-			for (int m = 1; m < numMetaboliteRows + 1; m++) {
-				PreparedStatement prep1 = conn.prepareStatement(
-						"insert into metabolites (id) values (?);");
-
-				prep1.setDouble(1, m);
-
-				prep1.addBatch();
-
-				conn.setAutoCommit(false);
-				prep1.executeBatch();
-				conn.setAutoCommit(true);
+			Statement stat = conn.createStatement();
+			
+			try {			
+				stat.executeUpdate("BEGIN TRANSACTION");			
+				for (int m = 1; m < numMetaboliteRows + 1; m++) {
+					String metabInsert = "insert into metabolites (id) values (" + m + ");";
+					stat.executeUpdate(metabInsert);				
+				}
+				for (int r = 1; r < numReactionRows + 1; r++) {
+					String reacInsert = "insert into reactions (id) values (" + r + ");";
+					stat.executeUpdate(reacInsert);				
+				}
+				String metabUpdate = "update metabolites set boundary = 'false', used = 'false';";
+				stat.executeUpdate(metabUpdate);
+				String reacUpdate = "update reactions set reversible = 'false', biological_objective = 0.0,lower_bound = -999999.0, upper_bound = 999999.0, flux_value = 0.0, knockout = 'false';";
+				stat.executeUpdate(reacUpdate);
+				stat.executeUpdate("COMMIT");
+			} catch (Exception e) {
+				stat.executeUpdate("ROLLBACK"); // throw away all updates since BEGIN TRANSACTION
 			}
-
-			Statement st4 = conn.createStatement();
-			String str4 = ("update metabolites set boundary = 'false', used = 'false';");
-
-			st4.executeUpdate(str4);
-
-			for (int r = 1; r < numReactionRows + 1; r++) {
-				PreparedStatement prep2 = conn.prepareStatement(
-						"insert into reactions (id) values (?);");
-
-				prep2.setDouble(1, r);
-
-				prep2.addBatch();
-
-				conn.setAutoCommit(false);
-				prep2.executeBatch();
-				conn.setAutoCommit(true);
-			}
-
-			Statement st3 = conn.createStatement();
-			String str3 = ("update reactions set reversible = 'false', biological_objective = 0.0,lower_bound = -999999.0, upper_bound = 999999.0, flux_value = 0.0, knockout = 'false';");
-
-			st3.executeUpdate(str3);
-
 			conn.close();
+		}catch(SQLException e){
 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}				
+
+		}
 	}
 
 	public void addMetaboliteRow(String databaseName) {

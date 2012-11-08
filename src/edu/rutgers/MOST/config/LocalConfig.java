@@ -1,6 +1,10 @@
 package edu.rutgers.MOST.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import edu.rutgers.MOST.data.SBMLModelReader;
 
 public class LocalConfig {
 	
@@ -278,6 +282,28 @@ public class LocalConfig {
 	
 	public Integer getHeaderColumnIndex() {
 		return headerColumnIndex;
+	}
+	
+	//map used to hold metabolite name/id pairs, in order to construct reaction_reactant
+	//and reaction_product (lookup) tables
+    public static Map<String, Object> metaboliteIdNameMap = new HashMap<String, Object>();
+	
+	public static Map<String, Object> getMetaboliteIdNameMap() {
+		return metaboliteIdNameMap;
+	}
+
+	public void setMetaboliteIdNameMap(Map<String, Object> metaboliteIdNameMap) {
+		this.metaboliteIdNameMap = metaboliteIdNameMap;
+	}
+	
+	private static Integer maxMetaboliteId;
+	
+	public void setMaxMetaboliteId(Integer maxMetaboliteId) {
+		this.maxMetaboliteId = maxMetaboliteId;
+	}
+	
+	public Integer getMaxMetaboliteId() {
+		return maxMetaboliteId;
 	}
 	
 }
