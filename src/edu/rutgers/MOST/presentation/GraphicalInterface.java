@@ -89,6 +89,7 @@ public class GraphicalInterface extends JFrame {
 	//Methods of current directory
 	public static String currentDirectory;
 	public static FileChooser fileChoose;
+	public static ListofCWD cwdDirs;
 	
 	
 	public static DefaultListModel<String> listModel = new DefaultListModel();
@@ -1132,6 +1133,48 @@ public class GraphicalInterface extends JFrame {
 	/*******************************************************************************/
 	//load methods and actions
 	/*******************************************************************************/ 
+	
+	public class ListofCWD {
+		public ArrayList<CurrentWorkingDirectory> curDirs;
+		
+		public CurrentWorkingDirectory getType(String sourceType) {
+			
+			for (CurrentWorkingDirectory cur : curDirs) {
+				if (cur.getSource() == sourceType) {
+					return cur;
+				}
+			}
+		}
+		
+		public void add(CurrentWorkingDirectory curDir) {
+			curDirs.add(curDir);
+		}
+	}
+	
+	public class CurrentWorkingDirectory {
+		public String cwd;
+		public String sourceType;
+		
+		public CurrentWorkingDirectory(String cwd) {
+			this.setCWD(cwd)
+		}
+		
+		public setCWD(String cwd) {
+			this.cwd = cwd;
+		}
+
+		public setCWD(File filename) {
+			//TODO: Get path from filename
+		}
+	
+		public setSourceType(String sourceType) {
+			this.sourceType = sourceType;
+		}
+	
+	
+	}
+	
+	
 	class LoadSBMLAction implements ActionListener {
 		public void actionPerformed(ActionEvent ae) { 
 			progressBar.progress.setValue(0);
@@ -1148,7 +1191,9 @@ public class GraphicalInterface extends JFrame {
 				//... The user selected a file, get it, use it.
 				File file = fileChooser.getSelectedFile();          	
 				String rawFilename = fileChooser.getSelectedFile().getName();
+				
 				//TODO: this.setCWD(attain current directory)
+				//TODO: this.curDirs.add(new CurrentWorkingDirectory(rawFilename))
 				//TODO: utilize fileChooser.setCurrentDirectory([global] current directory)
 				
 				
