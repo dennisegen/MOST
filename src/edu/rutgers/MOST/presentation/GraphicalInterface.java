@@ -88,7 +88,6 @@ public class GraphicalInterface extends JFrame {
 
 	//Methods of current directory
 	public static String currentDirectory;
-	public static FileChooser fileChoose;
 	public static ListofCWD cwdDirs;
 	
 	
@@ -1106,25 +1105,7 @@ public class GraphicalInterface extends JFrame {
 		table.getColumnModel().getColumn(col_index).setHeaderValue(col_name);
 	}
 	
-	public void setCWD(String cwd) {
-		this.currentDirectory = cwd;
-		//TODO: Set Attribute current working directory in setting class
-	}
 	
-	public String getRawFileName() {
-		JFileChooser fileChooser = new JFileChooser(); 
-			
-			//... Open a file dialog.
-			int retval = fileChooser.showOpenDialog(output);
-			if (retval == JFileChooser.APPROVE_OPTION) {
-				//... The user selected a file, get it, use it.
-				File file = fileChooser.getSelectedFile();          	
-				String rawFilename = fileChooser.getSelectedFile().getName();
-				//TODO: [global] current directory <-  attain current directory
-				//TODO: utilize fileChooser.setCurrentDirectory([global] current directory)
-			}
-		return rawFilename;
-	}
 
 	/*******************************************************************************/
 	//end methods
@@ -1141,7 +1122,7 @@ public class GraphicalInterface extends JFrame {
 		public boolean isSet(String sourceType) {
 			boolean truthValue = false;
 			for (CurrentWorkingDirectory cur : curDirs) {
-				if (cur.getSource() == sourceType) {
+				if (cur.getSourceType() == sourceType) {
 					truthValue = true;
 					break;
 				}
@@ -1152,10 +1133,11 @@ public class GraphicalInterface extends JFrame {
 		public CurrentWorkingDirectory getType(String sourceType) {
 			
 			for (CurrentWorkingDirectory cur : curDirs) {
-				if (cur.getSource() == sourceType) {
+				if (cur.getSourceType() == sourceType) {
 					return cur;
 				}
 			}
+			return null;
 		}
 		
 		public void add(CurrentWorkingDirectory curDir) {
@@ -1168,21 +1150,25 @@ public class GraphicalInterface extends JFrame {
 		public String sourceType;
 		
 		public CurrentWorkingDirectory(String cwd) {
-			this.setCWD(cwd)
+			this.setCWD(cwd);
 		}
 		
-		public setCWD(String cwd) {
+		public void setCWD(String cwd) {
 			this.cwd = cwd;
 		}
 
-		public setCWD(File filename) {
+		public void setCWD(File filename) {
 			//TODO: Get path from filename
 		}
 	
-		public setSourceType(String sourceType) {
+		public void setSourceType(String sourceType) {
 			this.sourceType = sourceType;
 		}
 	
+		public String getSourceType() {
+			String cur = this.sourceType;
+			return cur;
+		}
 	
 	}
 	
@@ -1196,6 +1182,14 @@ public class GraphicalInterface extends JFrame {
 			JFileChooser fileChooser = new JFileChooser(); 
 			//TODO: test the possibility of a global FileChooser
 			
+			/*
+			if (cwdDirs.isSet("SBML")) {
+				String curDir = cwdDirs.getType("SBML").cwd;
+				File dir = new File(curDir);
+				
+				fileChooser.setCurrentDirectory(dir);
+			}
+			*/
 			
 			//... Open a file dialog.
 			int retval = fileChooser.showOpenDialog(output);
@@ -1203,7 +1197,11 @@ public class GraphicalInterface extends JFrame {
 				//... The user selected a file, get it, use it.
 				File file = fileChooser.getSelectedFile();          	
 				String rawFilename = fileChooser.getSelectedFile().getName();
+				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
 				
+				CurrentWorkingDirectory tempCurDir = new CurrentWorkingDirectory(rawPathName);
+				tempCurDir.setSourceType("SBML");
+				cwdDirs.add(tempCurDir);
 				
 				//TODO: this.setCWD(attain current directory)
 				//TODO: If curDirs.isSet("SBML") get and load as current directory, else do following:
