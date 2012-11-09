@@ -1206,7 +1206,7 @@ public class GraphicalInterface extends JFrame {
 				
 				
 				//TODO: this.setCWD(attain current directory)
-				//TODO: If curDirs has SBML set, load as current directory, else do following:
+				//TODO: If curDirs.isSet("SBML") get and load as current directory, else do following:
 				
 				//TODO: CurrentWorkingDirectory tempCurDir = new CurrentWorkingDirectory(rawFilename)
 				//TODO: tempCurDir.setSourceType("SBML")
