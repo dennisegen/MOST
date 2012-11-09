@@ -1192,8 +1192,14 @@ public class GraphicalInterface extends JFrame {
 				File file = fileChooser.getSelectedFile();          	
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				
+				
 				//TODO: this.setCWD(attain current directory)
-				//TODO: this.curDirs.add(new CurrentWorkingDirectory(rawFilename))
+				//TODO: If curDirs has SBML set, load as current directory, else do following:
+				
+				//TODO: CurrentWorkingDirectory tempCurDir = new CurrentWorkingDirectory(rawFilename)
+				//TODO: tempCurDir.setSourceType("SBML")
+				//TODO: this.curDirs.add(tempCurDir)
+				
 				//TODO: utilize fileChooser.setCurrentDirectory([global] current directory)
 				
 				
