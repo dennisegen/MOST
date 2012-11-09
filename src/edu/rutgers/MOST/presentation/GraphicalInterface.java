@@ -86,6 +86,11 @@ public class GraphicalInterface extends JFrame {
 	//set tabs south (bottom) = 3
 	public JTabbedPane tabbedPane = new JTabbedPane(3); 
 
+	//Methods of current directory
+	public static String currentDirectory;
+	public static FileChooser fileChoose;
+	
+	
 	public static DefaultListModel<String> listModel = new DefaultListModel();
 	public static FileList fileList = new FileList();
 	static JScrollPane fileListPane = new JScrollPane(fileList);	
@@ -1099,6 +1104,27 @@ public class GraphicalInterface extends JFrame {
 	public void ChangeName(JXTable table, int col_index, String col_name){
 		table.getColumnModel().getColumn(col_index).setHeaderValue(col_name);
 	}
+	
+	public void setCWD(String cwd) {
+		this.currentDirectory = cwd;
+		//TODO: Set Attribute current working directory in setting class
+	}
+	
+	public String getRawFileName() {
+		JFileChooser fileChooser = new JFileChooser(); 
+			
+			//... Open a file dialog.
+			int retval = fileChooser.showOpenDialog(output);
+			if (retval == JFileChooser.APPROVE_OPTION) {
+				//... The user selected a file, get it, use it.
+				File file = fileChooser.getSelectedFile();          	
+				String rawFilename = fileChooser.getSelectedFile().getName();
+				//TODO: [global] current directory <-  attain current directory
+				//TODO: utilize fileChooser.setCurrentDirectory([global] current directory)
+			}
+		return rawFilename;
+	}
+
 	/*******************************************************************************/
 	//end methods
 	/*******************************************************************************/
@@ -1113,12 +1139,19 @@ public class GraphicalInterface extends JFrame {
 			loadSetUp();
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser(); 
+			//TODO: test the possibility of a global FileChooser
+			
+			
 			//... Open a file dialog.
 			int retval = fileChooser.showOpenDialog(output);
 			if (retval == JFileChooser.APPROVE_OPTION) {
 				//... The user selected a file, get it, use it.
 				File file = fileChooser.getSelectedFile();          	
 				String rawFilename = fileChooser.getSelectedFile().getName();
+				//TODO: this.setCWD(attain current directory)
+				//TODO: utilize fileChooser.setCurrentDirectory([global] current directory)
+				
+				
 				String filename = "";
 				if (!rawFilename.endsWith(".xml") && !rawFilename.endsWith(".sbml")) {
 					JOptionPane.showMessageDialog(null,                
