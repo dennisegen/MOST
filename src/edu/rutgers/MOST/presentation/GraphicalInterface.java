@@ -1137,6 +1137,18 @@ public class GraphicalInterface extends JFrame {
 	public class ListofCWD {
 		public ArrayList<CurrentWorkingDirectory> curDirs;
 		
+		
+		public boolean isSet(String sourceType) {
+			boolean truthValue = false;
+			for (CurrentWorkingDirectory cur : curDirs) {
+				if (cur.getSource() == sourceType) {
+					truthValue = true;
+					break;
+				}
+			}
+			return truthValue;
+		
+		}
 		public CurrentWorkingDirectory getType(String sourceType) {
 			
 			for (CurrentWorkingDirectory cur : curDirs) {
