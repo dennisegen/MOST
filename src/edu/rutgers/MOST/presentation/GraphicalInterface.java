@@ -1115,66 +1115,6 @@ public class GraphicalInterface extends JFrame {
 	//load methods and actions
 	/*******************************************************************************/ 
 	
-	public class ListofCWD {
-		public ArrayList<CurrentWorkingDirectory> curDirs;
-		
-		
-		public boolean isSet(String sourceType) {
-			boolean truthValue = false;
-			for (CurrentWorkingDirectory cur : curDirs) {
-				System.out.print(cur.sourceType);
-				if (cur.getSourceType() == sourceType) {
-					truthValue = true;
-					break;
-				}
-			}
-			return truthValue;
-		
-		}
-		public CurrentWorkingDirectory getType(String sourceType) {
-			
-			for (CurrentWorkingDirectory cur : curDirs) {
-				
-				if (cur.getSourceType() == sourceType) {
-					return cur;
-				}
-			}
-			return null;
-		}
-		
-		public void add(CurrentWorkingDirectory curDir) {
-			curDirs.add(curDir);
-		}
-	}
-	
-	public class CurrentWorkingDirectory {
-		public String cwd;
-		public String sourceType;
-		
-		public CurrentWorkingDirectory(String cwd) {
-			this.setCWD(cwd);
-		}
-		
-		public void setCWD(String cwd) {
-			this.cwd = cwd;
-		}
-
-		public void setCWD(File filename) {
-			//TODO: Get path from filename
-		}
-	
-		public void setSourceType(String sourceType) {
-			this.sourceType = sourceType;
-		}
-	
-		public String getSourceType() {
-			String cur = this.sourceType;
-			return cur;
-		}
-	
-	}
-	
-	
 	class LoadSBMLAction implements ActionListener {
 		public void actionPerformed(ActionEvent ae) { 
 			progressBar.progress.setValue(0);
