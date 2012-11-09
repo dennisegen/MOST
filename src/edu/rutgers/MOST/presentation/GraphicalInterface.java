@@ -87,8 +87,8 @@ public class GraphicalInterface extends JFrame {
 	public JTabbedPane tabbedPane = new JTabbedPane(3); 
 
 	//Methods of current directory
-	public static String currentDirectory;
-	public static ListofCWD cwdDirs;
+	public String lastSBMLpath;
+	
 	
 	
 	public static DefaultListModel<String> listModel = new DefaultListModel();
@@ -1122,6 +1122,7 @@ public class GraphicalInterface extends JFrame {
 		public boolean isSet(String sourceType) {
 			boolean truthValue = false;
 			for (CurrentWorkingDirectory cur : curDirs) {
+				System.out.print(cur.sourceType);
 				if (cur.getSourceType() == sourceType) {
 					truthValue = true;
 					break;
@@ -1133,6 +1134,7 @@ public class GraphicalInterface extends JFrame {
 		public CurrentWorkingDirectory getType(String sourceType) {
 			
 			for (CurrentWorkingDirectory cur : curDirs) {
+				
 				if (cur.getSourceType() == sourceType) {
 					return cur;
 				}
@@ -1181,15 +1183,11 @@ public class GraphicalInterface extends JFrame {
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser(); 
 			//TODO: test the possibility of a global FileChooser
-			
-			/*
-			if (cwdDirs.isSet("SBML")) {
-				String curDir = cwdDirs.getType("SBML").cwd;
-				File dir = new File(curDir);
-				
-				fileChooser.setCurrentDirectory(dir);
+			if (lastSBMLpath != null) {
+				fileChooser.setCurrentDirectory(new File(lastSBMLpath));
 			}
-			*/
+			
+			
 			
 			//... Open a file dialog.
 			int retval = fileChooser.showOpenDialog(output);
@@ -1198,19 +1196,8 @@ public class GraphicalInterface extends JFrame {
 				File file = fileChooser.getSelectedFile();          	
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
+				lastSBMLpath = rawPathName;
 				
-				CurrentWorkingDirectory tempCurDir = new CurrentWorkingDirectory(rawPathName);
-				tempCurDir.setSourceType("SBML");
-				cwdDirs.add(tempCurDir);
-				
-				//TODO: this.setCWD(attain current directory)
-				//TODO: If curDirs.isSet("SBML") get and load as current directory, else do following:
-				
-				//TODO: CurrentWorkingDirectory tempCurDir = new CurrentWorkingDirectory(rawFilename)
-				//TODO: tempCurDir.setSourceType("SBML")
-				//TODO: this.curDirs.add(tempCurDir)
-				
-				//TODO: utilize fileChooser.setCurrentDirectory([global] current directory)
 				
 				
 				String filename = "";
