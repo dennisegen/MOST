@@ -75,7 +75,6 @@ import org.apache.log4j.Logger;
 
 import layout.TableLayout;
 
-//test
 public class GraphicalInterface extends JFrame {
 	//log4j
 	static Logger log = Logger.getLogger(GraphicalInterface.class);
@@ -87,6 +86,11 @@ public class GraphicalInterface extends JFrame {
 	//set tabs south (bottom) = 3
 	public JTabbedPane tabbedPane = new JTabbedPane(3); 
 
+	//Methods of current directory
+	public String lastSBMLpath;
+	
+	
+	
 	public static DefaultListModel<String> listModel = new DefaultListModel();
 	public static FileList fileList = new FileList();
 	static JScrollPane fileListPane = new JScrollPane(fileList);	
@@ -1100,6 +1104,9 @@ public class GraphicalInterface extends JFrame {
 	public void ChangeName(JXTable table, int col_index, String col_name){
 		table.getColumnModel().getColumn(col_index).setHeaderValue(col_name);
 	}
+	
+	
+
 	/*******************************************************************************/
 	//end methods
 	/*******************************************************************************/
@@ -1107,6 +1114,7 @@ public class GraphicalInterface extends JFrame {
 	/*******************************************************************************/
 	//load methods and actions
 	/*******************************************************************************/ 
+	
 	class LoadSBMLAction implements ActionListener {
 		public void actionPerformed(ActionEvent ae) { 
 			progressBar.progress.setValue(0);
@@ -1114,12 +1122,22 @@ public class GraphicalInterface extends JFrame {
 			loadSetUp();
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser(); 
+			//TODO: test the possibility of a global FileChooser
+			if (lastSBMLpath != null) {
+				fileChooser.setCurrentDirectory(new File(lastSBMLpath));
+			}
+			
+			
+			
 			//... Open a file dialog.
 			int retval = fileChooser.showOpenDialog(output);
 			if (retval == JFileChooser.APPROVE_OPTION) {
 				//... The user selected a file, get it, use it.
 				File file = fileChooser.getSelectedFile();          	
 				String rawFilename = fileChooser.getSelectedFile().getName();
+				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
+				lastSBMLpath = rawPathName;
+				
 				String filename = "";
 				if (!rawFilename.endsWith(".xml") && !rawFilename.endsWith(".sbml")) {
 					JOptionPane.showMessageDialog(null,                
@@ -1192,7 +1210,7 @@ public class GraphicalInterface extends JFrame {
 			//... The user selected a file, get it, use it.
 			File file = fileChooser.getSelectedFile();    	    	
 			String rawFilename = fileChooser.getSelectedFile().getName();
-			if (!rawFilename.endsWith(".csv") && !rawFilename.endsWith(".txt")) {
+			if (!rawFilename.endsWith(".csv")) {
 				JOptionPane.showMessageDialog(null,                
 						"Not a Valid CSV File.",                
 						"Invalid CSV File",                                
