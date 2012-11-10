@@ -1,10 +1,12 @@
 *.class
 *.db
 *.log
-*.log1
+*.log.1
 
-bin/log4j.properties
+bin
+
 .classpath
 .project
 
-
+model.lp
+model.mps
