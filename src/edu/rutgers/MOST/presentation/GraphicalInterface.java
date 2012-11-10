@@ -1192,7 +1192,7 @@ public class GraphicalInterface extends JFrame {
 			//... The user selected a file, get it, use it.
 			File file = fileChooser.getSelectedFile();    	    	
 			String rawFilename = fileChooser.getSelectedFile().getName();
-			if (!rawFilename.endsWith(".csv")) {
+			if (!rawFilename.endsWith(".csv") && !rawFilename.endsWith(".txt")) {
 				JOptionPane.showMessageDialog(null,                
 						"Not a Valid CSV File.",                
 						"Invalid CSV File",                                
