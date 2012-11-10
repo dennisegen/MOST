@@ -86,9 +86,18 @@ public class GraphicalInterface extends JFrame {
 	//set tabs south (bottom) = 3
 	public JTabbedPane tabbedPane = new JTabbedPane(3); 
 
-	//Methods of current directory
-	public String lastSBMLpath;
+	//Methods of saving current directory
+	//Load Directories
+	public String lastSBML_lpath;
+	public String lastCSVM_lpath;
+	public String lastCSVR_lpath;
+	public String lastSQL_lpath;
 	
+	//Save Directories
+	public String lastSBML_spath;
+	public String lastCSVM_spath;
+	public String lastCSVR_spath;
+	public String lastSQL_spath;
 	
 	
 	public static DefaultListModel<String> listModel = new DefaultListModel();
@@ -1123,8 +1132,8 @@ public class GraphicalInterface extends JFrame {
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser(); 
 			//TODO: test the possibility of a global FileChooser
-			if (lastSBMLpath != null) {
-				fileChooser.setCurrentDirectory(new File(lastSBMLpath));
+			if (lastSBML_lpath != null) {
+				fileChooser.setCurrentDirectory(new File(lastSBML_lpath));
 			}
 			
 			
@@ -1136,7 +1145,7 @@ public class GraphicalInterface extends JFrame {
 				File file = fileChooser.getSelectedFile();          	
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
-				lastSBMLpath = rawPathName;
+				lastSBML_lpath = rawPathName;
 				
 				
 				
@@ -1176,11 +1185,20 @@ public class GraphicalInterface extends JFrame {
 			loadSetUp();
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser();
+			
+			if (lastSQL_lpath != null) {
+				fileChooser.setCurrentDirectory(new File(lastSQL_lpath ));
+			}
+			
 			//... Open a file dialog.
 			int retval = fileChooser.showOpenDialog(output);
 			if (retval == JFileChooser.APPROVE_OPTION) {
 				//... The user selected a file, get it, use it.
 				String rawFilename = fileChooser.getSelectedFile().getName();
+				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
+				lastSQL_lpath = rawPathName;
+				
+				
 				if (!rawFilename.endsWith(".db")) {
 					JOptionPane.showMessageDialog(null,                
 							"Not a Valid Database File.",                
@@ -1206,12 +1224,20 @@ public class GraphicalInterface extends JFrame {
 		loadSetUp();
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser();
+		if (lastCSVM_lpath != null) {
+			fileChooser.setCurrentDirectory(new File(lastCSVM_lpath));
+		}
+		
 		//... Open a file dialog.
 		int retval = fileChooser.showOpenDialog(output);
+		
 		if (retval == JFileChooser.APPROVE_OPTION) {
 			//... The user selected a file, get it, use it.
 			File file = fileChooser.getSelectedFile();    	    	
 			String rawFilename = fileChooser.getSelectedFile().getName();
+			String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
+			lastCSVM_lpath = rawPathName;
+			
 			if (!rawFilename.endsWith(".csv")) {
 				JOptionPane.showMessageDialog(null,                
 						"Not a Valid CSV File.",                
@@ -1262,12 +1288,19 @@ public class GraphicalInterface extends JFrame {
 		loadSetUp();
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser();
+		if (lastCSVR_lpath != null) {
+			fileChooser.setCurrentDirectory(new File(lastCSVR_lpath));
+		}
+		
 		//... Open a file dialog.
 		int retval = fileChooser.showOpenDialog(output);
 		if (retval == JFileChooser.APPROVE_OPTION) {
 			//... The user selected a file, get it, use it.
 			File file = fileChooser.getSelectedFile();
 			String rawFilename = fileChooser.getSelectedFile().getName();
+			String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
+			lastCSVR_lpath = rawPathName;
+			
 			if (!rawFilename.endsWith(".csv") && !rawFilename.endsWith(".txt")) {
 				if (!rawFilename.endsWith(".csv")) {
 					JOptionPane.showMessageDialog(null,                
