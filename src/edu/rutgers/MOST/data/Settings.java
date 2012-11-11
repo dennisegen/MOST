@@ -95,7 +95,7 @@ public class Settings {
 	
 	
 	public void setlastL_SBML(String value) {
-    	
+    	this.lastL_SBML = value;
     }
     
     public void setlastS_SBML(String value) {
