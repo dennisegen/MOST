@@ -1,6 +1,9 @@
 package edu.rutgers.MOST.data;
 
 import java.beans.PropertyChangeEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -19,6 +22,8 @@ import org.sbml.jsbml.SBMLWriter;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.SpeciesReference;
 
+import edu.rutgers.MOST.config.ConfigConstants;
+import edu.rutgers.MOST.config.LocalConfig;
 import edu.rutgers.MOST.data.SBMLWriter.ListOfParameters;
 import edu.rutgers.MOST.data.SBMLWriter.ListOfProducts;
 import edu.rutgers.MOST.data.SBMLWriter.ListOfReactants;
@@ -61,6 +66,12 @@ public class JSBMLWriter implements TreeModelListener{
 	public void treeStructureChanged(TreeModelEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void formConnect() throws Exception{
+		LocalConfig.getInstance().setLoadedDatabase(ConfigConstants.DEFAULT_DATABASE_NAME);
+		Connection con = DriverManager.getConnection("jdbc:sqlite:" + LocalConfig.getInstance().getDatabaseName() + ".db");
+		System.out.print(con.getSchema());
 	}
 	
 	public JSBMLWriter() throws Exception {
