@@ -29,15 +29,17 @@ import edu.rutgers.MOST.data.SBMLWriter.Parameter;
 public class JSBMLWriter implements TreeModelListener{
 	public String sourceType;
 	public String databaseName;
-	
+	public SMetabolites allSpecies;
 	
 
 	public JSBMLWriter() throws Exception {
 		SBMLDocument doc = new SBMLDocument(2, 4);
-		
+		allSpecies = new SMetabolites();
 		
 		// Create a new SBML model, and add a compartment to it.
 		Model model = doc.createModel("test_model");
+		allSpecies.setModel(model);
+		
 		Compartment compartment = model.createCompartment("default");
 		compartment.setSize(1d);
 		
@@ -50,7 +52,7 @@ public class JSBMLWriter implements TreeModelListener{
 		// Create some sample content in the SBML model.
 		Species specOne = model.createSpecies("test_spec1", compartment);
 		Species specTwo = model.createSpecies("test_spec2", compartment);
-		specTwo.setNotes(notes)
+		
 		Reaction sbReaction = model.createReaction("reaction_id");
 		
 		
@@ -75,6 +77,15 @@ public class JSBMLWriter implements TreeModelListener{
 		public Vector<SBMLMetabolite> allMetabolites;
 		public Vector<Species> allSpecies;
 	
+		public SMetabolites() {
+			
+		}
+		
+		
+		public SMetabolites(MetaboliteFactory mFactory) {
+			this.parseAllMetabolites(mFactory);
+		}
+		
 		public void setModel(Model model) {
 			this.model = model;
 		}
@@ -84,10 +95,20 @@ public class JSBMLWriter implements TreeModelListener{
 			for (int i=0; i < length; i++) {
 				this.allMetabolites.add((SBMLMetabolite) mFactory.getMetaboliteById(i, sourceType, databaseName));
 			}
+			
+			if (this.model != null) {
+				this.devModel();
+			}
 		}
 		
 		public Species getSpecies(String mName) {
-			for (SBMLMetabolite cur : allMetabolites)
+			Species match;
+			for (Species cur : allSpecies) {
+				if (cur.getName() == mName) {
+					match = cur;
+				}
+			return match;
+			}
 		}
 		
 		public void devModel() {
@@ -100,6 +121,7 @@ public class JSBMLWriter implements TreeModelListener{
 				String bound = cur.getBoundary();
 				String mName = cur.getMetaboliteName();
 				Species curSpec = model.createSpecies(mName, compartment);
+				
 				allSpecies.add(curSpec);
 			}
 			
@@ -141,19 +163,37 @@ public class JSBMLWriter implements TreeModelListener{
 			
 			Reaction sbReaction = model.createReaction(name);
 			
+			sbReaction.setReversible(Boolean.getBoolean(reversible));
+			
+			//TODO: KineticLaw kw;
+			//TODO: sbReaction.setKineticLaw(kineticLaw);
 			
 			ArrayList<SBMLProduct> prodList = sbmlReact.getProductsList(); //Convert elements to Product instances
 			for (SBMLProduct prod : prodList) {
+				String mName = prod.getMetaboliteAbbreviation();
+				
 				Species curSpec = model.createSpecies(prod.getMetaboliteAbbreviation());
 				prod.getMetaboliteAbbreviation();
-				sbReaction.createProduct(species)
+				Species curS = allSpecies.getSpecies(mName);
+				sbReaction.createProduct(curS);
+			}
+			
+			
+			ArrayList<SBMLReactant> reactList = sbmlReact.getReactantsList(); //Convert elements to Reactant instances
+			for (SBMLReactant reac : reactList) {
+				String mName = reac.getMetaboliteAbbreviation();
+				
+				Species curSpec = model.createSpecies(reac.getMetaboliteAbbreviation());
+				reac.getMetaboliteAbbreviation();
+				Species curS = allSpecies.getSpecies(mName);
+				sbReaction.createReactant(curS);
 			}
 			
 			this.setId(id);
 			this.setName(name);
 			this.setReversible(reversible);
 			
-			ArrayList reactList = sbmlReact.getReactantsList(); //Convert elements to Reactant instances
+			
 			
 			
 			Parameter lbound = new Parameter();
