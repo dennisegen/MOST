@@ -1,10 +1,13 @@
 package edu.rutgers.MOST.data;
 
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeNode;
+import javax.xml.stream.XMLEventWriter;
 
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.Creator;
@@ -16,8 +19,19 @@ import org.sbml.jsbml.SBMLWriter;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.SpeciesReference;
 
+import edu.rutgers.MOST.data.SBMLWriter.ListOfParameters;
+import edu.rutgers.MOST.data.SBMLWriter.ListOfProducts;
+import edu.rutgers.MOST.data.SBMLWriter.ListOfReactants;
+import edu.rutgers.MOST.data.SBMLWriter.Notes;
+import edu.rutgers.MOST.data.SBMLWriter.Parameter;
+
 
 public class JSBMLWriter implements TreeModelListener{
+	public String sourceType;
+	public String databaseName;
+	
+	
+
 	public JSBMLWriter() throws Exception {
 		SBMLDocument doc = new SBMLDocument(2, 4);
 		
@@ -36,6 +50,7 @@ public class JSBMLWriter implements TreeModelListener{
 		// Create some sample content in the SBML model.
 		Species specOne = model.createSpecies("test_spec1", compartment);
 		Species specTwo = model.createSpecies("test_spec2", compartment);
+		specTwo.setNotes(notes)
 		Reaction sbReaction = model.createReaction("reaction_id");
 		
 		
@@ -54,6 +69,127 @@ public class JSBMLWriter implements TreeModelListener{
 		
 		sbmlwrite.write(doc, "test.xml", "JSBMLexample", "1.0");
 	}
+	
+	public class SMetabolites {
+		public Model model;
+		public Vector<SBMLMetabolite> allMetabolites;
+		public Vector<Species> allSpecies;
+	
+		public void setModel(Model model) {
+			this.model = model;
+		}
+		
+		public void parseAllMetabolites(MetaboliteFactory mFactory) {
+			int length = mFactory.metaboliteCount(sourceType, databaseName);
+			for (int i=0; i < length; i++) {
+				this.allMetabolites.add((SBMLMetabolite) mFactory.getMetaboliteById(i, sourceType, databaseName));
+			}
+		}
+		
+		public Species getSpecies(String mName) {
+			for (SBMLMetabolite cur : allMetabolites)
+		}
+		
+		public void devModel() {
+			Vector<Species> curSpecies;
+			
+			int count = 0;
+			for (SBMLMetabolite cur : allMetabolites) {
+				
+				Compartment compartment = model.createCompartment(cur.getCompartment());
+				String bound = cur.getBoundary();
+				String mName = cur.getMetaboliteName();
+				Species curSpec = model.createSpecies(mName, compartment);
+				allSpecies.add(curSpec);
+			}
+			
+		}
+	}
+	
+	
+	
+	public class SReaction {
+		
+		public String id;
+		public String name;
+		public String reversible;
+		public Notes note;
+		public ListOfReactants reactants;
+		public ListOfProducts products;
+		
+		public ListOfParameters parameters;
+		public XMLEventWriter eventWriter;
+		
+		public SBMLReaction sbmlReact;
+		
+		public Species modelSpec;
+		public Model model;
+		
+		public void setSBMLReaction(SBMLReaction sbmlReact) {
+			this.sbmlReact = sbmlReact;
+			
+			
+			
+			String id = sbmlReact.getReactionAbbreviation();
+			String name = sbmlReact.getReactionName();
+			String reversible = sbmlReact.getReversible();
+			String lowerBound = String.valueOf(sbmlReact.getLowerBound()); 
+			String upperBound = String.valueOf(sbmlReact.getUpperBound()); 
+			String objectCoeff = "0.000000"; //TODO Find proper value
+			String fluxValue = String.valueOf(sbmlReact.getFluxValue()); 
+			String reducCost = "0.000000"; //TODO Find proper value
+			
+			Reaction sbReaction = model.createReaction(name);
+			
+			
+			ArrayList<SBMLProduct> prodList = sbmlReact.getProductsList(); //Convert elements to Product instances
+			for (SBMLProduct prod : prodList) {
+				Species curSpec = model.createSpecies(prod.getMetaboliteAbbreviation());
+				prod.getMetaboliteAbbreviation();
+				sbReaction.createProduct(species)
+			}
+			
+			this.setId(id);
+			this.setName(name);
+			this.setReversible(reversible);
+			
+			ArrayList reactList = sbmlReact.getReactantsList(); //Convert elements to Reactant instances
+			
+			
+			Parameter lbound = new Parameter();
+			lbound.setId("LOWER_BOUND");
+			lbound.setValue(lowerBound);
+			lbound.setUnits("mmol_per_gDW_per_hr");
+			
+			
+			Parameter ubound = new Parameter();
+			ubound.setId("UPPER_BOUND");
+			ubound.setValue(upperBound);
+			ubound.setUnits("mmol_per_gDW_per_hr");
+
+			
+			Parameter objCoeff = new Parameter();
+			objCoeff.setId("OBJECTIVE_COEFFICIENT");
+			objCoeff.setValue(objectCoeff);
+			
+			Parameter fluxVal = new Parameter();
+			fluxVal.setId("FLUX_VALUE");
+			fluxVal.setValue(fluxValue);
+			fluxVal.setUnits("mmol_per_gDW_per_hr");
+			
+			
+			Parameter redCost = new Parameter();
+			redCost.setValue(reducCost);
+			redCost.setId("REDUCED_COST");
+			
+			
+			parameters.add(lbound);
+			parameters.add(ubound);
+			parameters.add(objCoeff);
+			parameters.add(fluxVal);
+			parameters.add(redCost);	
+		}
+		
 
 	/**
 	 * @param args
