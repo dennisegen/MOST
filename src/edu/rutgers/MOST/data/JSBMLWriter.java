@@ -31,7 +31,38 @@ public class JSBMLWriter implements TreeModelListener{
 	public String databaseName;
 	public SMetabolites allSpecies;
 	
+	/**
+	 * @param args
+	 */
+	/** Main routine. This does not take any arguments. */
+		public static void main(String[] args) throws Exception {
+			new JSBMLWriter();
+		}
 
+	@Override
+	public void treeNodesChanged(TreeModelEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void treeNodesInserted(TreeModelEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void treeNodesRemoved(TreeModelEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void treeStructureChanged(TreeModelEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	public JSBMLWriter() throws Exception {
 		SBMLDocument doc = new SBMLDocument(2, 4);
 		allSpecies = new SMetabolites();
@@ -102,14 +133,15 @@ public class JSBMLWriter implements TreeModelListener{
 		}
 		
 		public Species getSpecies(String mName) {
-			Species match;
+			Species match = null;
 			for (Species cur : allSpecies) {
 				if (cur.getName() == mName) {
 					match = cur;
 				}
-			return match;
 			}
+			return match;	
 		}
+		
 		
 		public void devModel() {
 			Vector<Species> curSpecies;
@@ -139,7 +171,7 @@ public class JSBMLWriter implements TreeModelListener{
 		public ListOfReactants reactants;
 		public ListOfProducts products;
 		
-		public ListOfParameters parameters;
+		public ArrayList<Parameter> parameters;
 		public XMLEventWriter eventWriter;
 		
 		public SBMLReaction sbmlReact;
@@ -189,9 +221,9 @@ public class JSBMLWriter implements TreeModelListener{
 				sbReaction.createReactant(curS);
 			}
 			
-			this.setId(id);
-			this.setName(name);
-			this.setReversible(reversible);
+			//this.setId(id);
+			//this.setName(name);
+			
 			
 			
 			
@@ -231,36 +263,64 @@ public class JSBMLWriter implements TreeModelListener{
 		}
 		
 
-	/**
-	 * @param args
-	 */
-	/** Main routine. This does not take any arguments. */
-		public static void main(String[] args) throws Exception {
-			new JSBMLWriter();
+	
+		
+	}
+	
+	public class Parameter{
+		/*Class for easy implementation of Parameter node under listofParameters
+		 * 
+		 * Example:
+		 * <parameter id="LOWER_BOUND" value="-999999.000000" units="mmol_per_gDW_per_hr"/>
+		 * */
+		public String id;
+		public String value;
+		public String units;
+		
+		public void setId(String id) {
+			this.id = id;
 		}
-
-	@Override
-	public void treeNodesChanged(TreeModelEvent arg0) {
-		// TODO Auto-generated method stub
 		
+		public void setValue(String value) {
+			this.value = value;
+		}
+		
+		public void setUnits(String units) {
+			this.units = units;
+		}
+		
+		public String[] getKeys() {
+			String keys[];
+			if (this.units != null) {
+				keys = new String[3];
+				keys[0] = "id";
+				keys[1] = "value";
+				keys[2] = "units";
+			}
+			else {
+				keys = new String[2];
+				keys[0] = "id";
+				keys[1] = "value";
+			}
+			return keys;
+			
+		}
+		
+		public String[] getValues() {
+			String[] atr;
+			if (this.units != null) {
+				atr = new String[3];
+				atr[0] = this.id;
+				atr[1] = this.value;
+				atr[2] = this.units;
+			}
+			else {
+				atr = new String[2];
+				atr[0] = this.id;
+				atr[1] = this.value;
+			}
+					
+			return atr;
+		}
 	}
-
-	@Override
-	public void treeNodesInserted(TreeModelEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void treeNodesRemoved(TreeModelEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void treeStructureChanged(TreeModelEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-		
 }
