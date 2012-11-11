@@ -3,6 +3,7 @@ package edu.rutgers.MOST.data;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeNode;
 
 import org.sbml.jsbml.Compartment;
@@ -16,7 +17,7 @@ import org.sbml.jsbml.Species;
 import org.sbml.jsbml.SpeciesReference;
 
 
-public class JSBMLWriter {
+public class JSBMLWriter implements TreeModelListener{
 	public JSBMLWriter() throws Exception {
 		SBMLDocument doc = new SBMLDocument(2, 4);
 		
@@ -28,9 +29,9 @@ public class JSBMLWriter {
 		
 		// C
 		// Create a model history object and add author information to it.
-		History hist = model.getHistory(); // Will create the History, if it does not exist
-		Creator creator = new Creator("Given Name", "Family Name", "Organisation", "My@EMail.com");
-		hist.addCreator(creator);
+		//History hist = model.getHistory(); // Will create the History, if it does not exist
+		//Creator creator = new Creator("Given Name", "Family Name", "Organisation", "My@EMail.com");
+		//hist.addCreator(creator);
 		
 		// Create some sample content in the SBML model.
 		Species specOne = model.createSpecies("test_spec1", compartment);
@@ -61,5 +62,29 @@ public class JSBMLWriter {
 		public static void main(String[] args) throws Exception {
 			new JSBMLWriter();
 		}
+
+	@Override
+	public void treeNodesChanged(TreeModelEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void treeNodesInserted(TreeModelEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void treeNodesRemoved(TreeModelEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void treeStructureChanged(TreeModelEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 		
 }

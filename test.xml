@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!-- Created by JSBMLexample version 1.0 on 2012-11-10 23:56 with jsbml version 0.8-b1. -->
+<sbml xmlns="http://www.sbml.org/sbml/level2/version4" level="2" version="4">
+  <model id="test_model">
+    <listOfCompartments>
+      <compartment id="default" size="1.0"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="test_spec1" compartment="default"/>
+      <species id="test_spec2" compartment="default"/>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction id="reaction_id">
+        <listOfReactants>
+          <speciesReference species="test_spec1" sboTerm="SBO:0000015"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="test_spec2" sboTerm="SBO:0000011"/>
+        </listOfProducts>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
