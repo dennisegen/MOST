@@ -111,11 +111,15 @@ public class Settings {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 		    FileReader fileReader = new FileReader("settings.xml");
 		    XMLEventReader reader = factory.createXMLEventReader(fileReader);
-
+		    String currentElementValue = "";
+		    
 		    while (reader.hasNext()) {
 		      XMLEvent event = reader.nextEvent();
 		      if (event.isStartElement()) {
 		        StartElement element = (StartElement) event;
+		        currentElementValue = element.getName().toString();
+		        
+		        
 		        System.out.println("Start Element: " + element.getName());
 
 		        Iterator iterator = element.getAttributes();
@@ -134,6 +138,10 @@ public class Settings {
 		      
 		      if (event.isCharacters()) {
 		        Characters characters = (Characters) event;
+		        if (currentElementValue == "LastLoadedSBML" ) {
+		        	this.setlastL_SBML(characters.getData());
+		        	currentElementValue = "";
+		        }
 		        System.out.println("Text: " + characters.getData());
 		      }
 		    }
