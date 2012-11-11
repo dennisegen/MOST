@@ -1136,6 +1136,8 @@ public class GraphicalInterface extends JFrame {
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser(); 
 			//TODO: test the possibility of a global FileChooser
+			lastSBML_lpath = curSettings.lastL_SBML;
+			
 			if (lastSBML_lpath != null) {
 				fileChooser.setCurrentDirectory(new File(lastSBML_lpath));
 				
@@ -4168,6 +4170,7 @@ public class GraphicalInterface extends JFrame {
 
 	public static void main(String[] args) throws Exception {
 		curSettings = new Settings();
+		
 		Class.forName("org.sqlite.JDBC");       
 		DatabaseCreator databaseCreator = new DatabaseCreator();
 		setDatabaseName(ConfigConstants.DEFAULT_DATABASE_NAME);

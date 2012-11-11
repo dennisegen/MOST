@@ -7,6 +7,7 @@ import java.util.Vector;
 import java.util.List;
 
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.Reader;
@@ -28,6 +29,14 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 public class Settings {
+	public Settings() {
+		try {
+			this.read();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public String lastL_SBML;
 	public String lastS_SBML;
 	
@@ -84,6 +93,10 @@ public class Settings {
 	    writer.close();
 	}
 	
+	public boolean exists(String dir) {
+		File file=new File(dir);
+		return file.exists();
+	}
 	
 	public void setlastL_SBML(String value) {
     	this.lastL_SBML = value;
@@ -139,7 +152,10 @@ public class Settings {
 		      if (event.isCharacters()) {
 		        Characters characters = (Characters) event;
 		        if (currentElementValue == "LastLoadedSBML" ) {
-		        	this.setlastL_SBML(characters.getData());
+		        	String curAddr = characters.getData();
+		        	if (this.exists(curAddr)) {
+		        		this.setlastL_SBML(characters.getData());
+		        	}
 		        	currentElementValue = "";
 		        }
 		        System.out.println("Text: " + characters.getData());
