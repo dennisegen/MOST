@@ -26,6 +26,7 @@ import edu.rutgers.MOST.data.ReactionsMetaColumnManager;
 import edu.rutgers.MOST.data.SBMLMetabolite;
 import edu.rutgers.MOST.data.SBMLModelReader;
 import edu.rutgers.MOST.data.SBMLReaction;
+import edu.rutgers.MOST.data.Settings;
 import edu.rutgers.MOST.data.TextMetabolitesModelReader;
 import edu.rutgers.MOST.data.TextMetabolitesWriter;
 import edu.rutgers.MOST.data.TextReactionsModelReader;
@@ -98,6 +99,9 @@ public class GraphicalInterface extends JFrame {
 	public String lastCSVM_spath;
 	public String lastCSVR_spath;
 	public String lastSQL_spath;
+	
+	public static Settings curSettings;
+	
 	
 	
 	public static DefaultListModel<String> listModel = new DefaultListModel();
@@ -1134,6 +1138,8 @@ public class GraphicalInterface extends JFrame {
 			//TODO: test the possibility of a global FileChooser
 			if (lastSBML_lpath != null) {
 				fileChooser.setCurrentDirectory(new File(lastSBML_lpath));
+				
+				
 			}
 			
 			
@@ -1146,6 +1152,8 @@ public class GraphicalInterface extends JFrame {
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
 				lastSBML_lpath = rawPathName;
+				curSettings.setlastL_SBML(lastSBML_lpath);
+				
 				
 				
 				
@@ -4159,6 +4167,7 @@ public class GraphicalInterface extends JFrame {
 	/**************************************************************************/
 
 	public static void main(String[] args) throws Exception {
+		curSettings = new Settings();
 		Class.forName("org.sqlite.JDBC");       
 		DatabaseCreator databaseCreator = new DatabaseCreator();
 		setDatabaseName(ConfigConstants.DEFAULT_DATABASE_NAME);
@@ -4179,7 +4188,8 @@ public class GraphicalInterface extends JFrame {
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-
+		
+		
 		showPrompt = true;
 
 	}

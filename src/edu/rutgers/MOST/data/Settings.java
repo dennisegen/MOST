@@ -39,8 +39,6 @@ public class Settings {
 	
 	
 	public void writeMethod1() throws Exception {
-		lastL_SBML = "testthis, yep";
-		
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 
 	    XMLEventWriter writer = outputFactory.createXMLEventWriter(new FileOutputStream("settings.xml"));
@@ -78,13 +76,6 @@ public class Settings {
 
 	    
 
-	    StartElement nameSE = xmlEventFactory.createStartElement("", "", "name");
-	    writer.add(nameSE);
-	    Characters nameChars = xmlEventFactory.createCharacters("a name");
-	    writer.add(nameChars);
-	    EndElement nameEE = xmlEventFactory.createEndElement("", "", "name");
-	    writer.add(nameEE);
-
 
 	    EndDocument ed = xmlEventFactory.createEndDocument();
 	    writer.add(ed);
@@ -96,6 +87,15 @@ public class Settings {
 	
 	public void setlastL_SBML(String value) {
     	this.lastL_SBML = value;
+    	try {
+			this.writeMethod1();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			
+		}
     }
     
     public void setlastS_SBML(String value) {
