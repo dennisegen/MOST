@@ -1,1 +1,2 @@
-<?xml version='1.0' encoding='UTF-8'?><My-list><Item version="1"><code>I001</code>< :name>a name</ :name><Last Loaded SBML>testthis, yep</Last Loaded SBML></Item></My-list>
+<?xml version='1.0' encoding='UTF-8'?>
+<Settings><Attributes version="1"><LastLoadedSBML>testthis, yep</LastLoadedSBML><name>a name</name></Attributes></Settings>

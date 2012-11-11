@@ -38,7 +38,7 @@ public class Settings {
 	public String lastS_SQL;
 	
 	
-	public void write() throws Exception {
+	public void writeMethod1() throws Exception {
 		lastL_SBML = "testthis, yep";
 		
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
@@ -51,39 +51,40 @@ public class Settings {
 
 	    StartDocument startDocument = xmlEventFactory.createStartDocument("UTF-8", "1.0");
 	    writer.add(startDocument);
+	    writer.add(end);
 
-	    StartElement startElement = xmlEventFactory.createStartElement("", "", "My-list");
+	    StartElement startElement = xmlEventFactory.createStartElement("", "", "Settings");
 	    writer.add(startElement);
 
 	    Attribute attribute = xmlEventFactory.createAttribute("version", "1");
 	    List attributeList = Arrays.asList(attribute);
 	    List nsList = Arrays.asList();
 	    
-	    StartElement startElement2 = xmlEventFactory.createStartElement("", "", "Item",
+	    StartElement startElement2 = xmlEventFactory.createStartElement("", "", "Attributes",
 	        attributeList.iterator(), nsList.iterator());
 	    
+	 
 	    writer.add(startElement2);
+	    
 
-	    StartElement codeSE = xmlEventFactory.createStartElement("", "", "code");
+	    StartElement codeSE = xmlEventFactory.createStartElement("", "", "LastLoadedSBML");
 	    writer.add(codeSE);
-	    Characters codeChars = xmlEventFactory.createCharacters("I001");
+	    
+	    
+	    Characters codeChars = xmlEventFactory.createCharacters(lastL_SBML);
 	    writer.add(codeChars);
-	    EndElement codeEE = xmlEventFactory.createEndElement("", "", "code");
+	    EndElement codeEE = xmlEventFactory.createEndElement("", "", "LastLoadedSBML");
 	    writer.add(codeEE);
 
-	    StartElement nameSE = xmlEventFactory.createStartElement(" ", " ", "name");
+	    
+
+	    StartElement nameSE = xmlEventFactory.createStartElement("", "", "name");
 	    writer.add(nameSE);
 	    Characters nameChars = xmlEventFactory.createCharacters("a name");
 	    writer.add(nameChars);
 	    EndElement nameEE = xmlEventFactory.createEndElement("", "", "name");
 	    writer.add(nameEE);
 
-	    StartElement contactSE = xmlEventFactory.createStartElement("", "", "Last Loaded SBML");
-	    writer.add(contactSE);
-	    Characters contactChars = xmlEventFactory.createCharacters(lastL_SBML);
-	    writer.add(contactChars);
-	    EndElement contactEE = xmlEventFactory.createEndElement("", "", "contact");
-	    writer.add(contactEE);
 
 	    EndDocument ed = xmlEventFactory.createEndDocument();
 	    writer.add(ed);
@@ -92,28 +93,6 @@ public class Settings {
 	    writer.close();
 	}
 	
-	private void createNode(XMLEventWriter eventWriter, String name,
-		      String value) throws XMLStreamException {
-
-		    XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		    XMLEvent end = eventFactory.createDTD("\n");
-		    XMLEvent tab = eventFactory.createDTD("\t");
-		    
-		    // Create Start node
-		    StartElement sElement = eventFactory.createStartElement("", "", name);
-		    eventWriter.add(tab);
-		    eventWriter.add(sElement);
-		    
-		    // Create Content
-		    Characters characters = eventFactory.createCharacters(value);
-		    eventWriter.add(characters);
-		    
-		    // Create End node
-		    EndElement eElement = eventFactory.createEndElement("", "", name);
-		    eventWriter.add(eElement);
-		    eventWriter.add(end);
-
-	}
 	
 	public void setlastL_SBML(String value) {
     	
