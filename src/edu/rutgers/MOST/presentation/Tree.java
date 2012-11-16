@@ -37,8 +37,10 @@ class FileSystemModel implements TreeModel {
   public FileSystemModel() {
 
     root = System.getProperty("user.dir");
-    File tempFile = new File(root);
-    root = tempFile.getParent();
+   
+    
+    //File tempFile = new File(root);
+    //root = tempFile.getParent();
 
     listeners = new Vector();
   }
