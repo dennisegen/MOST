@@ -29,12 +29,17 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 public class Settings {
+	public Map mappings;
+	
 	public Settings() {
+		mappings = new Map();
 		try {
 			this.read();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			File f = new File("settings.xml");
+			boolean success = f.delete();
 		}
 	}
 	public String lastL_SBML;
@@ -46,14 +51,47 @@ public class Settings {
 	public String lastL_SQL;
 	public String lastS_SQL;
 	
+	public class Map {
+		public ArrayList<String> keys;
+		public ArrayList<String> values;
+		
+		public Map() {
+			keys = new ArrayList<String>();
+			values = new ArrayList<String>();
+		}
+		
+		public void add(String key, String value) {
+			this.keys.add(key);
+			this.values.add(value);
+		}
+		
+		public String getValue(String key) {
+			String cur = null;
+			for (String elem : keys) {
+				if (elem == key) {
+					cur = elem;
+					break;
+				}
+			}
+			return cur;
+		}
+		
+		public boolean in(String key) {
+			if (this.getValue(key) != null) {
+				return true;
+			}
+			return false;
+		}
+	}
 	
 	public void writeMethod1() throws Exception {
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 
-	    XMLEventWriter writer = outputFactory.createXMLEventWriter(new FileOutputStream("settings.xml"));
+		XMLEventWriter writer = outputFactory.createXMLEventWriter(new FileOutputStream("settings.xml"));
 	    
 	    
 	    XMLEventFactory xmlEventFactory = XMLEventFactory.newInstance();
+	    
 	    XMLEvent end = xmlEventFactory.createDTD("\n");
 
 	    StartDocument startDocument = xmlEventFactory.createStartDocument("UTF-8", "1.0");
@@ -72,9 +110,16 @@ public class Settings {
 	    
 	 
 	    writer.add(startElement2);
+	   
+	    this.addAttribute(writer, xmlEventFactory, "LastLoadedSBML", lastL_SBML);
 	    
+	    EndDocument ed = xmlEventFactory.createEndDocument();
+	    writer.add(ed);
 
-	    StartElement codeSE = xmlEventFactory.createStartElement("", "", "LastLoadedSBML");
+	    writer.flush();
+	    writer.close();
+
+	    /*StartElement codeSE = xmlEventFactory.createStartElement("", "", "LastLoadedSBML");
 	    writer.add(codeSE);
 	    
 	    
@@ -82,15 +127,33 @@ public class Settings {
 	    writer.add(codeChars);
 	    EndElement codeEE = xmlEventFactory.createEndElement("", "", "LastLoadedSBML");
 	    writer.add(codeEE);
-
+		*/
 	    
 
 
-	    EndDocument ed = xmlEventFactory.createEndDocument();
-	    writer.add(ed);
-
-	    writer.flush();
-	    writer.close();
+	    
+	}
+	
+	public void addAttribute(XMLEventWriter writer, XMLEventFactory xmlEventFactory, 
+			String key, String value) {
+		try {
+			StartElement codeSE = xmlEventFactory.createStartElement("", "", key);
+		    writer.add(codeSE);
+		    
+		    
+		    Characters codeChars = xmlEventFactory.createCharacters(value);
+		    writer.add(codeChars);
+		    EndElement codeEE = xmlEventFactory.createEndElement("", "", key);
+	    
+			writer.add(codeEE);
+			
+			mappings.add(key, value);
+			
+			
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean exists(String dir) {

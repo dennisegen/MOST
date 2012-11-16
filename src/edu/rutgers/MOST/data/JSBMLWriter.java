@@ -35,6 +35,7 @@ public class JSBMLWriter implements TreeModelListener{
 	public String sourceType;
 	public String databaseName;
 	public SMetabolites allSpecies;
+	public LocalConfig curConfig;
 	
 	/**
 	 * @param args
@@ -66,6 +67,10 @@ public class JSBMLWriter implements TreeModelListener{
 	public void treeStructureChanged(TreeModelEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void setConfig(LocalConfig conf) {
+		this.curConfig = conf;
 	}
 	
 	public void formConnect() throws Exception{
