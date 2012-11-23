@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<!-- Created by JSBMLexample version 1.0 on 2012-11-11 01:36 with jsbml version 0.8-b1. -->
+<!-- Created by JSBMLexample version 1.0 on 2012-11-23 16:39 with jsbml version 0.8-b1. -->
 <sbml xmlns="http://www.sbml.org/sbml/level2/version4" level="2" version="4">
   <model id="test_model">
     <listOfCompartments>

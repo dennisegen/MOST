@@ -18,6 +18,7 @@ import edu.rutgers.MOST.config.LocalConfig;
 import edu.rutgers.MOST.data.DatabaseCopier;
 import edu.rutgers.MOST.data.DatabaseCreator;
 import edu.rutgers.MOST.data.FBAModel;
+import edu.rutgers.MOST.data.JSBMLWriteTest;
 import edu.rutgers.MOST.data.JSBMLWriter;
 import edu.rutgers.MOST.data.MetaboliteFactory;
 import edu.rutgers.MOST.data.MetabolitesMetaColumnManager;
@@ -1125,6 +1126,17 @@ public class GraphicalInterface extends JFrame {
 	//end methods
 	/*******************************************************************************/
 
+	
+	/*******************************************************************************/
+	//Save methods and actions
+	/*******************************************************************************/ 
+	
+	
+	/*******************************************************************************/
+	//end methods
+	/*******************************************************************************/
+	
+	
 	/*******************************************************************************/
 	//load methods and actions
 	/*******************************************************************************/ 
@@ -4187,6 +4199,8 @@ public class GraphicalInterface extends JFrame {
 
 		GraphicalInterface frame = new GraphicalInterface(con);	   
 		
+		JSBMLWriteTest jTest = new JSBMLWriteTest();
+		jTest.connect(LocalConfig.getInstance());
 		
 		
 		frame.setIconImages(icons);

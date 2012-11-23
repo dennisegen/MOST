@@ -73,10 +73,10 @@ public class JSBMLWriter implements TreeModelListener{
 		this.curConfig = conf;
 	}
 	
-	public void formConnect() throws Exception{
-		LocalConfig.getInstance().setLoadedDatabase(ConfigConstants.DEFAULT_DATABASE_NAME);
-		Connection con = DriverManager.getConnection("jdbc:sqlite:" + LocalConfig.getInstance().getDatabaseName() + ".db");
-		System.out.print(con.getSchema());
+	public void formConnect(LocalConfig config) throws Exception{
+		//config.setLoadedDatabase(ConfigConstants.DEFAULT_DATABASE_NAME);
+		//Connection con = DriverManager.getConnection("jdbc:sqlite:" + config.getDatabaseName() + ".db");
+		//System.out.print(con.getSchema());
 	}
 	
 	public JSBMLWriter() throws Exception {
