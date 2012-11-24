@@ -25,6 +25,7 @@ import org.sbml.jsbml.Reaction;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.SBMLWriter;
+import org.sbml.jsbml.SBase;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.SpeciesReference;
 import org.sbml.jsbml.Unit;
@@ -454,7 +455,11 @@ public class JSBMLWriter implements TreeModelListener{
 					
 					LocalParameter lParam = new LocalParameter();
 					
+					
+					//lParam.setId(curId);
+					//lParam.setId(curId);
 					lParam.setName(curId);
+					
 					
 					lParam.setValue(Double.valueOf(value));
 					
