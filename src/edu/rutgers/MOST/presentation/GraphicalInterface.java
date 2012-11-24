@@ -1400,6 +1400,15 @@ public class GraphicalInterface extends JFrame {
 	class SaveSBMLItemAction implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
 			System.out.println("Hello");
+			try {
+				JSBMLWriter jWrite = new JSBMLWriter();
+				
+				jWrite.formConnect(LocalConfig.getInstance());
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -4210,10 +4219,6 @@ public class GraphicalInterface extends JFrame {
 		icons.add(new ImageIcon("etc/most32.jpg").getImage());
 
 		GraphicalInterface frame = new GraphicalInterface(con);	   
-		
-		JSBMLWriteTest jTest = new JSBMLWriteTest();
-		jTest.connect(LocalConfig.getInstance());
-		
 		
 		frame.setIconImages(icons);
 		frame.setSize(1000, 600);

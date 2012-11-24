@@ -1,6 +1,7 @@
 package edu.rutgers.MOST.data;
 
 import java.beans.PropertyChangeEvent;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeNode;
 import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLStreamException;
 
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.Creator;
@@ -18,6 +20,7 @@ import org.sbml.jsbml.History;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Reaction;
 import org.sbml.jsbml.SBMLDocument;
+import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.SBMLWriter;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.SpeciesReference;
@@ -34,7 +37,7 @@ import edu.rutgers.MOST.data.SBMLWriter.Parameter;
 public class JSBMLWriter implements TreeModelListener{
 	public String sourceType;
 	public String databaseName;
-	public SMetabolites allSpecies;
+	public SMetabolites allMeta;
 	public LocalConfig curConfig;
 	
 	/**
@@ -75,17 +78,42 @@ public class JSBMLWriter implements TreeModelListener{
 	
 	public void formConnect(LocalConfig config) throws Exception{
 		//config.setLoadedDatabase(ConfigConstants.DEFAULT_DATABASE_NAME);
+		System.out.println(config.getDatabaseName());
+		
+		
+		curConfig = config;
+		
+		databaseName = config.getDatabaseName();
+				
+		sourceType = "SBML";
+		
+		if (sourceType == "SBML") {
+			this.create();
+		}
+				
+		
 		//Connection con = DriverManager.getConnection("jdbc:sqlite:" + config.getDatabaseName() + ".db");
 		//System.out.print(con.getSchema());
 	}
 	
-	public JSBMLWriter() throws Exception {
+	public JSBMLWriter() {
+		
+	}
+	
+	public void create() throws Exception {
 		SBMLDocument doc = new SBMLDocument(2, 4);
-		allSpecies = new SMetabolites();
+		allMeta = new SMetabolites();
+		
 		
 		// Create a new SBML model, and add a compartment to it.
 		Model model = doc.createModel("test_model");
-		allSpecies.setModel(model);
+		allMeta.setModel(model);
+		
+		
+		
+		for (Species spec : allMeta.allSpecies) {
+			System.out.println(spec.getId());
+		}
 		
 		Compartment compartment = model.createCompartment("default");
 		compartment.setSize(1d);
@@ -128,19 +156,34 @@ public class JSBMLWriter implements TreeModelListener{
 			
 		}
 		
-		
-		public SMetabolites(MetaboliteFactory mFactory) {
-			this.parseAllMetabolites(mFactory);
+		public void setDatabase(String name) {
+			
 		}
+		
+		/*public SMetabolites(MetaboliteFactory mFactory) {
+			this.parseAllMetabolites(mFactory);
+		}*/
 		
 		public void setModel(Model model) {
 			this.model = model;
+			this.parseAllMetabolites();
 		}
 		
-		public void parseAllMetabolites(MetaboliteFactory mFactory) {
-			int length = mFactory.metaboliteCount(sourceType, databaseName);
+		public void parseAllMetabolites() {
+			MetaboliteFactory mFactory = new MetaboliteFactory();
+			int length = mFactory.maximumId(databaseName);
+			
+			//mFactory.getMetaboliteById(metaboliteId, sourceType, databaseName);
+			
+			System.out.print("Currently of size: ");
+			System.out.print(length);
+			System.out.print("\n");
+			
 			for (int i=0; i < length; i++) {
-				this.allMetabolites.add((SBMLMetabolite) mFactory.getMetaboliteById(i, sourceType, databaseName));
+				SBMLMetabolite curMeta = (SBMLMetabolite) mFactory.getMetaboliteById(i, sourceType, databaseName);
+				System.out.println(curMeta);
+				//this.allMetabolites.add((SBMLMetabolite) mFactory.getMetaboliteById(i, sourceType, databaseName));
+				
 			}
 			
 			if (this.model != null) {
@@ -222,7 +265,7 @@ public class JSBMLWriter implements TreeModelListener{
 				
 				Species curSpec = model.createSpecies(prod.getMetaboliteAbbreviation());
 				prod.getMetaboliteAbbreviation();
-				Species curS = allSpecies.getSpecies(mName);
+				Species curS = allMeta.getSpecies(mName);
 				sbReaction.createProduct(curS);
 			}
 			
@@ -233,7 +276,7 @@ public class JSBMLWriter implements TreeModelListener{
 				
 				Species curSpec = model.createSpecies(reac.getMetaboliteAbbreviation());
 				reac.getMetaboliteAbbreviation();
-				Species curS = allSpecies.getSpecies(mName);
+				Species curS = allMeta.getSpecies(mName);
 				sbReaction.createReactant(curS);
 			}
 			
