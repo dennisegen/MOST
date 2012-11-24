@@ -43,6 +43,8 @@ public class JSBMLWriter implements TreeModelListener{
 	public SMetabolites allMeta;
 	public LocalConfig curConfig;
 	public SReactions allReacts;
+	public int level;
+	public int version;
 	
 	/**
 	 * @param args
@@ -105,7 +107,9 @@ public class JSBMLWriter implements TreeModelListener{
 	}
 	
 	public void create() throws Exception {
-		SBMLDocument doc = new SBMLDocument(2, 4);
+		level = 2;
+		version = 4;
+		SBMLDocument doc = new SBMLDocument(level, version);
 		allMeta = new SMetabolites();
 		allReacts = new SReactions();
 		
@@ -132,8 +136,8 @@ public class JSBMLWriter implements TreeModelListener{
 		mmolgh.addUnit(mole);
 		mmolgh.addUnit(gram);
 		mmolgh.addUnit(second);
-		mmolgh.setLevel(2);
-		mmolgh.setVersion(4);
+		mmolgh.setLevel(level);
+		mmolgh.setVersion(version);
 		
 		model.addUnitDefinition(mmolgh);
 		
@@ -412,8 +416,8 @@ public class JSBMLWriter implements TreeModelListener{
 					curSpec.setId(curR.getMetaboliteAbbreviation());
 					curSpec.setStoichiometry(curR.getStoic());
 					
-					curSpec.setLevel(2);
-					curSpec.setVersion(4);
+					curSpec.setLevel(level);
+					curSpec.setVersion(version);
 					curReact.addReactant(curSpec);
 				}
 				
@@ -422,8 +426,8 @@ public class JSBMLWriter implements TreeModelListener{
 					SBMLProduct curP = (SBMLProduct) curProduct;
 					curSpec.setId(curP.getMetaboliteAbbreviation());
 					curSpec.setStoichiometry(curP.getStoic());
-					curSpec.setLevel(2);
-					curSpec.setVersion(4);
+					curSpec.setLevel(level);
+					curSpec.setVersion(version);
 					
 					curReact.addProduct(curSpec);
 				}
