@@ -144,7 +144,7 @@ public class JSBMLWriter implements TreeModelListener{
 		SBMLWriter sbmlwrite = new SBMLWriter();
 		
 		
-		sbmlwrite.write(doc, "test.xml", "JSBMLexample", "1.0");
+		sbmlwrite.write(doc, "test.xml", "MOST", "1.0");
 	}
 	
 	public class SMetabolites {
