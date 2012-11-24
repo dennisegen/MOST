@@ -149,11 +149,12 @@ public class JSBMLWriter implements TreeModelListener{
 	
 	public class SMetabolites {
 		public Model model;
-		public Vector<SBMLMetabolite> allMetabolites;
-		public Vector<Species> allSpecies;
+		public ArrayList<SBMLMetabolite> allMetabolites;
+		public ArrayList<Species> allSpecies;
 	
 		public SMetabolites() {
-			
+			allMetabolites = new ArrayList();
+			allSpecies = new ArrayList();
 		}
 		
 		public void setDatabase(String name) {
@@ -179,10 +180,10 @@ public class JSBMLWriter implements TreeModelListener{
 			System.out.print(length);
 			System.out.print("\n");
 			
-			for (int i=0; i < length; i++) {
+			for (int i=1; i <= length; i++) {
 				SBMLMetabolite curMeta = (SBMLMetabolite) mFactory.getMetaboliteById(i, sourceType, databaseName);
 				System.out.println(curMeta);
-				//this.allMetabolites.add((SBMLMetabolite) mFactory.getMetaboliteById(i, sourceType, databaseName));
+				this.allMetabolites.add(curMeta);
 				
 			}
 			
