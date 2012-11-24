@@ -39,6 +39,7 @@ public class JSBMLWriter implements TreeModelListener{
 	public String databaseName;
 	public SMetabolites allMeta;
 	public LocalConfig curConfig;
+	public SReactions allReacts;
 	
 	/**
 	 * @param args
@@ -103,12 +104,13 @@ public class JSBMLWriter implements TreeModelListener{
 	public void create() throws Exception {
 		SBMLDocument doc = new SBMLDocument(2, 4);
 		allMeta = new SMetabolites();
+		allReacts = new SReactions();
 		
 		
 		// Create a new SBML model, and add a compartment to it.
-		Model model = doc.createModel("test_model");
+		Model model = doc.createModel(databaseName + "1");
 		allMeta.setModel(model);
-		
+		allReacts.setModel(model);
 		
 		
 		for (Species spec : allMeta.allSpecies) {
@@ -125,17 +127,17 @@ public class JSBMLWriter implements TreeModelListener{
 		//hist.addCreator(creator);
 		
 		// Create some sample content in the SBML model.
-		Species specOne = model.createSpecies("test_spec1", compartment);
-		Species specTwo = model.createSpecies("test_spec2", compartment);
+		//Species specOne = model.createSpecies("test_spec1", compartment);
+		//Species specTwo = model.createSpecies("test_spec2", compartment);
 		
-		Reaction sbReaction = model.createReaction("reaction_id");
+		//Reaction sbReaction = model.createReaction("reaction_id");
 		
 		
 		// Add a substrate (SBO:0000015) and product (SBO:0000011) to the reaction.
-		SpeciesReference subs = sbReaction.createReactant(specOne);
+		/*SpeciesReference subs = sbReaction.createReactant(specOne);
 		subs.setSBOTerm(15);
 		SpeciesReference prod = sbReaction.createProduct(specTwo);
-		prod.setSBOTerm(11);
+		prod.setSBOTerm(11);*/
 		
 		// For brevity, WE DO NOT PERFORM ERROR CHECKING, but you should,
 		// using the method doc.checkConsistency() and then checking the error log.
@@ -220,6 +222,58 @@ public class JSBMLWriter implements TreeModelListener{
 		}
 	}
 	
+	public class SReactions {
+		public Model model;
+		public ArrayList<SBMLReaction> allReactions;
+	
+		public SReactions() {
+			allReactions = new ArrayList();
+		}
+		public void setModel(Model model) {
+			this.model = model;
+			this.parseAllReactions();
+		}
+		
+		public void parseAllReactions() {
+			ReactionFactory rFactory = new ReactionFactory();
+			
+			int length = rFactory.getAllReactions(sourceType, databaseName).size();
+			
+			
+			for (int i = 0 ; i<= length; i++) {
+				SBMLReaction curReact = (SBMLReaction) rFactory.getReactionById(i, sourceType, databaseName);
+				System.out.println(curReact);
+				allReactions.add(curReact);
+			}
+			
+			
+			if (this.model != null) {
+				this.devModel();
+			}
+		}
+		
+		/*public Species getReaction(String mName) {
+			Species match = null;
+			for (Species cur : allReactions) {
+				if (cur.getName() == mName) {
+					match = cur;
+				}
+			}
+			return match;	
+		}*/
+		
+		
+		public void devModel() {
+			Vector<Species> curSpecies;
+			
+			int count = 0;
+			for (SBMLReaction cur : allReactions) {
+				Reaction curReact = model.createReaction(cur.getReactionName());
+				
+			}
+			
+		}
+	}
 	
 	
 	public class SReaction {
