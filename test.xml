@@ -1,7 +1,16 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<!-- Created by MOST version 1.0 on 2012-11-24 15:20 with jsbml version 0.8-b1. -->
+<!-- Created by MOST version 1.0 on 2012-11-24 15:51 with jsbml version 0.8-b1. -->
 <sbml xmlns="http://www.sbml.org/sbml/level2/version4" level="2" version="4">
   <model id="Ec_core_flux1_no_boundaries1">
+    <listOfUnitDefinitions>
+      <unitDefinition name="mmol_per_gDW_per_hr">
+        <listOfUnits>
+          <unit scale="-3" kind="mole"/>
+          <unit exponent="-1" kind="gram"/>
+          <unit exponent="-1" kind="second"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
     <listOfCompartments>
       <compartment id="Cytosol"/>
       <compartment id="Extra_organism"/>

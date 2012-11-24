@@ -14,6 +14,7 @@ import javax.swing.tree.TreeNode;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 
+import org.sbml.jsbml.ASTNode;
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.Creator;
 import org.sbml.jsbml.History;
@@ -26,6 +27,9 @@ import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.SBMLWriter;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.SpeciesReference;
+import org.sbml.jsbml.Unit;
+import org.sbml.jsbml.Unit.Kind;
+import org.sbml.jsbml.UnitDefinition;
 
 import edu.rutgers.MOST.config.ConfigConstants;
 import edu.rutgers.MOST.config.LocalConfig;
@@ -106,6 +110,32 @@ public class JSBMLWriter implements TreeModelListener{
 		
 		// Create a new SBML model, and add a compartment to it.
 		Model model = doc.createModel(databaseName + "1");
+		UnitDefinition mmolgh = new UnitDefinition();
+		
+		Unit mole = new Unit();
+		mole.setKind(Kind.MOLE);
+		mole.setScale(-3);
+		
+		Unit gram = new Unit();
+		gram.setKind(Kind.GRAM);
+		gram.setExponent(-1);
+		
+		Unit second = new Unit();
+		second.setKind(Kind.SECOND);
+		//second.setMultiplier(.00027777);
+		second.setExponent(-1);
+		
+		mmolgh.setName("mmol_per_gDW_per_hr");
+		
+		mmolgh.addUnit(mole);
+		mmolgh.addUnit(gram);
+		mmolgh.addUnit(second);
+		mmolgh.setLevel(2);
+		mmolgh.setVersion(4);
+		
+		model.addUnitDefinition(mmolgh);
+		
+		
 		allMeta.setModel(model);
 		allReacts.setModel(model);
 		
@@ -340,6 +370,11 @@ public class JSBMLWriter implements TreeModelListener{
 				
 				KineticLaw law = new KineticLaw();
 				
+				ASTNode node = new ASTNode();
+				
+				
+				
+				
 				for (Parameter param : parameters) {
 					String curId = param.getId();
 					String value = param.getValue();
@@ -348,7 +383,7 @@ public class JSBMLWriter implements TreeModelListener{
 					LocalParameter lParam = new LocalParameter();
 					
 					lParam.setName(curId);
-					//curLaw.set
+					
 					lParam.setValue(Double.valueOf(value));
 					
 					if (units != null) {
