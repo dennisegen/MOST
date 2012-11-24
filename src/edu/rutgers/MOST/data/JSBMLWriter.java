@@ -18,6 +18,7 @@ import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.Creator;
 import org.sbml.jsbml.History;
 import org.sbml.jsbml.KineticLaw;
+import org.sbml.jsbml.LocalParameter;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Reaction;
 import org.sbml.jsbml.SBMLDocument;
@@ -28,11 +29,6 @@ import org.sbml.jsbml.SpeciesReference;
 
 import edu.rutgers.MOST.config.ConfigConstants;
 import edu.rutgers.MOST.config.LocalConfig;
-import edu.rutgers.MOST.data.SBMLWriter.ListOfParameters;
-import edu.rutgers.MOST.data.SBMLWriter.ListOfProducts;
-import edu.rutgers.MOST.data.SBMLWriter.ListOfReactants;
-import edu.rutgers.MOST.data.SBMLWriter.Notes;
-import edu.rutgers.MOST.data.SBMLWriter.Parameter;
 
 
 public class JSBMLWriter implements TreeModelListener{
@@ -216,8 +212,13 @@ public class JSBMLWriter implements TreeModelListener{
 				String bound = cur.getBoundary();
 				String mAbrv = cur.getMetaboliteAbbreviation();
 				String mName = cur.getMetaboliteName();
+				//int charge = Integer.getInteger(cur.getCharge());
+				
+				
+				
 				Species curSpec = model.createSpecies(mAbrv, compartment);
 				curSpec.setName(mName);
+				//curSpec.setCharge(charge);
 				
 				allSpecies.add(curSpec);
 			}
@@ -276,8 +277,13 @@ public class JSBMLWriter implements TreeModelListener{
 				String id = cur.getReactionAbbreviation();
 				String name = cur.getReactionName();
 				ArrayList<SBMLReactant> curReactants = cur.getReactantsList();
-				ArrayList<SBMLProduct> curProducts = cur.getProductsList();
 				
+				//System.out.println("Reactants [Size]: " + String.valueOf(cur.getReactantsList().size()));
+				
+				//curReactants.addAll(cur.getReactantsList());
+				
+				ArrayList<SBMLProduct> curProducts = cur.getProductsList();
+				//System.out.println("Products [Size]: " + String.valueOf(curProducts.size()));
 				
 				
 				Boolean reversible = Boolean.valueOf(cur.getReversible());
@@ -288,22 +294,88 @@ public class JSBMLWriter implements TreeModelListener{
 				String reducCost = "0.000000"; //TODO Find proper value
 				
 				
+				ArrayList<Parameter> parameters= new ArrayList();
+				
+				Parameter lbound = new Parameter();
+				lbound.setId("LOWER_BOUND");
+				lbound.setValue(lowerBound);
+				lbound.setUnits("mmol_per_gDW_per_hr");
+				parameters.add(lbound);
+				
+				
+				Parameter ubound = new Parameter();
+				ubound.setId("UPPER_BOUND");
+				ubound.setValue(upperBound);
+				ubound.setUnits("mmol_per_gDW_per_hr");
+				parameters.add(ubound);
+				
+				
+				Parameter objCoeff = new Parameter();
+				objCoeff.setId("OBJECTIVE_COEFFICIENT");
+				objCoeff.setValue(objectCoeff);
+				parameters.add(objCoeff);
+								
+				
+				Parameter fluxVal = new Parameter();
+				fluxVal.setId("FLUX_VALUE");
+				fluxVal.setValue(fluxValue);
+				fluxVal.setUnits("mmol_per_gDW_per_hr");
+				parameters.add(fluxVal);
+				
+				Parameter redCost = new Parameter();
+				redCost.setValue(reducCost);
+				redCost.setId("REDUCED_COST");
+				parameters.add(redCost);
+				
+				
 				Reaction curReact = model.createReaction(id);
 				curReact.setName(name);
 				curReact.setReversible(reversible);
 				
-				/*for (SBMLReactant reactant : curReactants) {
+				
+				
+				
+				
+				//"http://www.w3.org/1998/Math/MathML"
+				
+				KineticLaw law = new KineticLaw();
+				
+				for (Parameter param : parameters) {
+					String curId = param.getId();
+					String value = param.getValue();
+					String units = param.getUnits();
+					
+					LocalParameter lParam = new LocalParameter();
+					
+					lParam.setName(curId);
+					//curLaw.set
+					lParam.setValue(Double.valueOf(value));
+					
+					if (units != null) {
+						lParam.setUnits(units);
+					}
+					
+					law.addLocalParameter(lParam);
+				}
+								
+				curReact.setKineticLaw(law);
+				
+				/*				
+				for (SBMLReactant reactant : curReactants) {
 					//System.out.println(reactant);
 					//SpeciesReference specref = new SpeciesReference();
 					//specref.setId(reactant.getMetaboliteAbbreviation());
 
 					
 					//curReact.addReactant(specref);
-				}*/
+				}
+				*/
 				
 				//curReact.setCompartment(compartmentID);
 				
-				KineticLaw kl = new KineticLaw();
+				
+				
+				
 				
 				
 				//kl.
@@ -314,110 +386,7 @@ public class JSBMLWriter implements TreeModelListener{
 	}
 	
 	
-	public class SReaction {
-		
-		public String id;
-		public String name;
-		public String reversible;
-		public Notes note;
-		public ListOfReactants reactants;
-		public ListOfProducts products;
-		
-		public ArrayList<Parameter> parameters;
-		public XMLEventWriter eventWriter;
-		
-		public SBMLReaction sbmlReact;
-		
-		public Species modelSpec;
-		public Model model;
-		
-		public void setSBMLReaction(SBMLReaction sbmlReact) {
-			this.sbmlReact = sbmlReact;
-			
-			
-			
-			String id = sbmlReact.getReactionAbbreviation();
-			String name = sbmlReact.getReactionName();
-			String reversible = sbmlReact.getReversible();
-			String lowerBound = String.valueOf(sbmlReact.getLowerBound()); 
-			String upperBound = String.valueOf(sbmlReact.getUpperBound()); 
-			String objectCoeff = "0.000000"; //TODO Find proper value
-			String fluxValue = String.valueOf(sbmlReact.getFluxValue()); 
-			String reducCost = "0.000000"; //TODO Find proper value
-			
-			Reaction sbReaction = model.createReaction(name);
-			
-			sbReaction.setReversible(Boolean.getBoolean(reversible));
-			
-			//TODO: KineticLaw kw;
-			//TODO: sbReaction.setKineticLaw(kineticLaw);
-			
-			ArrayList<SBMLProduct> prodList = sbmlReact.getProductsList(); //Convert elements to Product instances
-			for (SBMLProduct prod : prodList) {
-				String mName = prod.getMetaboliteAbbreviation();
-				
-				Species curSpec = model.createSpecies(prod.getMetaboliteAbbreviation());
-				prod.getMetaboliteAbbreviation();
-				Species curS = allMeta.getSpecies(mName);
-				sbReaction.createProduct(curS);
-			}
-			
-			
-			ArrayList<SBMLReactant> reactList = sbmlReact.getReactantsList(); //Convert elements to Reactant instances
-			for (SBMLReactant reac : reactList) {
-				String mName = reac.getMetaboliteAbbreviation();
-				
-				Species curSpec = model.createSpecies(reac.getMetaboliteAbbreviation());
-				reac.getMetaboliteAbbreviation();
-				Species curS = allMeta.getSpecies(mName);
-				sbReaction.createReactant(curS);
-			}
-			
-			//this.setId(id);
-			//this.setName(name);
-			
-			
-			
-			
-			
-			Parameter lbound = new Parameter();
-			lbound.setId("LOWER_BOUND");
-			lbound.setValue(lowerBound);
-			lbound.setUnits("mmol_per_gDW_per_hr");
-			
-			
-			Parameter ubound = new Parameter();
-			ubound.setId("UPPER_BOUND");
-			ubound.setValue(upperBound);
-			ubound.setUnits("mmol_per_gDW_per_hr");
-
-			
-			Parameter objCoeff = new Parameter();
-			objCoeff.setId("OBJECTIVE_COEFFICIENT");
-			objCoeff.setValue(objectCoeff);
-			
-			Parameter fluxVal = new Parameter();
-			fluxVal.setId("FLUX_VALUE");
-			fluxVal.setValue(fluxValue);
-			fluxVal.setUnits("mmol_per_gDW_per_hr");
-			
-			
-			Parameter redCost = new Parameter();
-			redCost.setValue(reducCost);
-			redCost.setId("REDUCED_COST");
-			
-			
-			parameters.add(lbound);
-			parameters.add(ubound);
-			parameters.add(objCoeff);
-			parameters.add(fluxVal);
-			parameters.add(redCost);	
-		}
-		
-
 	
-		
-	}
 	
 	public class Parameter{
 		/*Class for easy implementation of Parameter node under listofParameters
@@ -428,6 +397,18 @@ public class JSBMLWriter implements TreeModelListener{
 		public String id;
 		public String value;
 		public String units;
+		
+		public String getId() {
+			return id;
+		}
+		
+		public String getValue() {
+			return value;
+		}
+		
+		public String getUnits() {
+			return units;
+		}
 		
 		public void setId(String id) {
 			this.id = id;
