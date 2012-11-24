@@ -555,6 +555,11 @@ public class GraphicalInterface extends JFrame {
 		
 		modelMenu.addSeparator();
 
+		JMenuItem saveSBMLItem = new JMenuItem("Save As SBML");
+		modelMenu.add(saveSBMLItem);
+		saveSBMLItem.setMnemonic(KeyEvent.VK_O);
+		saveSBMLItem.addActionListener(new SaveSBMLItemAction());
+		
 		JMenuItem saveCSVMetabolitesItem = new JMenuItem("Save As CSV Metabolites");
 		modelMenu.add(saveCSVMetabolitesItem);
 		saveCSVMetabolitesItem.setMnemonic(KeyEvent.VK_O);
@@ -1391,6 +1396,13 @@ public class GraphicalInterface extends JFrame {
 	/*******************************************************************************/
 	//save methods and actions
 	/*******************************************************************************/
+	
+	class SaveSBMLItemAction implements ActionListener {
+		public void actionPerformed(ActionEvent ae) {
+			System.out.println("Hello");
+		}
+	}
+	
 	
 	class SaveCSVMetabolitesItemAction implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
