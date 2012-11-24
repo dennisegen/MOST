@@ -110,6 +110,8 @@ public class Settings {
 	    
 	 
 	    writer.add(startElement2);
+	    
+	    
 	   
 	    this.addAttribute(writer, xmlEventFactory, "LastLoadedSBML", lastL_SBML);
 	    

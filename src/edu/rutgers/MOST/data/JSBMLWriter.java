@@ -30,6 +30,7 @@ import org.sbml.jsbml.SpeciesReference;
 import org.sbml.jsbml.Unit;
 import org.sbml.jsbml.Unit.Kind;
 import org.sbml.jsbml.UnitDefinition;
+import org.sbml.jsbml.xml.XMLNode;
 
 import edu.rutgers.MOST.config.ConfigConstants;
 import edu.rutgers.MOST.config.LocalConfig;
@@ -274,7 +275,7 @@ public class JSBMLWriter implements TreeModelListener{
 			int length = rFactory.getAllReactions(sourceType, databaseName).size();
 			
 			
-			for (int i = 0 ; i<= length; i++) {
+			for (int i = 1 ; i<= length; i++) {
 				SBMLReaction curReact = (SBMLReaction) rFactory.getReactionById(i, sourceType, databaseName);
 				System.out.println(curReact);
 				allReactions.add(curReact);
@@ -302,26 +303,37 @@ public class JSBMLWriter implements TreeModelListener{
 			
 			int count = 0;
 			System.out.println();
+			model.addNamespace("html");
+			model.addNamespace("html:p");
+			ReactantFactory reFactory = new ReactantFactory();
+			ProductFactory prFactory = new ProductFactory();
+			
 			for (SBMLReaction cur : allReactions) {
 				
 				String id = cur.getReactionAbbreviation();
 				String name = cur.getReactionName();
-				ArrayList<SBMLReactant> curReactants = cur.getReactantsList();
+				//ArrayList<SBMLReactant> curReactants = cur.getReactantsList();
+				
+				
+				
+				
 				
 				//System.out.println("Reactants [Size]: " + String.valueOf(cur.getReactantsList().size()));
 				
 				//curReactants.addAll(cur.getReactantsList());
-				
-				ArrayList<SBMLProduct> curProducts = cur.getProductsList();
+			
+				//ArrayList<SBMLProduct> curProducts = cur.getProductsList();
 				//System.out.println("Products [Size]: " + String.valueOf(curProducts.size()));
 				
 				
 				Boolean reversible = Boolean.valueOf(cur.getReversible());
 				String lowerBound = String.valueOf(cur.getLowerBound()); 
 				String upperBound = String.valueOf(cur.getUpperBound()); 
-				String objectCoeff = "0.000000"; //TODO Find proper value
+				String objectCoeff = String.valueOf(cur.getBiologicalObjective());
 				String fluxValue = String.valueOf(cur.getFluxValue()); 
 				String reducCost = "0.000000"; //TODO Find proper value
+				
+				
 				
 				
 				ArrayList<Parameter> parameters= new ArrayList();
@@ -362,7 +374,68 @@ public class JSBMLWriter implements TreeModelListener{
 				curReact.setName(name);
 				curReact.setReversible(reversible);
 				
+				String geneAssoc = cur.getMeta1();
+				String proteinAssoc = cur.getMeta2();
+				String subSystem = cur.getMeta3();
+				String proteinClass = cur.getMeta4();
 				
+				
+				
+				
+				XMLNode node = new XMLNode();
+				
+				/*
+				node.clearAttributes();
+				node.addAttr("GENE_ASSOCIATION", geneAssoc);
+				node.addAttr("PROTEIN_ASSOCIATION", proteinAssoc);
+				node.addAttr("SUBSYSTEM",subSystem);
+				node.addAttr("PROTEIN_CLASS",proteinClass);
+				*/
+				
+				Notes attr = new Notes(cur);
+				
+				/*
+				for (String note : attr.getNotes()) {
+					curReact.appendNotes(note);
+				}
+				*/
+				
+				
+				ArrayList<ModelReactant> curReactants = reFactory.getReactantsByReactionId(cur.getId(), sourceType, databaseName);
+				
+				ArrayList<ModelProduct> curProducts = prFactory.getProductsByReactionId(cur.getId(), sourceType, databaseName);
+				
+				for (ModelReactant curReactant : curReactants) {
+					SpeciesReference curSpec = new SpeciesReference();
+					SBMLReactant curR = (SBMLReactant) curReactant;
+					curSpec.setId(curR.getMetaboliteAbbreviation());
+					curSpec.setStoichiometry(curR.getStoic());
+					
+					curSpec.setLevel(2);
+					curSpec.setVersion(4);
+					curReact.addReactant(curSpec);
+				}
+				
+				for (ModelProduct curProduct : curProducts) {
+					SpeciesReference curSpec = new SpeciesReference();
+					SBMLProduct curP = (SBMLProduct) curProduct;
+					curSpec.setId(curP.getMetaboliteAbbreviation());
+					curSpec.setStoichiometry(curP.getStoic());
+					curSpec.setLevel(2);
+					curSpec.setVersion(4);
+					
+					curReact.addProduct(curSpec);
+				}
+				
+				//curReact.addNamespace("html:p");
+				//curReact.appendNotes(attr);
+				
+				
+				//curReact.setNotes(attr.toString());
+				
+				
+				//curReact.setNotes(node);
+				//curReact.writeXMLAttributes();
 				
 				
 				
@@ -370,7 +443,6 @@ public class JSBMLWriter implements TreeModelListener{
 				
 				KineticLaw law = new KineticLaw();
 				
-				ASTNode node = new ASTNode();
 				
 				
 				
@@ -421,6 +493,71 @@ public class JSBMLWriter implements TreeModelListener{
 	}
 	
 	
+	public class Notes {
+		public String geneAssoc;
+		public String proteinAssoc;
+		public String subSystem;
+		public String proteinClass;
+		
+		public Notes(SBMLReaction react) {
+			geneAssoc = react.getMeta1();
+			proteinAssoc = react.getMeta2();
+			subSystem = react.getMeta3();
+			proteinClass = react.getMeta4();
+		}
+		
+		public String[] getNotes() {
+			String[] lines = new String[4];
+			
+			String[] keys = this.getKeys();
+			String[] values = this.getValues();
+			
+			for (int i=0 ; i<4; i++) {
+				lines[i] = this.toNode(keys[i],values[i]);
+			} 
+			return lines;
+		}
+		
+		@Override
+		public String toString() {
+			String curStr = "";
+			String[] keys = this.getKeys();
+			String[] values = this.getValues();
+			for (int i=0 ; i<4; i++) {
+				curStr += this.toNode(keys[i],values[i]);
+			}
+			return curStr;
+		}
+		
+		public String[] getKeys() {
+			String[] keys = new String[4];
+			keys[0] = "GENE_ASSOCIATION";
+			keys[1] = "PROTEIN_ASSOCIATION";
+			keys[2] = "SUBSYSTEM";
+			keys[3] = "PROTEIN_CLASS";
+			return keys;
+		}
+		
+		public String[] getValues() {
+			String[] values = new String[4];
+			values[0] = geneAssoc;
+			values[1] = proteinAssoc;
+			values[2] = subSystem;
+			values[3] = proteinClass;
+			return values;
+		}
+		
+		public String toNode(String key, String value) {
+			String curStr = "<html:p>";
+			curStr += key + ": " + value + "</html:p>\n";
+			return curStr;
+			
+		}
+		
+		public void setGeneAssoc(String assoc) {
+			
+		}
+	}
 	
 	
 	public class Parameter{
