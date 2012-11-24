@@ -17,6 +17,7 @@ import javax.xml.stream.XMLStreamException;
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.Creator;
 import org.sbml.jsbml.History;
+import org.sbml.jsbml.KineticLaw;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Reaction;
 import org.sbml.jsbml.SBMLDocument;
@@ -213,8 +214,10 @@ public class JSBMLWriter implements TreeModelListener{
 				
 				Compartment compartment = model.createCompartment(cur.getCompartment());
 				String bound = cur.getBoundary();
+				String mAbrv = cur.getMetaboliteAbbreviation();
 				String mName = cur.getMetaboliteName();
-				Species curSpec = model.createSpecies(mName, compartment);
+				Species curSpec = model.createSpecies(mAbrv, compartment);
+				curSpec.setName(mName);
 				
 				allSpecies.add(curSpec);
 			}
@@ -267,9 +270,44 @@ public class JSBMLWriter implements TreeModelListener{
 			Vector<Species> curSpecies;
 			
 			int count = 0;
+			System.out.println();
 			for (SBMLReaction cur : allReactions) {
-				Reaction curReact = model.createReaction(cur.getReactionName());
 				
+				String id = cur.getReactionAbbreviation();
+				String name = cur.getReactionName();
+				ArrayList<SBMLReactant> curReactants = cur.getReactantsList();
+				ArrayList<SBMLProduct> curProducts = cur.getProductsList();
+				
+				
+				
+				Boolean reversible = Boolean.valueOf(cur.getReversible());
+				String lowerBound = String.valueOf(cur.getLowerBound()); 
+				String upperBound = String.valueOf(cur.getUpperBound()); 
+				String objectCoeff = "0.000000"; //TODO Find proper value
+				String fluxValue = String.valueOf(cur.getFluxValue()); 
+				String reducCost = "0.000000"; //TODO Find proper value
+				
+				
+				Reaction curReact = model.createReaction(id);
+				curReact.setName(name);
+				curReact.setReversible(reversible);
+				
+				/*for (SBMLReactant reactant : curReactants) {
+					//System.out.println(reactant);
+					//SpeciesReference specref = new SpeciesReference();
+					//specref.setId(reactant.getMetaboliteAbbreviation());
+
+					
+					//curReact.addReactant(specref);
+				}*/
+				
+				//curReact.setCompartment(compartmentID);
+				
+				KineticLaw kl = new KineticLaw();
+				
+				
+				//kl.
+				//curReact.setKineticLaw(kineticLaw)
 			}
 			
 		}
