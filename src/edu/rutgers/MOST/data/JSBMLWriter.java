@@ -146,9 +146,9 @@ public class JSBMLWriter implements TreeModelListener{
 		allReacts.setModel(model);
 		
 		
-		for (Species spec : allMeta.allSpecies) {
+		/*for (Species spec : allMeta.allSpecies) {
 			System.out.println(spec.getId());
-		}
+		}*/
 		
 		Compartment compartment = model.createCompartment("default");
 		compartment.setSize(1d);
@@ -217,7 +217,7 @@ public class JSBMLWriter implements TreeModelListener{
 			
 			for (int i=1; i <= length; i++) {
 				SBMLMetabolite curMeta = (SBMLMetabolite) mFactory.getMetaboliteById(i, sourceType, databaseName);
-				System.out.println(curMeta);
+				//System.out.println(curMeta);
 				this.allMetabolites.add(curMeta);
 				
 			}
@@ -310,6 +310,7 @@ public class JSBMLWriter implements TreeModelListener{
 			System.out.println();
 			model.addNamespace("html");
 			model.addNamespace("html:p");
+			MetaboliteFactory mFactory = new MetaboliteFactory();
 			ReactantFactory reFactory = new ReactantFactory();
 			ProductFactory prFactory = new ProductFactory();
 			
@@ -413,7 +414,15 @@ public class JSBMLWriter implements TreeModelListener{
 				for (ModelReactant curReactant : curReactants) {
 					SpeciesReference curSpec = new SpeciesReference();
 					SBMLReactant curR = (SBMLReactant) curReactant;
-					curSpec.setId(curR.getMetaboliteAbbreviation());
+					
+					int inId = curR.getMetaboliteId();
+					SBMLMetabolite sMReactant = (SBMLMetabolite) mFactory.getMetaboliteById(inId, sourceType, databaseName);
+					
+					String reactAbbrv = sMReactant.getMetaboliteAbbreviation();
+					
+					System.out.println("react: " + reactAbbrv);
+					
+					curSpec.setId(reactAbbrv);
 					curSpec.setStoichiometry(curR.getStoic());
 					
 					curSpec.setLevel(level);
