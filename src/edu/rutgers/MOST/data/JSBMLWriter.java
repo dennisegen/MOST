@@ -180,6 +180,7 @@ public class JSBMLWriter implements TreeModelListener{
 		
 		
 		sbmlwrite.write(doc, "test.xml", "MOST", "1.0");
+		System.out.println("Successfully outputted to test.xml");
 	}
 	
 	public class SMetabolites {
@@ -400,6 +401,7 @@ public class JSBMLWriter implements TreeModelListener{
 				
 				Notes attr = new Notes(cur);
 				
+				
 				/*
 				for (String note : attr.getNotes()) {
 					curReact.appendNotes(note);
@@ -419,9 +421,7 @@ public class JSBMLWriter implements TreeModelListener{
 					SBMLMetabolite sMReactant = (SBMLMetabolite) mFactory.getMetaboliteById(inId, sourceType, databaseName);
 					
 					String reactAbbrv = sMReactant.getMetaboliteAbbreviation();
-					
-					System.out.println("react: " + reactAbbrv);
-					
+										
 					curSpec.setId(reactAbbrv);
 					curSpec.setStoichiometry(curR.getStoic());
 					
@@ -484,27 +484,6 @@ public class JSBMLWriter implements TreeModelListener{
 				}
 								
 				curReact.setKineticLaw(law);
-				
-				/*				
-				for (SBMLReactant reactant : curReactants) {
-					//System.out.println(reactant);
-					//SpeciesReference specref = new SpeciesReference();
-					//specref.setId(reactant.getMetaboliteAbbreviation());
-
-					
-					//curReact.addReactant(specref);
-				}
-				*/
-				
-				//curReact.setCompartment(compartmentID);
-				
-				
-				
-				
-				
-				
-				//kl.
-				//curReact.setKineticLaw(kineticLaw)
 			}
 			
 		}
