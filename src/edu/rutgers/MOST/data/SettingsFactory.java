@@ -45,6 +45,13 @@ public class SettingsFactory {
 		mappings.put(key,value);
 	}
 	
+	public String get(String key) {
+		String curValue = null;
+		if (mappings.containsKey(key)) {
+			curValue = mappings.get(key);
+		}
+		return curValue;
+	}
 	public void add(Setting aSetting) {
 		String key = aSetting.getKey();
 		String value = aSetting.getValue();

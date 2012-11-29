@@ -29,6 +29,7 @@ import edu.rutgers.MOST.data.SBMLMetabolite;
 import edu.rutgers.MOST.data.SBMLModelReader;
 import edu.rutgers.MOST.data.SBMLReaction;
 import edu.rutgers.MOST.data.Settings;
+import edu.rutgers.MOST.data.SettingsFactory;
 import edu.rutgers.MOST.data.TextMetabolitesModelReader;
 import edu.rutgers.MOST.data.TextMetabolitesWriter;
 import edu.rutgers.MOST.data.TextReactionsModelReader;
@@ -102,7 +103,7 @@ public class GraphicalInterface extends JFrame {
 	public String lastCSVR_spath;
 	public String lastSQL_spath;
 	
-	public static Settings curSettings;
+	public static SettingsFactory curSettings;
 	
 	
 	
@@ -1154,11 +1155,10 @@ public class GraphicalInterface extends JFrame {
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser(); 
 			//TODO: test the possibility of a global FileChooser
-			lastSBML_lpath = curSettings.lastL_SBML;
+			lastSBML_lpath = curSettings.get("LastLoadedSBML");
 			
 			if (lastSBML_lpath != null) {
 				fileChooser.setCurrentDirectory(new File(lastSBML_lpath));
-				
 				
 			}
 			
@@ -1172,7 +1172,7 @@ public class GraphicalInterface extends JFrame {
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
 				lastSBML_lpath = rawPathName;
-				curSettings.setlastL_SBML(lastSBML_lpath);
+				curSettings.add("LastLoadedSBML",lastSBML_lpath);
 				
 				
 				
@@ -4203,7 +4203,8 @@ public class GraphicalInterface extends JFrame {
 	/**************************************************************************/
 
 	public static void main(String[] args) throws Exception {
-		curSettings = new Settings();
+		//curSettings = new Settings();
+		curSettings = new SettingsFactory();
 		
 		Class.forName("org.sqlite.JDBC");       
 		DatabaseCreator databaseCreator = new DatabaseCreator();
