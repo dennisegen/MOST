@@ -108,8 +108,9 @@ public class JSBMLWriter implements TreeModelListener{
 	
 	public void create() throws Exception {
 		level = 2;
-		version = 4;
+		version = 1;
 		SBMLDocument doc = new SBMLDocument(level, version);
+		
 		allMeta = new SMetabolites();
 		allReacts = new SReactions();
 		
@@ -482,6 +483,10 @@ public class JSBMLWriter implements TreeModelListener{
 					
 					law.addLocalParameter(lParam);
 				}
+				
+				//ASTNode mathml = new ASTNode();
+				
+				//law.setMath(math)addNamespace("http://www.w3.org/1998/Math/MathML");
 								
 				curReact.setKineticLaw(law);
 			}

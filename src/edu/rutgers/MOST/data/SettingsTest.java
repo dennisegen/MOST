@@ -11,6 +11,11 @@ public class SettingsTest {
 		//set.writeMethod1();
 		set.read();
 		System.out.println(set.lastL_SBML);
+		
+		SettingsFactory sFactory = new SettingsFactory();
+		sFactory.add("Test","Tester");
+		System.out.println(sFactory.toString());
+		sFactory.writeMethod1();
 	}
 
 }
