@@ -43,6 +43,12 @@ public class SettingsFactory {
 	
 	public void add(String key, String value) {
 		mappings.put(key,value);
+		try {
+			this.writeMethod1();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public String get(String key) {
@@ -56,6 +62,7 @@ public class SettingsFactory {
 		String key = aSetting.getKey();
 		String value = aSetting.getValue();
 		this.add(key,value);	
+		
 	}
 	
 	public boolean exists(String dir) {
