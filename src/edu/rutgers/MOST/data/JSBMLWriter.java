@@ -14,11 +14,17 @@ import javax.swing.tree.TreeNode;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.sbml.jsbml.ASTNode;
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.Creator;
 import org.sbml.jsbml.History;
 import org.sbml.jsbml.KineticLaw;
+
 import org.sbml.jsbml.LocalParameter;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Reaction;
@@ -33,6 +39,7 @@ import org.sbml.jsbml.Unit.Kind;
 import org.sbml.jsbml.UnitDefinition;
 import org.sbml.jsbml.xml.XMLNode;
 
+
 import edu.rutgers.MOST.config.ConfigConstants;
 import edu.rutgers.MOST.config.LocalConfig;
 
@@ -45,6 +52,8 @@ public class JSBMLWriter implements TreeModelListener{
 	public SReactions allReacts;
 	public int level;
 	public int version;
+	public Map<Integer, SBMLMetabolite> mapping;
+	
 	
 	/**
 	 * @param args
@@ -103,7 +112,7 @@ public class JSBMLWriter implements TreeModelListener{
 	}
 	
 	public JSBMLWriter() {
-		
+		mapping = new HashMap();
 	}
 	
 	public void create() throws Exception {
@@ -111,6 +120,9 @@ public class JSBMLWriter implements TreeModelListener{
 		version = 1;
 		SBMLDocument doc = new SBMLDocument(level, version);
 		
+	    //doc.addNamespace("html", "xmlns","http://www.w3.org/1999/xhtml");
+	    
+	    
 		allMeta = new SMetabolites();
 		allReacts = new SReactions();
 		
@@ -221,6 +233,7 @@ public class JSBMLWriter implements TreeModelListener{
 				SBMLMetabolite curMeta = (SBMLMetabolite) mFactory.getMetaboliteById(i, sourceType, databaseName);
 				//System.out.println(curMeta);
 				this.allMetabolites.add(curMeta);
+				mapping.put(i, curMeta);
 				
 			}
 			
@@ -284,7 +297,7 @@ public class JSBMLWriter implements TreeModelListener{
 			
 			for (int i = 1 ; i<= length; i++) {
 				SBMLReaction curReact = (SBMLReaction) rFactory.getReactionById(i, sourceType, databaseName);
-				System.out.println(curReact);
+				//System.out.println(curReact);
 				allReactions.add(curReact);
 			}
 			
@@ -390,24 +403,28 @@ public class JSBMLWriter implements TreeModelListener{
 				
 				
 				
-				XMLNode node = new XMLNode();
+				XMLNode gAssoc = new XMLNode();
+				XMLNode pAssoc = new XMLNode();
 				
-				/*
-				node.clearAttributes();
-				node.addAttr("GENE_ASSOCIATION", geneAssoc);
-				node.addAttr("PROTEIN_ASSOCIATION", proteinAssoc);
-				node.addAttr("SUBSYSTEM",subSystem);
-				node.addAttr("PROTEIN_CLASS",proteinClass);
-				*/
+				
+				//node.clearAttributes();
+				//gAssoc.addAttr("GENE_ASSOCIATION", geneAssoc);
+				//curReact.setNotes(gAssoc);
+				
+				//pAssoc.addAttr("PROTEIN_ASSOCIATION", proteinAssoc);
+				//curReact.appendNotes(pAssoc);
+				//node.addAttr("SUBSYSTEM",subSystem);
+				//node.addAttr("PROTEIN_CLASS",proteinClass);
+				
 				
 				Notes attr = new Notes(cur);
 				
 				
-				/*
+				
 				for (String note : attr.getNotes()) {
-					curReact.appendNotes(note);
+					
 				}
-				*/
+				
 				
 				
 				ArrayList<ModelReactant> curReactants = reFactory.getReactantsByReactionId(cur.getId(), sourceType, databaseName);
@@ -467,13 +484,12 @@ public class JSBMLWriter implements TreeModelListener{
 					String value = param.getValue();
 					String units = param.getUnits();
 					
-					LocalParameter lParam = new LocalParameter();
+					LocalParameter lParam = new LocalParameter(curId);
 					
 					
-					//lParam.setId(curId);
-					//lParam.setId(curId);
+					lParam.setId(curId);
 					lParam.setName(curId);
-					
+					lParam.setMetaId(curId);
 					
 					lParam.setValue(Double.valueOf(value));
 					

@@ -1,2 +1,2 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<Settings><Attributes version="1"><LastLoadedSBML>C:\Users\Shay\Documents\GitHub\MOST\etc\sbml\Ec_core_flux1.xml</LastLoadedSBML></Attributes></Settings>
+<Settings><Attributes version="1"><LastLoadedCSVR>C:\Users\Shay\Documents\GitHub\MOST\etc\csv\Model Reconstruction-new_metabolites.csv</LastLoadedCSVR><LastLoadedSBML>C:\Users\Shay\Documents\GitHub\MOST\etc\sbml\Ec_core_flux1_no_boundaries.xml</LastLoadedSBML><LastLoadedCSVM>C:\Users\Shay\Documents\GitHub\MOST\etc\csv\Model Reconstruction-mtb-raw.csv</LastLoadedCSVM><LastLoadedSQL>C:\Users\Shay\Documents\GitHub\MOST\Ec_core_flux1_no_boundaries.db</LastLoadedSQL></Attributes></Settings>

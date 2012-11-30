@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<!-- Created by MOST version 1.0 on 2012-11-25 15:33 with jsbml version 0.8-b1. -->
+<!-- Created by MOST version 1.0 on 2012-11-30 03:45 with jsbml version 0.8-b1. -->
 <sbml xmlns="http://www.sbml.org/sbml/level2" level="2" version="1">
-  <model id="Ec_core_flux1_no_boundaries1">
+  <model id="Ec_core_flux11">
     <listOfUnitDefinitions>
       <unitDefinition name="mmol_per_gDW_per_hr">
         <listOfUnits>
@@ -14,7 +14,7 @@
     <listOfCompartments>
       <compartment id="Cytosol"/>
       <compartment id="Extra_organism"/>
-      <compartment id="default" size="1.0"/>
+      <compartment id="default" size="1"/>
     </listOfCompartments>
     <listOfSpecies>
       <species id="M_13dpg_c" name="M_3_Phospho_D_glyceroyl_phosphate_C3H4O10P2" compartment="Cytosol"/>
@@ -98,176 +98,176 @@
     <listOfReactions>
       <reaction id="R_ACKr" name="R_acetate_kinase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_ac_c" stoichiometry="1.0"/>
-          <speciesReference id="M_atp_c" stoichiometry="1.0"/>
+          <speciesReference id="M_ac_c" stoichiometry="1"/>
+          <speciesReference id="M_atp_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_actp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_adp_c" stoichiometry="1.0"/>
+          <speciesReference id="M_actp_c" stoichiometry="1"/>
+          <speciesReference id="M_adp_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_ACONT" name="R_aconitase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_cit_c" stoichiometry="1.0"/>
+          <speciesReference id="M_cit_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_icit_c" stoichiometry="1.0"/>
+          <speciesReference id="M_icit_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="6.264896" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_ACt2r" name="R_acetate_reversible_transport_via_proton_symport" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_ac_e" stoichiometry="1.0"/>
-          <speciesReference id="M_h_e" stoichiometry="1.0"/>
+          <speciesReference id="M_ac_e" stoichiometry="1"/>
+          <speciesReference id="M_h_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_ac_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
+          <speciesReference id="M_ac_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_ADHEr" name="R_Acetaldehyde_dehydrogenase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_accoa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="2.0"/>
-          <speciesReference id="M_nadh_c" stoichiometry="2.0"/>
+          <speciesReference id="M_accoa_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="2"/>
+          <speciesReference id="M_nadh_c" stoichiometry="2"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_coa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_etoh_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nad_c" stoichiometry="2.0"/>
+          <speciesReference id="M_coa_c" stoichiometry="1"/>
+          <speciesReference id="M_etoh_c" stoichiometry="1"/>
+          <speciesReference id="M_nad_c" stoichiometry="2"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_ADK1" name="R_adenylate_kinase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_amp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_atp_c" stoichiometry="1.0"/>
+          <speciesReference id="M_amp_c" stoichiometry="1"/>
+          <speciesReference id="M_atp_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_adp_c" stoichiometry="2.0"/>
+          <speciesReference id="M_adp_c" stoichiometry="2"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_AKGDH" name="R_2_Oxogluterate_dehydrogenase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_akg_c" stoichiometry="1.0"/>
-          <speciesReference id="M_coa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nad_c" stoichiometry="1.0"/>
+          <speciesReference id="M_akg_c" stoichiometry="1"/>
+          <speciesReference id="M_coa_c" stoichiometry="1"/>
+          <speciesReference id="M_nad_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_co2_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadh_c" stoichiometry="1.0"/>
-          <speciesReference id="M_succoa_c" stoichiometry="1.0"/>
+          <speciesReference id="M_co2_c" stoichiometry="1"/>
+          <speciesReference id="M_nadh_c" stoichiometry="1"/>
+          <speciesReference id="M_succoa_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="5.335524" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_AKGt2r" name="R_2_oxoglutarate_reversible_transport_via_symport" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_akg_e" stoichiometry="1.0"/>
-          <speciesReference id="M_h_e" stoichiometry="1.0"/>
+          <speciesReference id="M_akg_e" stoichiometry="1"/>
+          <speciesReference id="M_h_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_akg_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
+          <speciesReference id="M_akg_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_ATPM" name="R_ATP_maintenance_requirement" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_atp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h2o_c" stoichiometry="1.0"/>
+          <speciesReference id="M_atp_c" stoichiometry="1"/>
+          <speciesReference id="M_h2o_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_adp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pi_c" stoichiometry="1.0"/>
+          <speciesReference id="M_adp_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
+          <speciesReference id="M_pi_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
+                  <listOfParameters>
             <parameter name="LOWER_BOUND" value="7.6" units="mmol_per_gDW_per_hr"/>
             <parameter name="UPPER_BOUND" value="7.6" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="7.6" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_ATPS4r" name="R_ATP_synthase__four_protons_for_one_ATP_" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_adp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pi_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_e" stoichiometry="4.0"/>
+          <speciesReference id="M_adp_c" stoichiometry="1"/>
+          <speciesReference id="M_pi_c" stoichiometry="1"/>
+          <speciesReference id="M_h_e" stoichiometry="4"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_atp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="3.0"/>
-          <speciesReference id="M_h2o_c" stoichiometry="1.0"/>
+          <speciesReference id="M_atp_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="3"/>
+          <speciesReference id="M_h2o_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="39.747017" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
@@ -298,1264 +298,1264 @@
           <speciesReference id="M_pi_c" stoichiometry="55.703"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="1.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="1"/>
             <parameter name="FLUX_VALUE" value="0.861407" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_CO2t" name="R_CO2_transporter_via_diffusion" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_co2_e" stoichiometry="1.0"/>
+          <speciesReference id="M_co2_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_co2_c" stoichiometry="1.0"/>
+          <speciesReference id="M_co2_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="-23.342377" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_CS" name="R_citrate_synthase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_accoa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h2o_c" stoichiometry="1.0"/>
-          <speciesReference id="M_oaa_c" stoichiometry="1.0"/>
+          <speciesReference id="M_accoa_c" stoichiometry="1"/>
+          <speciesReference id="M_h2o_c" stoichiometry="1"/>
+          <speciesReference id="M_oaa_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_cit_c" stoichiometry="1.0"/>
-          <speciesReference id="M_coa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
+          <speciesReference id="M_cit_c" stoichiometry="1"/>
+          <speciesReference id="M_coa_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="6.264896" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_CYTBD" name="R_cytochrome_oxidase_bd__ubiquinol_8_2_protons_" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_h_c" stoichiometry="2.0"/>
+          <speciesReference id="M_h_c" stoichiometry="2"/>
           <speciesReference id="M_o2_c" stoichiometry="0.5"/>
-          <speciesReference id="M_q8h2_c" stoichiometry="1.0"/>
+          <speciesReference id="M_q8h2_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h2o_c" stoichiometry="1.0"/>
-          <speciesReference id="M_q8_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_e" stoichiometry="2.0"/>
+          <speciesReference id="M_h2o_c" stoichiometry="1"/>
+          <speciesReference id="M_q8_c" stoichiometry="1"/>
+          <speciesReference id="M_h_e" stoichiometry="2"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="44.693007" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_D_LACt2" name="R_D_lactate_transport_via_proton_symport" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_h_e" stoichiometry="1.0"/>
-          <speciesReference id="M_lac_D_e" stoichiometry="1.0"/>
+          <speciesReference id="M_h_e" stoichiometry="1"/>
+          <speciesReference id="M_lac_D_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
-          <speciesReference id="M_lac_D_c" stoichiometry="1.0"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
+          <speciesReference id="M_lac_D_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_ENO" name="R_enolase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_2pg_c" stoichiometry="1.0"/>
+          <speciesReference id="M_2pg_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h2o_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pep_c" stoichiometry="1.0"/>
+          <speciesReference id="M_h2o_c" stoichiometry="1"/>
+          <speciesReference id="M_pep_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="14.84908" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_ETOHt2r" name="R_ethanol_reversible_transport_via_proton_symport" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_etoh_e" stoichiometry="1.0"/>
-          <speciesReference id="M_h_e" stoichiometry="1.0"/>
+          <speciesReference id="M_etoh_e" stoichiometry="1"/>
+          <speciesReference id="M_h_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_etoh_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
+          <speciesReference id="M_etoh_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_ac_e_" name="R_Acetate_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_ac_e" stoichiometry="1.0"/>
+          <speciesReference id="M_ac_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_ac_e" stoichiometry="1.0"/>
+          <speciesReference id="M_ac_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_akg_e_" name="R_2_Oxoglutarate_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_akg_e" stoichiometry="1.0"/>
+          <speciesReference id="M_akg_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_akg_e" stoichiometry="1.0"/>
+          <speciesReference id="M_akg_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_co2_e_" name="R_CO2_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_co2_e" stoichiometry="1.0"/>
+          <speciesReference id="M_co2_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_co2_e" stoichiometry="1.0"/>
+          <speciesReference id="M_co2_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="23.342377" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_etoh_e_" name="R_Ethanol_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_etoh_e" stoichiometry="1.0"/>
+          <speciesReference id="M_etoh_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_etoh_e" stoichiometry="1.0"/>
+          <speciesReference id="M_etoh_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_for_e_" name="R_Formate_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_for_e" stoichiometry="1.0"/>
+          <speciesReference id="M_for_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_for_e" stoichiometry="1.0"/>
+          <speciesReference id="M_for_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_fum_e_" name="R_Fumarate_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_fum_e" stoichiometry="1.0"/>
+          <speciesReference id="M_fum_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_fum_e" stoichiometry="1.0"/>
+          <speciesReference id="M_fum_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_glc_e_" name="R_D_Glucose_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_glc_D_e" stoichiometry="1.0"/>
+          <speciesReference id="M_glc_D_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_glc_D_e" stoichiometry="1.0"/>
+          <speciesReference id="M_glc_D_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-10.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="-10.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-10" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="-10" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_h2o_e_" name="R_H2O_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_h2o_e" stoichiometry="1.0"/>
+          <speciesReference id="M_h2o_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h2o_e" stoichiometry="1.0"/>
+          <speciesReference id="M_h2o_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="24.920131" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_h_e_" name="R_H_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_h_e" stoichiometry="1.0"/>
+          <speciesReference id="M_h_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h_e" stoichiometry="1.0"/>
+          <speciesReference id="M_h_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="9.112915" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_lac_D_e_" name="R_D_lactate_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_lac_D_e" stoichiometry="1.0"/>
+          <speciesReference id="M_lac_D_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_lac_D_e" stoichiometry="1.0"/>
+          <speciesReference id="M_lac_D_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_o2_e_" name="R_O2_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_o2_e" stoichiometry="1.0"/>
+          <speciesReference id="M_o2_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_o2_e" stoichiometry="1.0"/>
+          <speciesReference id="M_o2_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="-22.346504" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_pi_e_" name="R_Phosphate_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_pi_e" stoichiometry="1.0"/>
+          <speciesReference id="M_pi_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_pi_e" stoichiometry="1.0"/>
+          <speciesReference id="M_pi_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="-3.168859" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_pyr_e_" name="R_Pyruvate_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_pyr_e" stoichiometry="1.0"/>
+          <speciesReference id="M_pyr_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_pyr_e" stoichiometry="1.0"/>
+          <speciesReference id="M_pyr_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_EX_succ_e_" name="R_Succinate_exchange" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_succ_e" stoichiometry="1.0"/>
+          <speciesReference id="M_succ_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_succ_e" stoichiometry="1.0"/>
+          <speciesReference id="M_succ_b" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_FBA" name="R_fructose_bisphosphate_aldolase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_fdp_c" stoichiometry="1.0"/>
+          <speciesReference id="M_fdp_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_dhap_c" stoichiometry="1.0"/>
-          <speciesReference id="M_g3p_c" stoichiometry="1.0"/>
+          <speciesReference id="M_dhap_c" stoichiometry="1"/>
+          <speciesReference id="M_g3p_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="7.570782" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_FBP" name="R_fructose_bisphosphatase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_fdp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h2o_c" stoichiometry="1.0"/>
+          <speciesReference id="M_fdp_c" stoichiometry="1"/>
+          <speciesReference id="M_h2o_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_f6p_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pi_c" stoichiometry="1.0"/>
+          <speciesReference id="M_f6p_c" stoichiometry="1"/>
+          <speciesReference id="M_pi_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_FORt" name="R_formate_transport_via_diffusion" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_for_e" stoichiometry="1.0"/>
+          <speciesReference id="M_for_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_for_c" stoichiometry="1.0"/>
+          <speciesReference id="M_for_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_FRD" name="R_fumarate_reductase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_fadh2_c" stoichiometry="1.0"/>
-          <speciesReference id="M_fum_c" stoichiometry="1.0"/>
+          <speciesReference id="M_fadh2_c" stoichiometry="1"/>
+          <speciesReference id="M_fum_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_fad_c" stoichiometry="1.0"/>
-          <speciesReference id="M_succ_c" stoichiometry="1.0"/>
+          <speciesReference id="M_fad_c" stoichiometry="1"/>
+          <speciesReference id="M_succ_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_FUM" name="R_fumarase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_fum_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h2o_c" stoichiometry="1.0"/>
+          <speciesReference id="M_fum_c" stoichiometry="1"/>
+          <speciesReference id="M_h2o_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_mal_L_c" stoichiometry="1.0"/>
+          <speciesReference id="M_mal_L_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="5.335524" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_FUMt2_2" name="R_Fumarate_transport_via_proton_symport__2_H_" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_fum_e" stoichiometry="1.0"/>
-          <speciesReference id="M_h_e" stoichiometry="2.0"/>
+          <speciesReference id="M_fum_e" stoichiometry="1"/>
+          <speciesReference id="M_h_e" stoichiometry="2"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_fum_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="2.0"/>
+          <speciesReference id="M_fum_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="2"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_G6PDH2r" name="R_glucose_6_phosphate_dehydrogenase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_g6p_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadp_c" stoichiometry="1.0"/>
+          <speciesReference id="M_g6p_c" stoichiometry="1"/>
+          <speciesReference id="M_nadp_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_6pgl_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadph_c" stoichiometry="1.0"/>
+          <speciesReference id="M_6pgl_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
+          <speciesReference id="M_nadph_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="4.717127" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_GAPD" name="R_glyceraldehyde_3_phosphate_dehydrogenase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_g3p_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nad_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pi_c" stoichiometry="1.0"/>
+          <speciesReference id="M_g3p_c" stoichiometry="1"/>
+          <speciesReference id="M_nad_c" stoichiometry="1"/>
+          <speciesReference id="M_pi_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_13dpg_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadh_c" stoichiometry="1.0"/>
+          <speciesReference id="M_13dpg_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
+          <speciesReference id="M_nadh_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="16.137745" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_GLCpts" name="R_D_glucose_transport_via_PEPPyr_PTS" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_pep_c" stoichiometry="1.0"/>
-          <speciesReference id="M_glc_D_e" stoichiometry="1.0"/>
+          <speciesReference id="M_pep_c" stoichiometry="1"/>
+          <speciesReference id="M_glc_D_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_g6p_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pyr_c" stoichiometry="1.0"/>
+          <speciesReference id="M_g6p_c" stoichiometry="1"/>
+          <speciesReference id="M_pyr_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="10.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="10" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_GND" name="R_phosphogluconate_dehydrogenase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_6pgc_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadp_c" stoichiometry="1.0"/>
+          <speciesReference id="M_6pgc_c" stoichiometry="1"/>
+          <speciesReference id="M_nadp_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_co2_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadph_c" stoichiometry="1.0"/>
-          <speciesReference id="M_ru5p_D_c" stoichiometry="1.0"/>
+          <speciesReference id="M_co2_c" stoichiometry="1"/>
+          <speciesReference id="M_nadph_c" stoichiometry="1"/>
+          <speciesReference id="M_ru5p_D_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="4.717127" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_H2Ot" name="R_H2O_transport_via_diffusion" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_h2o_e" stoichiometry="1.0"/>
+          <speciesReference id="M_h2o_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h2o_c" stoichiometry="1.0"/>
+          <speciesReference id="M_h2o_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="-24.920131" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_ICDHyr" name="R_isocitrate_dehydrogenase__NADP_" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_icit_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadp_c" stoichiometry="1.0"/>
+          <speciesReference id="M_icit_c" stoichiometry="1"/>
+          <speciesReference id="M_nadp_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_akg_c" stoichiometry="1.0"/>
-          <speciesReference id="M_co2_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadph_c" stoichiometry="1.0"/>
+          <speciesReference id="M_akg_c" stoichiometry="1"/>
+          <speciesReference id="M_co2_c" stoichiometry="1"/>
+          <speciesReference id="M_nadph_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="6.264896" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_ICL" name="R_Isocitrate_lyase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_icit_c" stoichiometry="1.0"/>
+          <speciesReference id="M_icit_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_glx_c" stoichiometry="1.0"/>
-          <speciesReference id="M_succ_c" stoichiometry="1.0"/>
+          <speciesReference id="M_glx_c" stoichiometry="1"/>
+          <speciesReference id="M_succ_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_LDH_D" name="R_D_lactate_dehydrogenase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_lac_D_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nad_c" stoichiometry="1.0"/>
+          <speciesReference id="M_lac_D_c" stoichiometry="1"/>
+          <speciesReference id="M_nad_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadh_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pyr_c" stoichiometry="1.0"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
+          <speciesReference id="M_nadh_c" stoichiometry="1"/>
+          <speciesReference id="M_pyr_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_MALS" name="R_malate_synthase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_accoa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_glx_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h2o_c" stoichiometry="1.0"/>
+          <speciesReference id="M_accoa_c" stoichiometry="1"/>
+          <speciesReference id="M_glx_c" stoichiometry="1"/>
+          <speciesReference id="M_h2o_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_coa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
-          <speciesReference id="M_mal_L_c" stoichiometry="1.0"/>
+          <speciesReference id="M_coa_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
+          <speciesReference id="M_mal_L_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_MDH" name="R_malate_dehydrogenase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_mal_L_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nad_c" stoichiometry="1.0"/>
+          <speciesReference id="M_mal_L_c" stoichiometry="1"/>
+          <speciesReference id="M_nad_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadh_c" stoichiometry="1.0"/>
-          <speciesReference id="M_oaa_c" stoichiometry="1.0"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
+          <speciesReference id="M_nadh_c" stoichiometry="1"/>
+          <speciesReference id="M_oaa_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="5.335524" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_ME1" name="R_malic_enzyme__NAD_" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_mal_L_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nad_c" stoichiometry="1.0"/>
+          <speciesReference id="M_mal_L_c" stoichiometry="1"/>
+          <speciesReference id="M_nad_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_co2_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadh_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pyr_c" stoichiometry="1.0"/>
+          <speciesReference id="M_co2_c" stoichiometry="1"/>
+          <speciesReference id="M_nadh_c" stoichiometry="1"/>
+          <speciesReference id="M_pyr_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_ME2" name="R_malic_enzyme__NADP_" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_mal_L_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadp_c" stoichiometry="1.0"/>
+          <speciesReference id="M_mal_L_c" stoichiometry="1"/>
+          <speciesReference id="M_nadp_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_co2_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadph_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pyr_c" stoichiometry="1.0"/>
+          <speciesReference id="M_co2_c" stoichiometry="1"/>
+          <speciesReference id="M_nadph_c" stoichiometry="1"/>
+          <speciesReference id="M_pyr_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_NADH11" name="R_NADH_dehydrogenase__ubiquinone_8__2_protons_" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_h_c" stoichiometry="3.0"/>
-          <speciesReference id="M_nadh_c" stoichiometry="1.0"/>
-          <speciesReference id="M_q8_c" stoichiometry="1.0"/>
+          <speciesReference id="M_h_c" stoichiometry="3"/>
+          <speciesReference id="M_nadh_c" stoichiometry="1"/>
+          <speciesReference id="M_q8_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_nad_c" stoichiometry="1.0"/>
-          <speciesReference id="M_q8h2_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_e" stoichiometry="2.0"/>
+          <speciesReference id="M_nad_c" stoichiometry="1"/>
+          <speciesReference id="M_q8h2_c" stoichiometry="1"/>
+          <speciesReference id="M_h_e" stoichiometry="2"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="39.357484" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_NADTRHD" name="R_NAD_transhydrogenase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_nad_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadph_c" stoichiometry="1.0"/>
+          <speciesReference id="M_nad_c" stoichiometry="1"/>
+          <speciesReference id="M_nadph_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_nadh_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadp_c" stoichiometry="1.0"/>
+          <speciesReference id="M_nadh_c" stoichiometry="1"/>
+          <speciesReference id="M_nadp_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_O2t" name="R_o2_transport__diffusion_" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_o2_e" stoichiometry="1.0"/>
+          <speciesReference id="M_o2_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_o2_c" stoichiometry="1.0"/>
+          <speciesReference id="M_o2_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="22.346504" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PDH" name="R_pyruvate_dehydrogenase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_coa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nad_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pyr_c" stoichiometry="1.0"/>
+          <speciesReference id="M_coa_c" stoichiometry="1"/>
+          <speciesReference id="M_nad_c" stoichiometry="1"/>
+          <speciesReference id="M_pyr_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_accoa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_co2_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadh_c" stoichiometry="1.0"/>
+          <speciesReference id="M_accoa_c" stoichiometry="1"/>
+          <speciesReference id="M_co2_c" stoichiometry="1"/>
+          <speciesReference id="M_nadh_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="9.493279" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PFK" name="R_phosphofructokinase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_atp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_f6p_c" stoichiometry="1.0"/>
+          <speciesReference id="M_atp_c" stoichiometry="1"/>
+          <speciesReference id="M_f6p_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_adp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_fdp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
+          <speciesReference id="M_adp_c" stoichiometry="1"/>
+          <speciesReference id="M_fdp_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="7.570782" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PFL" name="R_pyruvate_formate_lyase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_coa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pyr_c" stoichiometry="1.0"/>
+          <speciesReference id="M_coa_c" stoichiometry="1"/>
+          <speciesReference id="M_pyr_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_accoa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_for_c" stoichiometry="1.0"/>
+          <speciesReference id="M_accoa_c" stoichiometry="1"/>
+          <speciesReference id="M_for_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PGI" name="R_glucose_6_phosphate_isomerase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_g6p_c" stoichiometry="1.0"/>
+          <speciesReference id="M_g6p_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_f6p_c" stoichiometry="1.0"/>
+          <speciesReference id="M_f6p_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="5.106285" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PGK" name="R_phosphoglycerate_kinase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_3pg_c" stoichiometry="1.0"/>
-          <speciesReference id="M_atp_c" stoichiometry="1.0"/>
+          <speciesReference id="M_3pg_c" stoichiometry="1"/>
+          <speciesReference id="M_atp_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_13dpg_c" stoichiometry="1.0"/>
-          <speciesReference id="M_adp_c" stoichiometry="1.0"/>
+          <speciesReference id="M_13dpg_c" stoichiometry="1"/>
+          <speciesReference id="M_adp_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="-16.137745" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PGL" name="R_6_phosphogluconolactonase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_6pgl_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h2o_c" stoichiometry="1.0"/>
+          <speciesReference id="M_6pgl_c" stoichiometry="1"/>
+          <speciesReference id="M_h2o_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_6pgc_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
+          <speciesReference id="M_6pgc_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="4.717127" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PGM" name="R_phosphoglycerate_mutase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_2pg_c" stoichiometry="1.0"/>
+          <speciesReference id="M_2pg_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_3pg_c" stoichiometry="1.0"/>
+          <speciesReference id="M_3pg_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="-14.84908" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PIt" name="R_Inorganic_phosphate_exchange__diffusion" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_pi_c" stoichiometry="1.0"/>
+          <speciesReference id="M_pi_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_pi_e" stoichiometry="1.0"/>
+          <speciesReference id="M_pi_e" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="-3.168859" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PPC" name="R_phosphoenolpyruvate_carboxylase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_co2_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h2o_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pep_c" stoichiometry="1.0"/>
+          <speciesReference id="M_co2_c" stoichiometry="1"/>
+          <speciesReference id="M_h2o_c" stoichiometry="1"/>
+          <speciesReference id="M_pep_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
-          <speciesReference id="M_oaa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pi_c" stoichiometry="1.0"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
+          <speciesReference id="M_oaa_c" stoichiometry="1"/>
+          <speciesReference id="M_pi_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="2.468449" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PPCK" name="R_phosphoenolpyruvate_carboxykinase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_atp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_oaa_c" stoichiometry="1.0"/>
+          <speciesReference id="M_atp_c" stoichiometry="1"/>
+          <speciesReference id="M_oaa_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_adp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_co2_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pep_c" stoichiometry="1.0"/>
+          <speciesReference id="M_adp_c" stoichiometry="1"/>
+          <speciesReference id="M_co2_c" stoichiometry="1"/>
+          <speciesReference id="M_pep_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PPS" name="R_phosphoenolpyruvate_synthase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_atp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h2o_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pyr_c" stoichiometry="1.0"/>
+          <speciesReference id="M_atp_c" stoichiometry="1"/>
+          <speciesReference id="M_h2o_c" stoichiometry="1"/>
+          <speciesReference id="M_pyr_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_amp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="2.0"/>
-          <speciesReference id="M_pep_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pi_c" stoichiometry="1.0"/>
+          <speciesReference id="M_amp_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="2"/>
+          <speciesReference id="M_pep_c" stoichiometry="1"/>
+          <speciesReference id="M_pi_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PTAr" name="R_phosphotransacetylase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_accoa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pi_c" stoichiometry="1.0"/>
+          <speciesReference id="M_accoa_c" stoichiometry="1"/>
+          <speciesReference id="M_pi_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_actp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_coa_c" stoichiometry="1.0"/>
+          <speciesReference id="M_actp_c" stoichiometry="1"/>
+          <speciesReference id="M_coa_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PYK" name="R_pyruvate_kinase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_adp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pep_c" stoichiometry="1.0"/>
+          <speciesReference id="M_adp_c" stoichiometry="1"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
+          <speciesReference id="M_pep_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_atp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pyr_c" stoichiometry="1.0"/>
+          <speciesReference id="M_atp_c" stoichiometry="1"/>
+          <speciesReference id="M_pyr_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="1.933474" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_PYRt2r" name="R_pyruvate_reversible_transport_via_proton_symport" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_h_e" stoichiometry="1.0"/>
-          <speciesReference id="M_pyr_e" stoichiometry="1.0"/>
+          <speciesReference id="M_h_e" stoichiometry="1"/>
+          <speciesReference id="M_pyr_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pyr_c" stoichiometry="1.0"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
+          <speciesReference id="M_pyr_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_RPE" name="R_ribulose_5_phosphate_3_epimerase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_ru5p_D_c" stoichiometry="1.0"/>
+          <speciesReference id="M_ru5p_D_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_xu5p_D_c" stoichiometry="1.0"/>
+          <speciesReference id="M_xu5p_D_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="2.525572" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_RPI" name="R_ribose_5_phosphate_isomerase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_r5p_c" stoichiometry="1.0"/>
+          <speciesReference id="M_r5p_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_ru5p_D_c" stoichiometry="1.0"/>
+          <speciesReference id="M_ru5p_D_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="-2.191555" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_SUCCt2_2" name="R_succinate_transport_via_proton_symport__2_H_" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_h_e" stoichiometry="2.0"/>
-          <speciesReference id="M_succ_e" stoichiometry="1.0"/>
+          <speciesReference id="M_h_e" stoichiometry="2"/>
+          <speciesReference id="M_succ_e" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h_c" stoichiometry="2.0"/>
-          <speciesReference id="M_succ_c" stoichiometry="1.0"/>
+          <speciesReference id="M_h_c" stoichiometry="2"/>
+          <speciesReference id="M_succ_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_SUCCt2b" name="R_Succinate_efflux_via_proton_symport" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_h_c" stoichiometry="1.0"/>
-          <speciesReference id="M_succ_c" stoichiometry="1.0"/>
+          <speciesReference id="M_h_c" stoichiometry="1"/>
+          <speciesReference id="M_succ_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h_e" stoichiometry="1.0"/>
-          <speciesReference id="M_succ_e" stoichiometry="1.0"/>
+          <speciesReference id="M_h_e" stoichiometry="1"/>
+          <speciesReference id="M_succ_e" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_SUCD1i" name="R_succinate_dehydrogenase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_fad_c" stoichiometry="1.0"/>
-          <speciesReference id="M_succ_c" stoichiometry="1.0"/>
+          <speciesReference id="M_fad_c" stoichiometry="1"/>
+          <speciesReference id="M_succ_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_fadh2_c" stoichiometry="1.0"/>
-          <speciesReference id="M_fum_c" stoichiometry="1.0"/>
+          <speciesReference id="M_fadh2_c" stoichiometry="1"/>
+          <speciesReference id="M_fum_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="5.335524" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_SUCD4" name="R_succinate_dehyrdogenase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_fadh2_c" stoichiometry="1.0"/>
-          <speciesReference id="M_q8_c" stoichiometry="1.0"/>
+          <speciesReference id="M_fadh2_c" stoichiometry="1"/>
+          <speciesReference id="M_q8_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_fad_c" stoichiometry="1.0"/>
-          <speciesReference id="M_q8h2_c" stoichiometry="1.0"/>
+          <speciesReference id="M_fad_c" stoichiometry="1"/>
+          <speciesReference id="M_q8h2_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="5.335524" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_SUCOAS" name="R_succinyl_CoA_synthetase__ADP_forming_" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_atp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_coa_c" stoichiometry="1.0"/>
-          <speciesReference id="M_succ_c" stoichiometry="1.0"/>
+          <speciesReference id="M_atp_c" stoichiometry="1"/>
+          <speciesReference id="M_coa_c" stoichiometry="1"/>
+          <speciesReference id="M_succ_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_adp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_pi_c" stoichiometry="1.0"/>
-          <speciesReference id="M_succoa_c" stoichiometry="1.0"/>
+          <speciesReference id="M_adp_c" stoichiometry="1"/>
+          <speciesReference id="M_pi_c" stoichiometry="1"/>
+          <speciesReference id="M_succoa_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="-5.335524" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_TALA" name="R_transaldolase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_g3p_c" stoichiometry="1.0"/>
-          <speciesReference id="M_s7p_c" stoichiometry="1.0"/>
+          <speciesReference id="M_g3p_c" stoichiometry="1"/>
+          <speciesReference id="M_s7p_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_e4p_c" stoichiometry="1.0"/>
-          <speciesReference id="M_f6p_c" stoichiometry="1.0"/>
+          <speciesReference id="M_e4p_c" stoichiometry="1"/>
+          <speciesReference id="M_f6p_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="1.41827" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_THD2" name="R_NAD_P__transhydrogenase" reversible="false">
         <listOfReactants>
-          <speciesReference id="M_nadh_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadp_c" stoichiometry="1.0"/>
-          <speciesReference id="M_h_e" stoichiometry="2.0"/>
+          <speciesReference id="M_nadh_c" stoichiometry="1"/>
+          <speciesReference id="M_nadp_c" stoichiometry="1"/>
+          <speciesReference id="M_h_e" stoichiometry="2"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_h_c" stoichiometry="2.0"/>
-          <speciesReference id="M_nad_c" stoichiometry="1.0"/>
-          <speciesReference id="M_nadph_c" stoichiometry="1.0"/>
+          <speciesReference id="M_h_c" stoichiometry="2"/>
+          <speciesReference id="M_nad_c" stoichiometry="1"/>
+          <speciesReference id="M_nadph_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
-            <parameter name="FLUX_VALUE" value="0.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
+            <parameter name="FLUX_VALUE" value="0" units="mmol_per_gDW_per_hr"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_TKT1" name="R_transketolase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_r5p_c" stoichiometry="1.0"/>
-          <speciesReference id="M_xu5p_D_c" stoichiometry="1.0"/>
+          <speciesReference id="M_r5p_c" stoichiometry="1"/>
+          <speciesReference id="M_xu5p_D_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_g3p_c" stoichiometry="1.0"/>
-          <speciesReference id="M_s7p_c" stoichiometry="1.0"/>
+          <speciesReference id="M_g3p_c" stoichiometry="1"/>
+          <speciesReference id="M_s7p_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="1.41827" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_TKT2" name="R_transketolase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_e4p_c" stoichiometry="1.0"/>
-          <speciesReference id="M_xu5p_D_c" stoichiometry="1.0"/>
+          <speciesReference id="M_e4p_c" stoichiometry="1"/>
+          <speciesReference id="M_xu5p_D_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_f6p_c" stoichiometry="1.0"/>
-          <speciesReference id="M_g3p_c" stoichiometry="1.0"/>
+          <speciesReference id="M_f6p_c" stoichiometry="1"/>
+          <speciesReference id="M_g3p_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="1.107302" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>
       <reaction id="R_TPI" name="R_triose_phosphate_isomerase" reversible="true">
         <listOfReactants>
-          <speciesReference id="M_dhap_c" stoichiometry="1.0"/>
+          <speciesReference id="M_dhap_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="M_g3p_c" stoichiometry="1.0"/>
+          <speciesReference id="M_g3p_c" stoichiometry="1"/>
         </listOfProducts>
         <kineticLaw>
-          <listOfParameters>
-            <parameter name="LOWER_BOUND" value="-999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="UPPER_BOUND" value="999999.0" units="mmol_per_gDW_per_hr"/>
-            <parameter name="OBJECTIVE_COEFFICIENT" value="0.0"/>
+                  <listOfParameters>
+            <parameter name="LOWER_BOUND" value="-999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="UPPER_BOUND" value="999999" units="mmol_per_gDW_per_hr"/>
+            <parameter name="OBJECTIVE_COEFFICIENT" value="0"/>
             <parameter name="FLUX_VALUE" value="7.570782" units="mmol_per_gDW_per_hr"/>
-            <parameter name="REDUCED_COST" value="0.0"/>
+            <parameter name="REDUCED_COST" value="0"/>
           </listOfParameters>
         </kineticLaw>
       </reaction>

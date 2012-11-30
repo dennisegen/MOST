@@ -1214,6 +1214,7 @@ public class GraphicalInterface extends JFrame {
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser();
 			
+			lastSQL_lpath = curSettings.get("LastLoadedSQL");
 			if (lastSQL_lpath != null) {
 				fileChooser.setCurrentDirectory(new File(lastSQL_lpath ));
 			}
@@ -1225,7 +1226,7 @@ public class GraphicalInterface extends JFrame {
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
 				lastSQL_lpath = rawPathName;
-				
+				curSettings.add("LastLoadedSQL",lastSQL_lpath);
 				
 				if (!rawFilename.endsWith(".db")) {
 					JOptionPane.showMessageDialog(null,                
@@ -1252,6 +1253,12 @@ public class GraphicalInterface extends JFrame {
 		loadSetUp();
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser();
+		
+		lastCSVM_lpath = curSettings.get("LastLoadedCSVM");
+		if (lastSQL_lpath != null) {
+			fileChooser.setCurrentDirectory(new File(lastCSVM_lpath ));
+		}
+		
 		if (lastCSVM_lpath != null) {
 			fileChooser.setCurrentDirectory(new File(lastCSVM_lpath));
 		}
@@ -1265,6 +1272,8 @@ public class GraphicalInterface extends JFrame {
 			String rawFilename = fileChooser.getSelectedFile().getName();
 			String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
 			lastCSVM_lpath = rawPathName;
+			curSettings.add("LastLoadedCSVM",lastCSVM_lpath);
+			
 			
 			if (!rawFilename.endsWith(".csv")) {
 				JOptionPane.showMessageDialog(null,                
@@ -1316,6 +1325,8 @@ public class GraphicalInterface extends JFrame {
 		loadSetUp();
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser();
+		
+		lastCSVR_lpath = curSettings.get("LastLoadedCSVR");
 		if (lastCSVR_lpath != null) {
 			fileChooser.setCurrentDirectory(new File(lastCSVR_lpath));
 		}
@@ -1328,6 +1339,7 @@ public class GraphicalInterface extends JFrame {
 			String rawFilename = fileChooser.getSelectedFile().getName();
 			String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
 			lastCSVR_lpath = rawPathName;
+			curSettings.add("LastLoadedCSVR",lastCSVR_lpath);
 			
 			if (!rawFilename.endsWith(".csv") && !rawFilename.endsWith(".txt")) {
 				if (!rawFilename.endsWith(".csv")) {
