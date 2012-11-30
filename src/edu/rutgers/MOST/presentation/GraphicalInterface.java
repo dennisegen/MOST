@@ -18,6 +18,7 @@ import edu.rutgers.MOST.config.LocalConfig;
 import edu.rutgers.MOST.data.DatabaseCopier;
 import edu.rutgers.MOST.data.DatabaseCreator;
 import edu.rutgers.MOST.data.FBAModel;
+import edu.rutgers.MOST.data.JSBMLWriter;
 import edu.rutgers.MOST.data.MetaboliteFactory;
 import edu.rutgers.MOST.data.MetabolitesMetaColumnManager;
 import edu.rutgers.MOST.data.ModelReaction;
@@ -26,6 +27,7 @@ import edu.rutgers.MOST.data.ReactionsMetaColumnManager;
 import edu.rutgers.MOST.data.SBMLMetabolite;
 import edu.rutgers.MOST.data.SBMLModelReader;
 import edu.rutgers.MOST.data.SBMLReaction;
+import edu.rutgers.MOST.data.Settings;
 import edu.rutgers.MOST.data.TextMetabolitesModelReader;
 import edu.rutgers.MOST.data.TextMetabolitesWriter;
 import edu.rutgers.MOST.data.TextReactionsModelReader;
@@ -86,10 +88,20 @@ public class GraphicalInterface extends JFrame {
 	//set tabs south (bottom) = 3
 	public JTabbedPane tabbedPane = new JTabbedPane(3); 
 
-	//Methods of current directory
-	public String lastSBMLpath;
+	//Methods of saving current directory
+	//Load Directories
+	public String lastSBML_lpath;
+	public String lastCSVM_lpath;
+	public String lastCSVR_lpath;
+	public String lastSQL_lpath;
 	
+	//Save Directories
+	public String lastSBML_spath;
+	public String lastCSVM_spath;
+	public String lastCSVR_spath;
+	public String lastSQL_spath;
 	
+	public static Settings curSettings;
 	
 	public static DefaultListModel<String> listModel = new DefaultListModel();
 	public static FileList fileList = new FileList();
@@ -1123,8 +1135,12 @@ public class GraphicalInterface extends JFrame {
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser(); 
 			//TODO: test the possibility of a global FileChooser
-			if (lastSBMLpath != null) {
-				fileChooser.setCurrentDirectory(new File(lastSBMLpath));
+			lastSBML_lpath = curSettings.lastL_SBML;
+			
+			if (lastSBML_lpath != null) {
+				fileChooser.setCurrentDirectory(new File(lastSBML_lpath));
+				
+				
 			}
 			
 			
@@ -1136,7 +1152,9 @@ public class GraphicalInterface extends JFrame {
 				File file = fileChooser.getSelectedFile();          	
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
-				lastSBMLpath = rawPathName;
+				lastSBML_lpath = rawPathName;
+				curSettings.setlastL_SBML(lastSBML_lpath);
+				
 				
 				String filename = "";
 				if (!rawFilename.endsWith(".xml") && !rawFilename.endsWith(".sbml")) {
@@ -1174,11 +1192,20 @@ public class GraphicalInterface extends JFrame {
 			loadSetUp();
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser();
+			
+			if (lastSQL_lpath != null) {
+				fileChooser.setCurrentDirectory(new File(lastSQL_lpath ));
+			}
+			
 			//... Open a file dialog.
 			int retval = fileChooser.showOpenDialog(output);
 			if (retval == JFileChooser.APPROVE_OPTION) {
 				//... The user selected a file, get it, use it.
 				String rawFilename = fileChooser.getSelectedFile().getName();
+				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
+				lastSQL_lpath = rawPathName;
+				
+				
 				if (!rawFilename.endsWith(".db")) {
 					JOptionPane.showMessageDialog(null,                
 							"Not a Valid Database File.",                
@@ -1204,12 +1231,20 @@ public class GraphicalInterface extends JFrame {
 		loadSetUp();
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser();
+		if (lastCSVM_lpath != null) {
+			fileChooser.setCurrentDirectory(new File(lastCSVM_lpath));
+		}
+		
 		//... Open a file dialog.
 		int retval = fileChooser.showOpenDialog(output);
+		
 		if (retval == JFileChooser.APPROVE_OPTION) {
 			//... The user selected a file, get it, use it.
 			File file = fileChooser.getSelectedFile();    	    	
 			String rawFilename = fileChooser.getSelectedFile().getName();
+			String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
+			lastCSVM_lpath = rawPathName;
+			
 			if (!rawFilename.endsWith(".csv")) {
 				JOptionPane.showMessageDialog(null,                
 						"Not a Valid CSV File.",                
@@ -1260,12 +1295,19 @@ public class GraphicalInterface extends JFrame {
 		loadSetUp();
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser();
+		if (lastCSVR_lpath != null) {
+			fileChooser.setCurrentDirectory(new File(lastCSVR_lpath));
+		}
+		
 		//... Open a file dialog.
 		int retval = fileChooser.showOpenDialog(output);
 		if (retval == JFileChooser.APPROVE_OPTION) {
 			//... The user selected a file, get it, use it.
 			File file = fileChooser.getSelectedFile();
 			String rawFilename = fileChooser.getSelectedFile().getName();
+			String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
+			lastCSVR_lpath = rawPathName;
+			
 			if (!rawFilename.endsWith(".csv") && !rawFilename.endsWith(".txt")) {
 				if (!rawFilename.endsWith(".csv")) {
 					JOptionPane.showMessageDialog(null,                
@@ -4124,6 +4166,8 @@ public class GraphicalInterface extends JFrame {
 	/**************************************************************************/
 
 	public static void main(String[] args) throws Exception {
+		curSettings = new Settings();
+		
 		Class.forName("org.sqlite.JDBC");       
 		DatabaseCreator databaseCreator = new DatabaseCreator();
 		setDatabaseName(ConfigConstants.DEFAULT_DATABASE_NAME);
@@ -4138,13 +4182,16 @@ public class GraphicalInterface extends JFrame {
 		icons.add(new ImageIcon("etc/most32.jpg").getImage());
 
 		GraphicalInterface frame = new GraphicalInterface(con);	   
-
+		
+		
+		
 		frame.setIconImages(icons);
 		frame.setSize(1000, 600);
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-
+		
+		
 		showPrompt = true;
 
 	}
