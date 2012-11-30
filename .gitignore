@@ -3,7 +3,7 @@
 *.log
 *.log.1
 
-bin
+log4j.properties
 
 .classpath
 .project
