@@ -7,6 +7,8 @@ import java.util.Map;
 import org.sbml.jsbml.*;
 
 import edu.rutgers.MOST.config.LocalConfig;
+import edu.rutgers.MOST.presentation.GraphicalInterface;
+import edu.rutgers.MOST.presentation.GraphicalInterfaceConstants;
 import edu.rutgers.MOST.presentation.ProgressConstants;
 
 public class SBMLModelReader {
@@ -60,6 +62,9 @@ public class SBMLModelReader {
 	@SuppressWarnings("unchecked")
 	public void load(){
 		readNotes = true;
+		
+		LocalConfig.getInstance().getMetaboliteUsedMap().clear();
+		
 		DatabaseCreator databaseCreator = new DatabaseCreator();
 		databaseCreator.createDatabase(getDatabaseName());
 
@@ -115,7 +120,7 @@ public class SBMLModelReader {
 					} else {
 						boundary = "true";
 					}
-					String used = "false"; 
+
 					String metabMeta1 = " ";
 					String metabMeta2 = " ";
 					String metabMeta3 = " ";
@@ -246,10 +251,14 @@ public class SBMLModelReader {
 
 					String metabInsert = "INSERT INTO metabolites(metabolite_abbreviation, metabolite_name, charge, compartment, boundary, meta_1, meta_2, "
 						+ " meta_3, meta_4, meta_5, meta_6, meta_7, meta_8, meta_9, meta_10, "
-						+ " meta_11, meta_12, meta_13, meta_14, meta_15, used) values" 
-						+ " (" + "'" + metaboliteAbbreviation + "', '" + metaboliteName + "', '" + chargeString + "', '" + compartment + "', '" + boundary + "', '" + metabMeta1 + "', '" + metabMeta2 + "', '" + metabMeta3 + "', '" + metabMeta4 + "', '" + metabMeta5 + "', '" + metabMeta6 + "', '" + metabMeta7 + "', '" + metabMeta8 + "', '" + metabMeta9 + "', '" + metabMeta10 + "', '" + metabMeta11 + "', '" + metabMeta12 + "', '" + metabMeta13 + "', '" + metabMeta14 + "', '" + metabMeta15 + "', '" + used + "');";
+						+ " meta_11, meta_12, meta_13, meta_14, meta_15) values" 
+						+ " (" + "'" + metaboliteAbbreviation + "', '" + metaboliteName + "', '" + chargeString + "', '" + compartment + "', '" + boundary + "', '" + metabMeta1 + "', '" + metabMeta2 + "', '" + metabMeta3 + "', '" + metabMeta4 + "', '" + metabMeta5 + "', '" + metabMeta6 + "', '" + metabMeta7 + "', '" + metabMeta8 + "', '" + metabMeta9 + "', '" + metabMeta10 + "', '" + metabMeta11 + "', '" + metabMeta12 + "', '" + metabMeta13 + "', '" + metabMeta14 + "', '" + metabMeta15 + "');";
 					stat.executeUpdate(metabInsert);	
 				}
+				LocalConfig.getInstance().setMaxMetaboliteId(metabolites.size());
+				LocalConfig.getInstance().setMetaboliteIdNameMap(metaboliteIdNameMap);
+				System.out.println("id name map " + LocalConfig.getInstance().getMetaboliteIdNameMap());
+								
 				ListOf<Reaction> reactions = doc.getModel().getListOfReactions();
 				for (int j = 0; j < reactions.size(); j++) {
 					if (j%10 == 0) {
@@ -274,8 +283,12 @@ public class SBMLModelReader {
 								Integer id = (Integer) metaboliteIdNameMap.get(reactants.get(r).getSpecies());
 								String rrInsert = "INSERT INTO reaction_reactants(reaction_id, stoic, metabolite_id) values (" + (j + 1) + ", " + reactants.get(r).getStoichiometry() + ", " + id + ");";
 								stat.executeUpdate(rrInsert);
-								String update = "update metabolites set used='true' where id=" + id + ";";
-								stat.executeUpdate(update);	
+								if (LocalConfig.getInstance().getMetaboliteUsedMap().containsKey(reactants.get(r).getSpecies())) {
+									int usedCount = (Integer) LocalConfig.getInstance().getMetaboliteUsedMap().get(reactants.get(r).getSpecies());
+									LocalConfig.getInstance().getMetaboliteUsedMap().put(reactants.get(r).getSpecies(), new Integer(usedCount + 1));
+								} else {
+									LocalConfig.getInstance().getMetaboliteUsedMap().put(reactants.get(r).getSpecies(), new Integer(1));
+								}					
 							}
 							
 							String stoicStr = "";
@@ -308,12 +321,18 @@ public class SBMLModelReader {
 					if (reactions.get(j).isSetListOfProducts()) {
 						ListOf<SpeciesReference> products = reactions.get(j).getListOfProducts();
 						for (int p = 0; p < products.size(); p++) {	
-							Integer id = (Integer) metaboliteIdNameMap.get(products.get(p).getSpecies());
-							String rpInsert = "INSERT INTO reaction_products(reaction_id, stoic, metabolite_id) values (" + (j + 1) + ", " + products.get(p).getStoichiometry() + ", " + id + ");";
-							stat.executeUpdate(rpInsert);
-							String update = "update metabolites set used='true' where id=" + id + ";";
-							stat.executeUpdate(update);
-
+							if (products.get(p).isSetSpecies()) {
+								Integer id = (Integer) metaboliteIdNameMap.get(products.get(p).getSpecies());
+								String rpInsert = "INSERT INTO reaction_products(reaction_id, stoic, metabolite_id) values (" + (j + 1) + ", " + products.get(p).getStoichiometry() + ", " + id + ");";
+								stat.executeUpdate(rpInsert);
+								if (LocalConfig.getInstance().getMetaboliteUsedMap().containsKey(products.get(p).getSpecies())) {
+									int usedCount = (Integer) LocalConfig.getInstance().getMetaboliteUsedMap().get(products.get(p).getSpecies());
+									LocalConfig.getInstance().getMetaboliteUsedMap().put(products.get(p).getSpecies(), new Integer(usedCount + 1));
+								} else {
+									LocalConfig.getInstance().getMetaboliteUsedMap().put(products.get(p).getSpecies(), new Integer(1));
+								}		
+							}
+													
 							String stoicStr = "";
 							if (products.get(p).getStoichiometry() == 1) {
 								stoicStr = "";
@@ -348,11 +367,11 @@ public class SBMLModelReader {
 
 					String reactionString = rxnBfr.toString().trim();
 					
-					String knockout = "false";	
-					Double lowerBound = -999999.0;
-					Double upperBound =	999999.0;
-					Double objective = 0.0;
-					Double fluxValue = 0.0;
+					String knockout = GraphicalInterfaceConstants.KO_DEFAULT;	
+					Double lowerBound = GraphicalInterfaceConstants.LOWER_BOUND_DEFAULT;
+					Double upperBound =	GraphicalInterfaceConstants.UPPER_BOUND_DEFAULT;
+					Double objective = GraphicalInterfaceConstants.BIOLOGICAL_OBJECTIVE_DEFAULT;
+					Double fluxValue = GraphicalInterfaceConstants.FLUX_VALUE_DEFAULT;
 					
 					//if strings contain ' (single quote), it will not execute insert statement
 					//this code escapes ' as '' - sqlite syntax for escaping '
@@ -515,7 +534,7 @@ public class SBMLModelReader {
 						+ " meta_1, meta_2, meta_3, meta_4, meta_5, meta_6, meta_7, meta_8, "
 						+ " meta_9, meta_10, meta_11, meta_12, meta_13, meta_14, meta_15) values " 
 						+ " (" + "'" + knockout + "', '" + fluxValue + "', '" + reactionAbbreviation + "', '" + reactionName + "', '" + reactionString + "', '" + reversible + "', '" + lowerBound + "', '" + upperBound + "', '" + objective + "', '" + meta1 + "', '" + meta2 + "', '" + meta3 + "', '" + meta4 + "', '" + meta5 + "', '" + meta6 + "', '" + meta7 + "', '" + meta8 + "', '" + meta9 + "', '" + meta10 + "', '" + meta11 + "', '" + meta12 + "', '" + meta13 + "', '" + meta14 + "', '" + meta15 + "');";
-					stat.executeUpdate(reacInsert);						
+					stat.executeUpdate(reacInsert);	
 				}
 				stat.executeUpdate("COMMIT");
 			} catch (Exception e) {
@@ -524,8 +543,9 @@ public class SBMLModelReader {
 			}
 
 			conn.close();
-			LocalConfig.getInstance().setProgress(100);		
-
+			LocalConfig.getInstance().setProgress(100);	
+			System.out.println("used map " + LocalConfig.getInstance().getMetaboliteUsedMap());
+			
 		}catch(SQLException e){
 
 			e.printStackTrace();
