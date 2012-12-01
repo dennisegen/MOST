@@ -150,44 +150,44 @@ public class SettingsFactory {
 	
 	public void read() throws Exception {
 		XMLInputFactory factory = XMLInputFactory.newInstance();
-	    FileReader fileReader = new FileReader(this.filename);
-	    XMLEventReader reader = factory.createXMLEventReader(fileReader);
-	    String currentElementValue = "";
-	    
-	    while (reader.hasNext()) {
-	      XMLEvent event = reader.nextEvent();
-	      if (event.isStartElement()) {
-	        StartElement element = (StartElement) event;
-	        currentElementValue = element.getName().toString();
-	        
-	        
-	        System.out.println("Start Element: " + element.getName());
+		FileReader fileReader = new FileReader(this.filename);
+		XMLEventReader reader = factory.createXMLEventReader(fileReader);
+		String currentElementValue = "";
 
-	        Iterator iterator = element.getAttributes();
-	        while (iterator.hasNext()) {
-	          Attribute attribute = (Attribute) iterator.next();
-	          QName name = attribute.getName();
-	          String value = attribute.getValue();
-	          System.out.println("Attribute name/value: " + name + "/" + value);
-	        }
-	      }
-	      
-	      if (event.isEndElement()) {
-	        EndElement element = (EndElement) event;
-	        System.out.println("End element:" + element.getName());
-	      }
-	      
-	      if (event.isCharacters()) {
-	        Characters characters = (Characters) event;
-	        String curAddr = characters.getData();
-	        if (this.exists(curAddr)) {
-	        	mappings.put(currentElementValue, curAddr);
-	        }
-	        currentElementValue = "";
-	        
-	        System.out.println("Text: " + characters.getData());
-	      }
-	    }
+		while (reader.hasNext()) {
+			XMLEvent event = reader.nextEvent();
+			if (event.isStartElement()) {
+				StartElement element = (StartElement) event;
+				currentElementValue = element.getName().toString();
+
+
+				System.out.println("Start Element: " + element.getName());
+
+				Iterator iterator = element.getAttributes();
+				while (iterator.hasNext()) {
+					Attribute attribute = (Attribute) iterator.next();
+					QName name = attribute.getName();
+					String value = attribute.getValue();
+					System.out.println("Attribute name/value: " + name + "/" + value);
+				}
+			}
+
+			if (event.isEndElement()) {
+				EndElement element = (EndElement) event;
+				System.out.println("End element:" + element.getName());
+			}
+
+			if (event.isCharacters()) {
+				Characters characters = (Characters) event;
+				String curAddr = characters.getData();
+				if (this.exists(curAddr)) {
+					mappings.put(currentElementValue, curAddr);
+				}
+				currentElementValue = "";
+
+				System.out.println("Text: " + characters.getData());
+			}
+		}
 	}
 	
 	public String toString() {

@@ -30,7 +30,6 @@ import edu.rutgers.MOST.data.ReactionsUpdater;
 import edu.rutgers.MOST.data.SBMLMetabolite;
 import edu.rutgers.MOST.data.SBMLModelReader;
 import edu.rutgers.MOST.data.SBMLReaction;
-import edu.rutgers.MOST.data.Settings;
 import edu.rutgers.MOST.data.SettingsFactory;
 import edu.rutgers.MOST.data.TextMetabolitesModelReader;
 import edu.rutgers.MOST.data.TextMetabolitesWriter;
@@ -92,11 +91,6 @@ public class GraphicalInterface extends JFrame {
 	public JTabbedPane tabbedPane = new JTabbedPane(3); 
 
 	//Methods of saving current directory
-	//Load Directories
-	public String lastSBML_path;
-	public String lastCSV_path;
-	public String lastSQL_path;
-	
 	public static SettingsFactory curSettings;
 	
 	public static DefaultListModel<String> listModel = new DefaultListModel();
@@ -105,7 +99,7 @@ public class GraphicalInterface extends JFrame {
 
 	private Task task;	
 	public final ProgressBar progressBar = new ProgressBar();	
-	javax.swing.Timer t = new javax.swing.Timer(1000, new TimeListener());
+	javax.swing.Timer timer = new javax.swing.Timer(1000, new TimeListener());
 
 	public static boolean highlightUnusedMetabolites;	
 	public static boolean showPrompt;
@@ -1162,13 +1156,13 @@ public class GraphicalInterface extends JFrame {
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser(); 
 			//TODO: test the possibility of a global FileChooser
-			lastSBML_lpath = curSettings.get("LastLoadedSBML");
 			
-			if (lastSBML_lpath != null) {
-				fileChooser.setCurrentDirectory(new File(lastSBML_lpath));
-				
+			String lastSBML_path = curSettings.get("LastSBML");
+			if (lastSBML_path == null) {
+				lastSBML_path = ".";
 			}
-			
+			fileChooser.setCurrentDirectory(new File(lastSBML_path));
+						
 			//... Open a file dialog.
 			int retval = fileChooser.showOpenDialog(output);
 			if (retval == JFileChooser.APPROVE_OPTION) {
@@ -1176,8 +1170,7 @@ public class GraphicalInterface extends JFrame {
 				File file = fileChooser.getSelectedFile();          	
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
-				curSettings.setlast_SBML(rawPathName);
-				curSettings.add("LastLoadedSBML",lastSBML_lpath);
+				curSettings.add("LastSBML", rawPathName);
 								
 				String filename = "";
 				if (!rawFilename.endsWith(".xml") && !rawFilename.endsWith(".sbml")) {
@@ -1200,7 +1193,7 @@ public class GraphicalInterface extends JFrame {
 					LocalConfig.getInstance().setProgress(0);
 					progressBar.setVisible(true);
 
-					t.start();
+					timer.start();
 
 					task = new Task();
 					task.execute();
@@ -1216,10 +1209,11 @@ public class GraphicalInterface extends JFrame {
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser();
 			
-			lastSQL_lpath = curSettings.get("LastLoadedSQL");
-			if (lastSQL_path != null) {
-				fileChooser.setCurrentDirectory(new File(lastSQL_path));
+			String lastSQL_path = curSettings.get("LastLoadedSQL");
+			if (lastSQL_path == null) {
+				lastSQL_path = ".";
 			}
+			fileChooser.setCurrentDirectory(new File(lastSQL_path));
 			
 			//... Open a file dialog.
 			int retval = fileChooser.showOpenDialog(output);
@@ -1227,8 +1221,7 @@ public class GraphicalInterface extends JFrame {
 				//... The user selected a file, get it, use it.
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
-				curSettings.setlast_SQL(rawPathName);
-				curSettings.add("LastLoadedSQL",lastSQL_lpath);
+				curSettings.add("LastSQL", rawPathName);
 								
 				if (!rawFilename.endsWith(".db")) {
 					JOptionPane.showMessageDialog(null,                
@@ -1256,14 +1249,11 @@ public class GraphicalInterface extends JFrame {
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser();
 		
-		lastCSVM_lpath = curSettings.get("LastLoadedCSVM");
-		if (lastSQL_lpath != null) {
-			fileChooser.setCurrentDirectory(new File(lastCSVM_lpath ));
+		String lastCSV_path = curSettings.get("LastCSV");
+		if (lastCSV_path == null) {
+			lastCSV_path = ".";
 		}
-		
-		if (lastCSVM_lpath != null) {
-			fileChooser.setCurrentDirectory(new File(lastCSVM_lpath));
-		}
+		fileChooser.setCurrentDirectory(new File(lastCSV_path));
 		
 		//... Open a file dialog.
 		int retval = fileChooser.showOpenDialog(output);
@@ -1273,8 +1263,7 @@ public class GraphicalInterface extends JFrame {
 			File file = fileChooser.getSelectedFile();    	    	
 			String rawFilename = fileChooser.getSelectedFile().getName();
 			String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
-			curSettings.setlast_CSV(rawPathName);
-			curSettings.add("LastLoadedCSVM",lastCSVM_lpath);
+			curSettings.add("LastCSV", rawPathName);
 			
 			
 			if (!rawFilename.endsWith(".csv")) {
@@ -1328,10 +1317,11 @@ public class GraphicalInterface extends JFrame {
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser();
 		
-		lastCSVR_lpath = curSettings.get("LastLoadedCSVR");
-		if (lastCSV_path != null) {
-			fileChooser.setCurrentDirectory(new File(lastCSV_path));
+		String lastCSV_path = curSettings.get("LastCSV");
+		if (lastCSV_path == null) {
+			lastCSV_path = ".";
 		}
+		fileChooser.setCurrentDirectory(new File(lastCSV_path));
 		
 		//... Open a file dialog.
 		int retval = fileChooser.showOpenDialog(output);
@@ -1340,8 +1330,7 @@ public class GraphicalInterface extends JFrame {
 			File file = fileChooser.getSelectedFile();
 			String rawFilename = fileChooser.getSelectedFile().getName();
 			String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
-			curSettings.setlast_CSV(rawPathName);
-			curSettings.add("LastLoadedCSVR",lastCSVR_lpath);
+			curSettings.add("LastCSV", rawPathName);
 			
 			if (!rawFilename.endsWith(".csv") && !rawFilename.endsWith(".txt")) {
 				if (!rawFilename.endsWith(".csv")) {
@@ -1394,7 +1383,7 @@ public class GraphicalInterface extends JFrame {
 			setSplitCharacter(',');
 			setExtension(".csv");
 			loadMetabolitesTextFile();
-			t.start();
+			timer.start();
 		}
 	}
 
@@ -1403,7 +1392,7 @@ public class GraphicalInterface extends JFrame {
 			setSplitCharacter(',');
 			setExtension(".csv");
 			loadReactionsTextFile();
-			t.start();
+			timer.start();
 		}
 	}
 
@@ -1466,10 +1455,12 @@ public class GraphicalInterface extends JFrame {
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser(new File(getDatabaseName()));
 		
-		lastCSV_path = curSettings.last_CSV;
-		if (lastCSV_path != null) {
-			fileChooser.setCurrentDirectory(new File(lastCSV_path));
+		String lastCSV_path = curSettings.get("LastCSV");
+		if (lastCSV_path == null) {
+			lastCSV_path = ".";	
 		}
+		fileChooser.setCurrentDirectory(new File(lastCSV_path));
+		
 		boolean done = false;
 		while (!done) {
 			//... Open a file dialog.
@@ -1549,10 +1540,12 @@ public class GraphicalInterface extends JFrame {
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser(new File(getDatabaseName()));
 		
-		lastCSV_path = curSettings.last_CSV;
-		if (lastCSV_path != null) {
-			fileChooser.setCurrentDirectory(new File(lastCSV_path));
+		String lastCSV_path = curSettings.get("LastCSV");
+		if (lastCSV_path == null) {
+			lastCSV_path = ".";
 		}
+		fileChooser.setCurrentDirectory(new File(lastCSV_path));
+		
 		boolean done = false;
 		while (!done) {
 			//... Open a file dialog.
@@ -1654,10 +1647,12 @@ public class GraphicalInterface extends JFrame {
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser(new File(getDatabaseName()));
 		
-		lastSQL_path = curSettings.last_SQL;
+		String lastSQL_path = curSettings.get("LastSQL");
 		if (lastSQL_path != null) {
-			fileChooser.setCurrentDirectory(new File(lastSQL_path));
+			lastSQL_path = ".";
 		}
+		fileChooser.setCurrentDirectory(new File(lastSQL_path));
+		
 		boolean done = false;
 		while (!done) {
 			//... Open a file dialog.
@@ -3690,7 +3685,7 @@ public class GraphicalInterface extends JFrame {
 				} catch (InterruptedException ignore) {
 				}			
 			}				
-			t.stop();
+			timer.stop();
 			return null;
 		}
 	}
@@ -3704,7 +3699,7 @@ public class GraphicalInterface extends JFrame {
 			progressBar.progress.repaint();
 			if (LocalConfig.getInstance().getProgress() == 100) {
 				setUpTables();
-				t.stop();
+				timer.stop();
 				progressBar.setVisible(false);
 				progressBar.dispose();
 				LocalConfig.getInstance().setProgress(0);
