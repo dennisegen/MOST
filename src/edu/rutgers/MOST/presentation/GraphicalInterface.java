@@ -91,16 +91,9 @@ public class GraphicalInterface extends JFrame {
 
 	//Methods of saving current directory
 	//Load Directories
-	public String lastSBML_lpath;
-	public String lastCSVM_lpath;
-	public String lastCSVR_lpath;
-	public String lastSQL_lpath;
-	
-	//Save Directories
-	public String lastSBML_spath;
-	public String lastCSVM_spath;
-	public String lastCSVR_spath;
-	public String lastSQL_spath;
+	public String lastSBML_path;
+	public String lastCSV_path;
+	public String lastSQL_path;
 	
 	public static Settings curSettings;
 	
@@ -665,15 +658,17 @@ public class GraphicalInterface extends JFrame {
 				log.debug("optimization complete");
 				//End optimization
 				
-				StringBuffer outputText = new StringBuffer();
 				ReactionFactory rFactory = new ReactionFactory("SBML", getOptimizePath());
 				rFactory.setFluxes(soln);
 
 				Writer writer = null;
 				try {
-
-					outputText.append("Maximum objective: "
-							+ fba.getMaxObj() + "\n");
+					StringBuffer outputText = new StringBuffer();
+					outputText.append("FBA\n");
+					outputText.append(getDatabaseName() + "\n");
+					outputText.append(model.getNumMetabolites() + " metabolites, " + model.getNumReactions() + " reactions\n");
+					outputText.append("Maximum objective: "	+ fba.getMaxObj() + "\n");
+					
 					File file = new File(optimizePath + ".log");
 					writer = new BufferedWriter(new FileWriter(file));
 					writer.write(outputText.toString());
@@ -1149,15 +1144,11 @@ public class GraphicalInterface extends JFrame {
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser(); 
 			//TODO: test the possibility of a global FileChooser
-			lastSBML_lpath = curSettings.lastL_SBML;
 			
-			if (lastSBML_lpath != null) {
-				fileChooser.setCurrentDirectory(new File(lastSBML_lpath));
-				
-				
-			}
-			
-			
+			lastSBML_path = curSettings.last_SBML;
+			if (lastSBML_path != null) {
+				fileChooser.setCurrentDirectory(new File(lastSBML_path));			
+			}		
 			
 			//... Open a file dialog.
 			int retval = fileChooser.showOpenDialog(output);
@@ -1166,10 +1157,8 @@ public class GraphicalInterface extends JFrame {
 				File file = fileChooser.getSelectedFile();          	
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
-				lastSBML_lpath = rawPathName;
-				curSettings.setlastL_SBML(lastSBML_lpath);
-				
-				
+				curSettings.setlast_SBML(rawPathName);
+								
 				String filename = "";
 				if (!rawFilename.endsWith(".xml") && !rawFilename.endsWith(".sbml")) {
 					JOptionPane.showMessageDialog(null,                
@@ -1207,8 +1196,9 @@ public class GraphicalInterface extends JFrame {
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser();
 			
-			if (lastSQL_lpath != null) {
-				fileChooser.setCurrentDirectory(new File(lastSQL_lpath ));
+			lastSQL_path = curSettings.last_SQL;
+			if (lastSQL_path != null) {
+				fileChooser.setCurrentDirectory(new File(lastSQL_path));
 			}
 			
 			//... Open a file dialog.
@@ -1217,9 +1207,8 @@ public class GraphicalInterface extends JFrame {
 				//... The user selected a file, get it, use it.
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
-				lastSQL_lpath = rawPathName;
-				
-				
+				curSettings.setlast_SQL(rawPathName);
+								
 				if (!rawFilename.endsWith(".db")) {
 					JOptionPane.showMessageDialog(null,                
 							"Not a Valid Database File.",                
@@ -1245,8 +1234,10 @@ public class GraphicalInterface extends JFrame {
 		loadSetUp();
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser();
-		if (lastCSVM_lpath != null) {
-			fileChooser.setCurrentDirectory(new File(lastCSVM_lpath));
+		
+		lastCSV_path = curSettings.last_CSV;
+		if (lastCSV_path != null) {
+			fileChooser.setCurrentDirectory(new File(lastCSV_path));
 		}
 		
 		//... Open a file dialog.
@@ -1257,7 +1248,7 @@ public class GraphicalInterface extends JFrame {
 			File file = fileChooser.getSelectedFile();    	    	
 			String rawFilename = fileChooser.getSelectedFile().getName();
 			String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
-			lastCSVM_lpath = rawPathName;
+			curSettings.setlast_CSV(rawPathName);
 			
 			if (!rawFilename.endsWith(".csv")) {
 				JOptionPane.showMessageDialog(null,                
@@ -1309,8 +1300,10 @@ public class GraphicalInterface extends JFrame {
 		loadSetUp();
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser();
-		if (lastCSVR_lpath != null) {
-			fileChooser.setCurrentDirectory(new File(lastCSVR_lpath));
+		
+		lastCSV_path = curSettings.last_CSV;
+		if (lastCSV_path != null) {
+			fileChooser.setCurrentDirectory(new File(lastCSV_path));
 		}
 		
 		//... Open a file dialog.
@@ -1320,7 +1313,7 @@ public class GraphicalInterface extends JFrame {
 			File file = fileChooser.getSelectedFile();
 			String rawFilename = fileChooser.getSelectedFile().getName();
 			String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
-			lastCSVR_lpath = rawPathName;
+			curSettings.setlast_CSV(rawPathName);
 			
 			if (!rawFilename.endsWith(".csv") && !rawFilename.endsWith(".txt")) {
 				if (!rawFilename.endsWith(".csv")) {
@@ -1428,6 +1421,11 @@ public class GraphicalInterface extends JFrame {
 	public void saveMetabolitesTextFileChooser() {
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser(new File(getDatabaseName()));
+		
+		lastCSV_path = curSettings.last_CSV;
+		if (lastCSV_path != null) {
+			fileChooser.setCurrentDirectory(new File(lastCSV_path));
+		}
 		boolean done = false;
 		while (!done) {
 			//... Open a file dialog.
@@ -1506,6 +1504,11 @@ public class GraphicalInterface extends JFrame {
 	public void saveReactionsTextFileChooser() {
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser(new File(getDatabaseName()));
+		
+		lastCSV_path = curSettings.last_CSV;
+		if (lastCSV_path != null) {
+			fileChooser.setCurrentDirectory(new File(lastCSV_path));
+		}
 		boolean done = false;
 		while (!done) {
 			//... Open a file dialog.
@@ -1606,6 +1609,11 @@ public class GraphicalInterface extends JFrame {
 	public void saveSQLiteFileChooser() {
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser(new File(getDatabaseName()));
+		
+		lastSQL_path = curSettings.last_SQL;
+		if (lastSQL_path != null) {
+			fileChooser.setCurrentDirectory(new File(lastSQL_path));
+		}
 		boolean done = false;
 		while (!done) {
 			//... Open a file dialog.

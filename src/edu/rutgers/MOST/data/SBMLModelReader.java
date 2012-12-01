@@ -91,7 +91,8 @@ public class SBMLModelReader {
 				ListOf<Species> metabolites = doc.getModel().getListOfSpecies();
 				for (int i = 0; i < metabolites.size(); i++) {
 					if (i%10 == 0) {
-						LocalConfig.getInstance().setProgress((i*ProgressConstants.METABOLITE_LOAD_PERCENT)/metabolites.size());		
+						LocalConfig.getInstance().setProgress((i * ProgressConstants.METABOLITE_LOAD_PERCENT) / metabolites.size()
+								+ ProgressConstants.SBML_LOAD_PERCENT);		
 					}
 					
 					//if strings contain ' (single quote), it will not execute insert statement
@@ -262,7 +263,8 @@ public class SBMLModelReader {
 				ListOf<Reaction> reactions = doc.getModel().getListOfReactions();
 				for (int j = 0; j < reactions.size(); j++) {
 					if (j%10 == 0) {
-						LocalConfig.getInstance().setProgress((j*ProgressConstants.REACTION_LOAD_PERCENT)/reactions.size() + ProgressConstants.METABOLITE_LOAD_PERCENT);		
+						LocalConfig.getInstance().setProgress((j * ProgressConstants.REACTION_LOAD_PERCENT) / reactions.size() 
+								+ ProgressConstants.METABOLITE_LOAD_PERCENT + ProgressConstants.SBML_LOAD_PERCENT);		
 					}
 					
 					StringBuffer reacBfr = new StringBuffer();

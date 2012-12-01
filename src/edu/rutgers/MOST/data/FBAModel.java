@@ -48,7 +48,15 @@ public class FBAModel {
 	
 	public Vector<ModelReaction> getReactions() {
 		return this.reactions;
-	}	
+	}
+	
+	public int getNumMetabolites() {
+		return this.metabolites.size();
+	}
+	
+	public int getNumReactions() {
+		return this.reactions.size();
+	}
 	
 	public Vector<Double> getObjective() {
 	    return this.objective;

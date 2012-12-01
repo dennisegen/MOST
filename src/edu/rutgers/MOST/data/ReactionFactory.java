@@ -98,7 +98,7 @@ public class ReactionFactory {
 				PreparedStatement prep = conn
 				.prepareStatement("select id, knockout, reaction_abbreviation, reaction_name, reaction_string, reversible, "
 						+ " biological_objective, lower_bound, upper_bound, flux_value "
-						+ " from reactions where length(reaction_abbreviation) > 0;");
+						+ " from reactions;");
 				conn.setAutoCommit(true);
 				ResultSet rs = prep.executeQuery();
 				while (rs.next()) {
