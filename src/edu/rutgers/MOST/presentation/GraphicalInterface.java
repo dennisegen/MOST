@@ -21,6 +21,7 @@ import edu.rutgers.MOST.data.FBAModel;
 import edu.rutgers.MOST.data.JSBMLWriter;
 import edu.rutgers.MOST.data.MetaboliteFactory;
 import edu.rutgers.MOST.data.MetabolitesMetaColumnManager;
+import edu.rutgers.MOST.data.ModelMetabolite;
 import edu.rutgers.MOST.data.ModelReaction;
 import edu.rutgers.MOST.data.ReactionFactory;
 import edu.rutgers.MOST.data.ReactionsMetaColumnManager;
@@ -633,21 +634,18 @@ public class GraphicalInterface extends JFrame {
 
 				
 				setOptimizePath(optimizePath);
-
                
 				// DEGEN: Begin optimization
 
-				ReactionFactory aFactory = new ReactionFactory();
-				Vector<ModelReaction> reactions = aFactory.getAllReactions(
-						"SBML", getDatabaseName());
-				FBAModel model = new FBAModel();
-				for (int i = 0; i < reactions.size(); i++) {
-					model.addReaction(reactions.elementAt(i));
-				}
-				Vector<Integer> objReactions = aFactory.getObjectiveFunctions(
-						"SBML", getDatabaseName());
+				ReactionFactory rFactory = new ReactionFactory();
+				Vector<Double> objective = rFactory.getObjective("SBML", getDatabaseName());						
+				Vector<ModelReaction> reactions = rFactory.getAllReactions("SBML", getDatabaseName());
+				
+				MetaboliteFactory mFactory = new MetaboliteFactory();
+				Vector<ModelMetabolite> metabolites = mFactory.getAllMetabolites("SBML", getDatabaseName());
+		
+				FBAModel model = new FBAModel(reactions, metabolites, objective);
 
-				model.setBiologicalObjective(objReactions);
 				log.debug("create an optimize");
 
 				Optimize opt = new Optimize();
@@ -666,7 +664,7 @@ public class GraphicalInterface extends JFrame {
 					try {
 						Integer reactionId = Integer.valueOf(vars.get(i).get(
 								GRB.StringAttr.VarName));
-						SBMLReaction aReaction = (SBMLReaction) aFactory
+						SBMLReaction aReaction = (SBMLReaction) rFactory
 								.getReactionById(reactionId, "SBML",
 										getOptimizePath());
 						outputText.append("\nReaction:"

@@ -66,18 +66,14 @@ public class Optimize {
 			this.varNames.add(varName);
 		}
 	}
-	private void setConstraints(){
-		
+	
+	private void setConstraints() {
 		Vector<ModelReaction> reactions = this.model.getReactions();
 		setConstraints(reactions,ConType.EQUAL,0.0);
-		//Add the exchange reactions 
-		Vector<ModelReaction> exchangeReactions = this.model.getExchangeReactions();
-		//setConstraints(exchangeReactions,ConType.LESS_EQUAL,1000.0); //TODO: Get these exchange flux constraints dynamically
-	}
-	
+	}	
 	
 	private void setConstraints(Vector<ModelReaction> reactions, ConType conType, double bValue) {
-		Hashtable ht = new Hashtable();
+/*		Hashtable ht = new Hashtable();
 		
 		ReactantFactory rFactory = new ReactantFactory();
 		ProductFactory pFactory = new ProductFactory();
@@ -138,19 +134,23 @@ public class Optimize {
 						.elementAt(i).id + "stoic=" + pairs.elementAt(i).stoic);
 			}
 			this.getSolver().addConstraint(map, conType, bValue);
-		}	
-
+		}	*/
+		
+		Vector<Map<Integer, Double>> sMatrix = this.model.getSMatrix();
+		for (Integer i = 0; i < sMatrix.size(); i++) {
+			this.getSolver().addConstraint(sMatrix.elementAt(i), conType, bValue);
+		}
 	}
 
 	private void setObjective() {
 		this.getSolver().setObjType(ObjType.Maximize);
-		Vector<Integer> objFunction = this.model.getBiologicalObjective();
+		Vector<Double> objective = this.model.getObjective();
 
 		Map<Integer, Double> map = new HashMap<Integer, Double>();
-		for (int i = 0; i < objFunction.size(); i++) {
-			// TODO: Currently we only allow for objective coefficient of 1.
-			// This could easily be updated.
-			map.put(objFunction.elementAt(i), 1.0);
+		for (int i = 0; i < objective.size(); i++) {
+			if (objective.elementAt(i) != 0.0) {
+				map.put(i, objective.elementAt(i));
+			}
 		}
 		this.getSolver().setObj(map);
 		
@@ -161,9 +161,6 @@ public class Optimize {
 	}
 
 	public void optimize() {
-		
-		
-		
 		log.debug("Set Vars");
 		this.setVars();
 		log.debug("setConstraints");
@@ -179,35 +176,15 @@ public class Optimize {
 	}
 
 	public static void main(String[] argv) {
-		ReactionFactory aFactory = new ReactionFactory();
-		Vector<ModelReaction> reactions =  aFactory.getAllReactions("SBML", "ecoli_core_model_full_with_boundaries_mapped"); 
-		
-		//Vector<ModelReaction> exchangeReactions =  aFactory.getExchangeReactions("SBML", "ecoli_core_model_full_with_boundaries_mapped"); 
-		
-		
-		FBAModel model = new FBAModel();
-		for(int i=0; i < reactions.size(); i++){
-			model.addReaction(reactions.elementAt(i));
-		}
-		
-//		for(int i=0; i < exchangeReactions.size(); i++){
-//			model.addExchangeReaction(exchangeReactions.elementAt(i));
-//		}
-//		
-		Vector<Integer> objReactions = aFactory.getObjectiveFunctions("SBML", "ecoli_core_model_full_with_boundaries_mapped");
-		
-		
-		
-		model.setBiologicalObjective(objReactions);
-		
+		String databaseName = "Ec_core_flux1_no_boundaries";
+				
 		Optimize opt = new Optimize();
-		opt.setDatabaseName("ecoli_core_model_full_with_boundaries_mapped");//should be optimizePath once the copier is implemented
+		opt.setDatabaseName(databaseName);//should be optimizePath once the copier is implemented
+		
+		FBAModel model = new FBAModel(databaseName);		
 		opt.setFBAModel(model);
 		 
-		opt.optimize();
-		
-		
-		
+		opt.optimize();		
 		
 		List<GRBVar> vars = ((GurobiSolver) opt.getSolver()).getVars();
 		for (int i = 0; i < vars.size(); i++) {
@@ -215,8 +192,10 @@ public class Optimize {
 			try {
 				Integer reactionId = Integer.valueOf(vars.get(i).get(
 						GRB.StringAttr.VarName));
-				SBMLReaction aReaction = (SBMLReaction) aFactory
-						.getReactionById(reactionId, "SBML", "ecoli_core_model_full_with_boundaries");
+				
+				ReactionFactory rFactory = new ReactionFactory();
+				SBMLReaction aReaction = (SBMLReaction) rFactory
+						.getReactionById(reactionId, "SBML", databaseName);
 				System.out.println("Reaction:"
 						+ aReaction.getReactionAbbreviation() + " Flux: "
 						+ vars.get(i).get(GRB.DoubleAttr.X));
@@ -227,6 +206,7 @@ public class Optimize {
 		}
 		System.out.println("max objective flux:" + opt.getmaxFlux());
 	}
+	
 	public static Solver getSolver() {
 		return solver;
 	}

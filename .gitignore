@@ -2,11 +2,11 @@
 *.db
 *.log
 *.log.1
-
-log4j.properties
+*.orig
 
 .classpath
 .project
-
+log4j.properties
 model.lp
 model.mps
+settings.xml

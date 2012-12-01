@@ -95,7 +95,7 @@ public class ReactionFactory {
 				PreparedStatement prep = conn
 				.prepareStatement("select id, knockout, reaction_abbreviation, reaction_name, reaction_string, reversible, "
 						+ " biological_objective, lower_bound, upper_bound, flux_value "
-						+ " from reactions  where length(reaction_abbreviation) > 0;");
+						+ " from reactions where length(reaction_abbreviation) > 0;");
 				conn.setAutoCommit(true);
 				ResultSet rs = prep.executeQuery();
 				while (rs.next()) {
@@ -128,8 +128,8 @@ public class ReactionFactory {
 	 * @param args
 	 */
 
-	public Vector<Integer> getObjectiveFunctions(String sourceType, String databaseName) {
-		Vector<Integer> objectiveFunctions = new Vector<Integer>();
+	public Vector<Double> getObjective(String sourceType, String databaseName) {
+		Vector<Double> objective = new Vector<Double>();
 
 		if("SBML".equals(sourceType)){
 			try {
@@ -137,30 +137,28 @@ public class ReactionFactory {
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				return objectiveFunctions;
+				return objective;
 			}
 			Connection conn;
 			try {
 				conn = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db"); 
 
 				Statement stat = conn.createStatement();
-				ResultSet rs = stat.executeQuery("select id from reactions where biological_objective > 0;");
+				ResultSet rs = stat.executeQuery("select biological_objective from reactions where length(reaction_abbreviation) > 0;");
 
 				while (rs.next()) {
-					Integer id = rs.getInt("id");
-
-					objectiveFunctions.add(id -1); //indexing starts at zero for reactions, 1 in the DB
+					objective.add(rs.getDouble("biological_objective")); 
 				}
 				rs.close();
 				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				return objectiveFunctions;
+				return objective;
 			}
 		}
 
-		return objectiveFunctions;
+		return objective;
 	}
 
 	public static void main(String[] args) {

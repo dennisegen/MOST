@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 
 import edu.rutgers.MOST.config.LocalConfig;
 import edu.rutgers.MOST.presentation.GraphicalInterface;
@@ -207,7 +208,52 @@ public class MetaboliteFactory {
 		}	
 
 		return metaboliteId;
+	}
+	
+	public Vector<ModelMetabolite> getAllInternalMetabolites(String sourceType, String databaseName) {
+		Vector<ModelMetabolite> metabolites = new Vector<ModelMetabolite>();
+		
+		if("SBML".equals(sourceType)){
+			try {
+				Class.forName("org.sqlite.JDBC");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return metabolites;
+			}
+			Connection conn;
+			try {
+				conn = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db"); // TODO:
+				// Make
+				// this
+				// configurable
+				PreparedStatement prep = conn
+				.prepareStatement("select id, metabolite_abbreviation, metabolite_name, charge, compartment, "
+						+ " boundary "
+						+ " from metabolites where length(metabolite_abbreviation) > 0 and boundary = 'false';");
+				conn.setAutoCommit(true);
+				ResultSet rs = prep.executeQuery();
+				while (rs.next()) {
+					SBMLMetabolite metabolite = new SBMLMetabolite();
+					metabolite.setId(rs.getInt("id"));
+					metabolite.setMetaboliteAbbreviation(rs.getString("metabolite_abbreviation"));
+					metabolite.setMetaboliteName(rs.getString("metabolite_name"));
+					metabolite.setCharge(rs.getString("charge"));
+					metabolite.setCompartment(rs.getString("compartment"));
+					metabolite.setBoundary(rs.getString("boundary"));
 
+					metabolites.add(metabolite);
+				}
+				rs.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return metabolites;
+			}
+		}
+		
+		return metabolites;
 	}
 
 	public static void main(String[] args) {

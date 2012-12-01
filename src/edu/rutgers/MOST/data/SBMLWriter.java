@@ -602,7 +602,7 @@ public class SBMLWriter {
 			}
 			else {
 				keys = new String[2];
-				keys[0] = "id"
+				keys[0] = "id";
 				keys[1] = "value";
 			}
 			return keys;
