@@ -18,6 +18,7 @@ import edu.rutgers.MOST.config.LocalConfig;
 import edu.rutgers.MOST.data.DatabaseCopier;
 import edu.rutgers.MOST.data.DatabaseCreator;
 import edu.rutgers.MOST.data.FBAModel;
+import edu.rutgers.MOST.data.JSBMLWriteTest;
 import edu.rutgers.MOST.data.JSBMLWriter;
 import edu.rutgers.MOST.data.MetaboliteFactory;
 import edu.rutgers.MOST.data.MetabolitesMetaColumnManager;
@@ -30,6 +31,7 @@ import edu.rutgers.MOST.data.SBMLMetabolite;
 import edu.rutgers.MOST.data.SBMLModelReader;
 import edu.rutgers.MOST.data.SBMLReaction;
 import edu.rutgers.MOST.data.Settings;
+import edu.rutgers.MOST.data.SettingsFactory;
 import edu.rutgers.MOST.data.TextMetabolitesModelReader;
 import edu.rutgers.MOST.data.TextMetabolitesWriter;
 import edu.rutgers.MOST.data.TextReactionsModelReader;
@@ -95,7 +97,7 @@ public class GraphicalInterface extends JFrame {
 	public String lastCSV_path;
 	public String lastSQL_path;
 	
-	public static Settings curSettings;
+	public static SettingsFactory curSettings;
 	
 	public static DefaultListModel<String> listModel = new DefaultListModel();
 	public static FileList fileList = new FileList();
@@ -568,6 +570,11 @@ public class GraphicalInterface extends JFrame {
 		
 		modelMenu.addSeparator();
 
+		JMenuItem saveSBMLItem = new JMenuItem("Save As SBML");
+		modelMenu.add(saveSBMLItem);
+		saveSBMLItem.setMnemonic(KeyEvent.VK_O);
+		saveSBMLItem.addActionListener(new SaveSBMLItemAction());
+		
 		JMenuItem saveCSVMetabolitesItem = new JMenuItem("Save As CSV Metabolites");
 		modelMenu.add(saveCSVMetabolitesItem);
 		saveCSVMetabolitesItem.setMnemonic(KeyEvent.VK_O);
@@ -1132,6 +1139,17 @@ public class GraphicalInterface extends JFrame {
 	//end methods
 	/*******************************************************************************/
 
+	
+	/*******************************************************************************/
+	//Save methods and actions
+	/*******************************************************************************/ 
+	
+	
+	/*******************************************************************************/
+	//end methods
+	/*******************************************************************************/
+	
+	
 	/*******************************************************************************/
 	//load methods and actions
 	/*******************************************************************************/ 
@@ -1144,11 +1162,12 @@ public class GraphicalInterface extends JFrame {
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser(); 
 			//TODO: test the possibility of a global FileChooser
+			lastSBML_lpath = curSettings.get("LastLoadedSBML");
 			
-			lastSBML_path = curSettings.last_SBML;
-			if (lastSBML_path != null) {
-				fileChooser.setCurrentDirectory(new File(lastSBML_path));			
-			}		
+			if (lastSBML_lpath != null) {
+				fileChooser.setCurrentDirectory(new File(lastSBML_lpath));
+				
+			}
 			
 			//... Open a file dialog.
 			int retval = fileChooser.showOpenDialog(output);
@@ -1158,6 +1177,7 @@ public class GraphicalInterface extends JFrame {
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
 				curSettings.setlast_SBML(rawPathName);
+				curSettings.add("LastLoadedSBML",lastSBML_lpath);
 								
 				String filename = "";
 				if (!rawFilename.endsWith(".xml") && !rawFilename.endsWith(".sbml")) {
@@ -1196,7 +1216,7 @@ public class GraphicalInterface extends JFrame {
 			JTextArea output = null;
 			JFileChooser fileChooser = new JFileChooser();
 			
-			lastSQL_path = curSettings.last_SQL;
+			lastSQL_lpath = curSettings.get("LastLoadedSQL");
 			if (lastSQL_path != null) {
 				fileChooser.setCurrentDirectory(new File(lastSQL_path));
 			}
@@ -1208,6 +1228,7 @@ public class GraphicalInterface extends JFrame {
 				String rawFilename = fileChooser.getSelectedFile().getName();
 				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
 				curSettings.setlast_SQL(rawPathName);
+				curSettings.add("LastLoadedSQL",lastSQL_lpath);
 								
 				if (!rawFilename.endsWith(".db")) {
 					JOptionPane.showMessageDialog(null,                
@@ -1235,9 +1256,13 @@ public class GraphicalInterface extends JFrame {
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser();
 		
-		lastCSV_path = curSettings.last_CSV;
-		if (lastCSV_path != null) {
-			fileChooser.setCurrentDirectory(new File(lastCSV_path));
+		lastCSVM_lpath = curSettings.get("LastLoadedCSVM");
+		if (lastSQL_lpath != null) {
+			fileChooser.setCurrentDirectory(new File(lastCSVM_lpath ));
+		}
+		
+		if (lastCSVM_lpath != null) {
+			fileChooser.setCurrentDirectory(new File(lastCSVM_lpath));
 		}
 		
 		//... Open a file dialog.
@@ -1249,6 +1274,8 @@ public class GraphicalInterface extends JFrame {
 			String rawFilename = fileChooser.getSelectedFile().getName();
 			String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
 			curSettings.setlast_CSV(rawPathName);
+			curSettings.add("LastLoadedCSVM",lastCSVM_lpath);
+			
 			
 			if (!rawFilename.endsWith(".csv")) {
 				JOptionPane.showMessageDialog(null,                
@@ -1301,7 +1328,7 @@ public class GraphicalInterface extends JFrame {
 		JTextArea output = null;
 		JFileChooser fileChooser = new JFileChooser();
 		
-		lastCSV_path = curSettings.last_CSV;
+		lastCSVR_lpath = curSettings.get("LastLoadedCSVR");
 		if (lastCSV_path != null) {
 			fileChooser.setCurrentDirectory(new File(lastCSV_path));
 		}
@@ -1314,6 +1341,7 @@ public class GraphicalInterface extends JFrame {
 			String rawFilename = fileChooser.getSelectedFile().getName();
 			String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
 			curSettings.setlast_CSV(rawPathName);
+			curSettings.add("LastLoadedCSVR",lastCSVR_lpath);
 			
 			if (!rawFilename.endsWith(".csv") && !rawFilename.endsWith(".txt")) {
 				if (!rawFilename.endsWith(".csv")) {
@@ -1382,6 +1410,22 @@ public class GraphicalInterface extends JFrame {
 	/*******************************************************************************/
 	//save methods and actions
 	/*******************************************************************************/
+	
+	class SaveSBMLItemAction implements ActionListener {
+		public void actionPerformed(ActionEvent ae) {
+			System.out.println("Hello");
+			try {
+				JSBMLWriter jWrite = new JSBMLWriter();
+				
+				jWrite.formConnect(LocalConfig.getInstance());
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	
 	class SaveCSVMetabolitesItemAction implements ActionListener {
 		public void actionPerformed(ActionEvent ae) {
@@ -4332,7 +4376,8 @@ public class GraphicalInterface extends JFrame {
 	/**************************************************************************/
 	
 	public static void main(String[] args) throws Exception {
-		curSettings = new Settings();
+		//curSettings = new Settings();
+		curSettings = new SettingsFactory();
 		
 		Class.forName("org.sqlite.JDBC");       
 		DatabaseCreator databaseCreator = new DatabaseCreator();
@@ -4348,8 +4393,6 @@ public class GraphicalInterface extends JFrame {
 		icons.add(new ImageIcon("etc/most32.jpg").getImage());
 
 		GraphicalInterface frame = new GraphicalInterface(con);	   
-		
-		
 		
 		frame.setIconImages(icons);
 		frame.setSize(1000, 600);

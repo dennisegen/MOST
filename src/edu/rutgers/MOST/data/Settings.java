@@ -29,25 +29,69 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 public class Settings {
+	public Map mappings;
+	
 	public Settings() {
+		mappings = new Map();
 		try {
 			this.read();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			File f = new File("settings.xml");
+			boolean success = f.delete();
 		}
 	}
-	public String last_SBML = ".";
-	public String last_CSV = ".";
-	public String last_SQL = ".";
+	public String lastL_SBML;
+	public String lastS_SBML;
+	
+	public String lastL_CSVR;
+	public String lastS_CSVM;
+	
+	public String lastL_SQL;
+	public String lastS_SQL;
+	
+	public class Map {
+		public ArrayList<String> keys;
+		public ArrayList<String> values;
 		
+		public Map() {
+			keys = new ArrayList<String>();
+			values = new ArrayList<String>();
+		}
+		
+		public void add(String key, String value) {
+			this.keys.add(key);
+			this.values.add(value);
+		}
+		
+		public String getValue(String key) {
+			String cur = null;
+			for (String elem : keys) {
+				if (elem == key) {
+					cur = elem;
+					break;
+				}
+			}
+			return cur;
+		}
+		
+		public boolean in(String key) {
+			if (this.getValue(key) != null) {
+				return true;
+			}
+			return false;
+		}
+	}
+	
 	public void writeMethod1() throws Exception {
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 
-	    XMLEventWriter writer = outputFactory.createXMLEventWriter(new FileOutputStream("settings.xml"));
+		XMLEventWriter writer = outputFactory.createXMLEventWriter(new FileOutputStream("settings.xml"));
 	    
 	    
 	    XMLEventFactory xmlEventFactory = XMLEventFactory.newInstance();
+	    
 	    XMLEvent end = xmlEventFactory.createDTD("\n");
 
 	    StartDocument startDocument = xmlEventFactory.createStartDocument("UTF-8", "1.0");
@@ -63,34 +107,55 @@ public class Settings {
 	    
 	    StartElement startElement2 = xmlEventFactory.createStartElement("", "", "Attributes",
 	        attributeList.iterator(), nsList.iterator());
+	    
+	 
 	    writer.add(startElement2);
 	    
-	    StartElement codeSE = xmlEventFactory.createStartElement("", "", "LastSBML");
-	    writer.add(codeSE);       
-	    Characters codeChars = xmlEventFactory.createCharacters(last_SBML);
-	    writer.add(codeChars);
-	    EndElement codeEE = xmlEventFactory.createEndElement("", "", "LastLoadedSBML");
-	    writer.add(codeEE);
-
-	    codeSE = xmlEventFactory.createStartElement("", "", "LastCSV");
-	    writer.add(codeSE);   
-	    codeChars = xmlEventFactory.createCharacters(last_CSV);
-	    writer.add(codeChars);
-	    codeEE = xmlEventFactory.createEndElement("", "", "LastCSV");
-	    writer.add(codeEE);
-
-	    codeSE = xmlEventFactory.createStartElement("", "", "LastSQL");
-	    writer.add(codeSE);   
-	    codeChars = xmlEventFactory.createCharacters(last_SQL);
-	    writer.add(codeChars);
-	    codeEE = xmlEventFactory.createEndElement("", "", "LastSQL");
-	    writer.add(codeEE);
-
+	    
+	   
+	    this.addAttribute(writer, xmlEventFactory, "LastLoadedSBML", lastL_SBML);
+	    
 	    EndDocument ed = xmlEventFactory.createEndDocument();
 	    writer.add(ed);
 
 	    writer.flush();
 	    writer.close();
+
+	    /*StartElement codeSE = xmlEventFactory.createStartElement("", "", "LastLoadedSBML");
+	    writer.add(codeSE);
+	    
+	    
+	    Characters codeChars = xmlEventFactory.createCharacters(lastL_SBML);
+	    writer.add(codeChars);
+	    EndElement codeEE = xmlEventFactory.createEndElement("", "", "LastLoadedSBML");
+	    writer.add(codeEE);
+		*/
+	    
+
+
+	    
+	}
+	
+	public void addAttribute(XMLEventWriter writer, XMLEventFactory xmlEventFactory, 
+			String key, String value) {
+		try {
+			StartElement codeSE = xmlEventFactory.createStartElement("", "", key);
+		    writer.add(codeSE);
+		    
+		    
+		    Characters codeChars = xmlEventFactory.createCharacters(value);
+		    writer.add(codeChars);
+		    EndElement codeEE = xmlEventFactory.createEndElement("", "", key);
+	    
+			writer.add(codeEE);
+			
+			mappings.add(key, value);
+			
+			
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean exists(String dir) {
@@ -98,41 +163,18 @@ public class Settings {
 		return file.exists();
 	}
 	
-	public void setlast_SBML(String value) {
-    	this.last_SBML = value;
+	public void setlastL_SBML(String value) {
+    	this.lastL_SBML = value;
     	try {
 			this.writeMethod1();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		finally {
+			
 		}
     }
-	
-	public void setlast_CSV(String value) {
-    	this.last_CSV = value;
-    	try {
-			this.writeMethod1();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally {
-			
-		}
-    }		
-	
-	public void setlast_SQL(String value) {
-    	this.last_SQL = value;
-    	try {
-			this.writeMethod1();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally {
-			
-		}
-    }	
     
     public void setlastS_SBML(String value) {
     	
@@ -143,62 +185,48 @@ public class Settings {
     	
     }
 	
-    public void read() throws Exception {
-    	XMLInputFactory factory = XMLInputFactory.newInstance();
-    	FileReader fileReader = new FileReader("settings.xml");
-    	XMLEventReader reader = factory.createXMLEventReader(fileReader);
-    	String currentElementValue = "";
+	public void read() throws Exception {
+			XMLInputFactory factory = XMLInputFactory.newInstance();
+		    FileReader fileReader = new FileReader("settings.xml");
+		    XMLEventReader reader = factory.createXMLEventReader(fileReader);
+		    String currentElementValue = "";
+		    
+		    while (reader.hasNext()) {
+		      XMLEvent event = reader.nextEvent();
+		      if (event.isStartElement()) {
+		        StartElement element = (StartElement) event;
+		        currentElementValue = element.getName().toString();
+		        
+		        
+		        System.out.println("Start Element: " + element.getName());
 
-    	while (reader.hasNext()) {
-    		XMLEvent event = reader.nextEvent();
-    		if (event.isStartElement()) {
-    			StartElement element = (StartElement) event;
-    			currentElementValue = element.getName().toString();
-
-
-    			System.out.println("Start Element: " + element.getName());
-
-    			Iterator iterator = element.getAttributes();
-    			while (iterator.hasNext()) {
-    				Attribute attribute = (Attribute) iterator.next();
-    				QName name = attribute.getName();
-    				String value = attribute.getValue();
-    				System.out.println("Attribute name/value: " + name + "/" + value);
-    			}
-    		}
-
-    		if (event.isEndElement()) {
-    			EndElement element = (EndElement) event;
-    			System.out.println("End element:" + element.getName());
-    		}
-
-    		if (event.isCharacters()) {
-    			Characters characters = (Characters) event;
-    			if (currentElementValue == "LastSBML" ) {
-    				String curAddr = characters.getData();
-    				if (this.exists(curAddr)) {
-    					this.setlast_SBML(characters.getData());
-    				}
-    				currentElementValue = "";
-    			}
-    			else if (currentElementValue == "LastSQL" ) {
-    				String curAddr = characters.getData();
-    				if (this.exists(curAddr)) {
-    					this.setlast_SQL(characters.getData());
-    				}
-    				currentElementValue = "";
-    			}
-    			else if (currentElementValue == "LastCSV" ) {
-    				String curAddr = characters.getData();
-    				if (this.exists(curAddr)) {
-    					this.setlast_CSV(characters.getData());
-    				}
-    				currentElementValue = "";
-    			}
-    			System.out.println("Text: " + characters.getData());
-    		}
-    	}
-    }
+		        Iterator iterator = element.getAttributes();
+		        while (iterator.hasNext()) {
+		          Attribute attribute = (Attribute) iterator.next();
+		          QName name = attribute.getName();
+		          String value = attribute.getValue();
+		          System.out.println("Attribute name/value: " + name + "/" + value);
+		        }
+		      }
+		      
+		      if (event.isEndElement()) {
+		        EndElement element = (EndElement) event;
+		        System.out.println("End element:" + element.getName());
+		      }
+		      
+		      if (event.isCharacters()) {
+		        Characters characters = (Characters) event;
+		        if (currentElementValue == "LastLoadedSBML" ) {
+		        	String curAddr = characters.getData();
+		        	if (this.exists(curAddr)) {
+		        		this.setlastL_SBML(characters.getData());
+		        	}
+		        	currentElementValue = "";
+		        }
+		        System.out.println("Text: " + characters.getData());
+		      }
+		    }
+	}
 }
 
 
