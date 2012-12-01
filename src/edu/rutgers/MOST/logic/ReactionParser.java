@@ -29,14 +29,12 @@ public class ReactionParser {
 
 	boolean addMetaboliteOption = true;	
 
-	public ArrayList parseReaction(String reactionEquation, int reactionId, String databaseName) {
+	public ArrayList<ArrayList> parseReaction(String reactionEquation, int reactionId, String databaseName) {
 		DatabaseCreator creator = new DatabaseCreator();
 
-		ReactionFactory rFactory = new ReactionFactory();			
-		//SBMLReaction aReaction = (SBMLReaction)rFactory.getReactionById(reactionId, "SBML", databaseName); 
-		ArrayList<SBMLReactant> reactantList = new ArrayList();
-		ArrayList<SBMLProduct> productList = new ArrayList();
-		ArrayList<ArrayList> reactantsAndProductsList = new ArrayList();
+		ArrayList<SBMLReactant> reactantList = new ArrayList<SBMLReactant>();
+		ArrayList<SBMLProduct> productList = new ArrayList<SBMLProduct>();
+		ArrayList<ArrayList> reactantsAndProductsList = new ArrayList<ArrayList>();
 
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -99,20 +97,20 @@ public class ReactionParser {
 					reactant = reactants.get(0);					
 				}
 
-				MetaboliteFactory mFactory = new MetaboliteFactory();
+				MetaboliteFactory mFactory = new MetaboliteFactory("SBML", databaseName);
 
-				if (mFactory.metaboliteCount(reactant, databaseName) == 0) {
+				if (mFactory.metaboliteCount(reactant) == 0) {
 					if (addMetaboliteOption) {
 						if (GraphicalInterface.showPrompt) {
 							addMetabolitePrompt(mFactory, reactant, reactionId, databaseName);
 						} else {
-							mFactory.addMetabolite(reactant, databaseName);
+							mFactory.addMetabolite(reactant);
 						}
 					}				    					
 				} 
 
-				aFactory[currentReactant] = new ReactantFactory();   		    
-				aReactant[currentReactant] = (SBMLReactant)aFactory[currentReactant].getReactantByReactionId(reactionId, "SBML", databaseName);
+				aFactory[currentReactant] = new ReactantFactory("SBML", databaseName);   		    
+				aReactant[currentReactant] = (SBMLReactant)aFactory[currentReactant].getReactantByReactionId(reactionId);
 				aReactant[currentReactant].setReactionId(reactionId);
 				aReactant[currentReactant].setStoic(stoic);
 				aReactant[currentReactant].setMetaboliteAbbreviation(reactant);
@@ -149,8 +147,8 @@ public class ReactionParser {
 			reactant = reactants.get(0);					
 		}
 
-		MetaboliteFactory nFactory = new MetaboliteFactory();
-		if (nFactory.metaboliteCount(reactant, databaseName) == 0) {
+		MetaboliteFactory nFactory = new MetaboliteFactory("SBML", databaseName);
+		if (nFactory.metaboliteCount(reactant) == 0) {
 			//if user enters values into blank tables on original load of gui, 
 			//this code gets rid of blank rows 
 			if (databaseName == ConfigConstants.DEFAULT_DATABASE_NAME) {
@@ -164,13 +162,13 @@ public class ReactionParser {
 				if (GraphicalInterface.showPrompt) {
 					addMetabolitePrompt(nFactory, reactant, reactionId, databaseName);
 				} else {
-					nFactory.addMetabolite(reactant, databaseName);
+					nFactory.addMetabolite(reactant);
 				}
 			}		    
 		} 
 
-		aFactory[currentReactant] = new ReactantFactory();   		    
-		aReactant[currentReactant] = (SBMLReactant)aFactory[currentReactant].getReactantByReactionId(reactionId, "SBML", databaseName);
+		aFactory[currentReactant] = new ReactantFactory("SBML", databaseName);   		    
+		aReactant[currentReactant] = (SBMLReactant)aFactory[currentReactant].getReactantByReactionId(reactionId);
 		aReactant[currentReactant].setReactionId(reactionId);
 		aReactant[currentReactant].setStoic(stoic);
 		aReactant[currentReactant].setMetaboliteAbbreviation(reactant);
@@ -223,21 +221,21 @@ public class ReactionParser {
 						product = products.get(0);					
 					}
 
-					MetaboliteFactory mFactory = new MetaboliteFactory();
-					if (mFactory.metaboliteCount(product, databaseName) == 0) {
+					MetaboliteFactory mFactory = new MetaboliteFactory("SBML", databaseName);
+					if (mFactory.metaboliteCount(product) == 0) {
 
 						if (addMetaboliteOption) {
 							if (GraphicalInterface.showPrompt) {
 								addMetabolitePrompt(mFactory, product, reactionId, databaseName);
 							} else {
-								mFactory.addMetabolite(product, databaseName);
+								mFactory.addMetabolite(product);
 							}
 						}
 
 					} 
 
-					pFactory[currentProduct] = new ProductFactory();   		    
-					aProduct[currentProduct] = (SBMLProduct)pFactory[currentProduct].getProductByReactionId(reactionId, "SBML", databaseName);
+					pFactory[currentProduct] = new ProductFactory("SBML", databaseName);   		    
+					aProduct[currentProduct] = (SBMLProduct)pFactory[currentProduct].getProductByReactionId(reactionId);
 					aProduct[currentProduct].setReactionId(reactionId);
 					aProduct[currentProduct].setStoic(prodStoic);
 					aProduct[currentProduct].setMetaboliteAbbreviation(product);
@@ -274,20 +272,20 @@ public class ReactionParser {
 				product = products.get(0);					
 			}
 
-			MetaboliteFactory oFactory = new MetaboliteFactory();
-			if (oFactory.metaboliteCount(product, databaseName) == 0) {
+			MetaboliteFactory oFactory = new MetaboliteFactory("SBML", databaseName);
+			if (oFactory.metaboliteCount(product) == 0) {
 
 				if (addMetaboliteOption) {
 					if (GraphicalInterface.showPrompt) {
 						addMetabolitePrompt(oFactory, product, reactionId, databaseName);
 					} else {
-						oFactory.addMetabolite(product, databaseName);
+						oFactory.addMetabolite(product);
 					}
 				}				
 			}
 
-			pFactory[currentProduct] = new ProductFactory();   		    
-			aProduct[currentProduct] = (SBMLProduct)pFactory[currentProduct].getProductByReactionId(reactionId, "SBML", databaseName);
+			pFactory[currentProduct] = new ProductFactory("SBML", databaseName);   		    
+			aProduct[currentProduct] = (SBMLProduct)pFactory[currentProduct].getProductByReactionId(reactionId);
 			aProduct[currentProduct].setReactionId(reactionId);
 			aProduct[currentProduct].setStoic(prodStoic);
 			aProduct[currentProduct].setMetaboliteAbbreviation(product);
@@ -349,13 +347,13 @@ public class ReactionParser {
 			// interpret the user's choice	  
 			if (choice == JOptionPane.YES_OPTION)
 			{
-				mFactory.addMetabolite(reactant, databaseName);
+				mFactory.addMetabolite(reactant);
 			}
 			//No option actually corresponds to "Yes to All" button
 			if (choice == JOptionPane.NO_OPTION)
 			{
 				GraphicalInterface.showPrompt = false;
-				mFactory.addMetabolite(reactant, databaseName);
+				mFactory.addMetabolite(reactant);
 			}
 			//Cancel option actually corresponds to "No" button
 			if (choice == JOptionPane.CANCEL_OPTION) {
@@ -366,8 +364,8 @@ public class ReactionParser {
 	}
 
 	public void clearReactionString(int reactionId, String databaseName) {
-		ReactionFactory rFactory = new ReactionFactory();			
-		SBMLReaction aReaction = (SBMLReaction)rFactory.getReactionById(reactionId, "SBML", databaseName); 
+		ReactionFactory rFactory = new ReactionFactory("SBML", databaseName);			
+		SBMLReaction aReaction = (SBMLReaction)rFactory.getReactionById(reactionId); 
 		aReaction.setReactionString("");
 		aReaction.update();
 		aReaction.clearReactants();
@@ -393,7 +391,7 @@ public class ReactionParser {
 		java.util.List<String> halfEquations = Arrays.asList(correctedReaction.split(splitString(correctedReaction)));	
 		java.util.List<String> reactantsAndCoeff = Arrays.asList(halfEquations.get(0).split("\\s+"));
 
-		MetaboliteFactory mFactory = new MetaboliteFactory();
+		MetaboliteFactory mFactory = new MetaboliteFactory("SBML", databaseName);
 		ArrayList<String> reactants = new ArrayList();
 		String reactant;
 
@@ -411,7 +409,7 @@ public class ReactionParser {
 				}
 
 				if (reactant != null || reactant.trim().length() > 0) {
-					speciesIdList.add(mFactory.metaboliteId(databaseName, reactant));
+					speciesIdList.add(mFactory.metaboliteId(reactant));
 				}
 				
 				currentReactant += 1;
@@ -428,7 +426,7 @@ public class ReactionParser {
 		}
 
 		if (reactant != null || reactant.trim().length() > 0) {
-			speciesIdList.add(mFactory.metaboliteId(databaseName, reactant));
+			speciesIdList.add(mFactory.metaboliteId(reactant));
 		}
 
 		//for reactions with no products (metabolite <==>), there will be no 2nd
@@ -453,7 +451,7 @@ public class ReactionParser {
 
 					//avoids duplicate entries
 					if (product != null || product.trim().length() > 0) {
-						Integer id = mFactory.metaboliteId(databaseName, product);
+						Integer id = mFactory.metaboliteId(product);
 						if (!speciesIdList.contains(id)) {
 							speciesIdList.add(id);
 						}
@@ -472,7 +470,7 @@ public class ReactionParser {
 
 			//avoids duplicate entries
 			if (product != null || product.trim().length() > 0) {
-				Integer id = mFactory.metaboliteId(databaseName, product);
+				Integer id = mFactory.metaboliteId(product);
 				if (!speciesIdList.contains(id)) {
 					speciesIdList.add(id);
 				}

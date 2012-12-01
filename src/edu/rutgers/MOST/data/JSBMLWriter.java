@@ -133,9 +133,9 @@ public class JSBMLWriter implements TreeModelListener{
 		}
 		
 		public void parseAllMetabolites(MetaboliteFactory mFactory) {
-			int length = mFactory.metaboliteCount(sourceType, databaseName);
+			int length = mFactory.metaboliteCount(sourceType);
 			for (int i=0; i < length; i++) {
-				this.allMetabolites.add((SBMLMetabolite) mFactory.getMetaboliteById(i, sourceType, databaseName));
+				this.allMetabolites.add((SBMLMetabolite) mFactory.getMetaboliteById(i));
 			}
 			
 			if (this.model != null) {

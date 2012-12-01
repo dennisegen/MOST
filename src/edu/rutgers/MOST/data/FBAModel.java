@@ -10,38 +10,39 @@ public class FBAModel {
 	private Vector<ModelReaction> reactions;
 	private Vector<ModelMetabolite> metabolites;
 	private Vector<Double> objective;
-	private Vector<Map<Integer, Double>> sMatrix;
+	private ArrayList<Map<Integer, Double>> sMatrix;
 	
 	public FBAModel(String databaseName) {
-		ReactionFactory rFactory = new ReactionFactory();
-		this.reactions = rFactory.getAllReactions("SBML", databaseName); 
-		this.objective = rFactory.getObjective("SBML", databaseName);
+		ReactionFactory rFactory = new ReactionFactory("SBML", databaseName);
+		this.reactions = rFactory.getAllReactions(); 
+		this.objective = rFactory.getObjective();
 		
-		MetaboliteFactory mFactory = new MetaboliteFactory();
-		this.metabolites = mFactory.getAllInternalMetabolites("SBML", databaseName);
+		MetaboliteFactory mFactory = new MetaboliteFactory("SBML", databaseName);
+		this.metabolites = mFactory.getAllInternalMetabolites();
 
-		ReactantFactory reactantFactory = new ReactantFactory();
-		ArrayList<ModelReactant> reactantList = reactantFactory.getAllReactants("SBML", databaseName);		
-		ProductFactory productFactory = new ProductFactory();
-		ArrayList<ModelProduct> productList = productFactory.getAllProducts("SBML", databaseName);
+		ReactantFactory reactantFactory = new ReactantFactory("SBML", databaseName);
+		ArrayList<ModelReactant> reactantList = reactantFactory.getAllReactants();		
+		ProductFactory productFactory = new ProductFactory("SBML", databaseName);
+		ArrayList<ModelProduct> productList = productFactory.getAllProducts();
 		
-		this.sMatrix = new Vector<Map<Integer, Double>>(metabolites.size());
-		for (Integer i = 0; i < reactantList.size(); i++) {
-			SBMLReactant reactant = (SBMLReactant) reactantList.get(i);
-			Map<Integer, Double> sRow = sMatrix.elementAt(reactant.getMetaboliteId());
-			if (sRow == null) {
-				sRow = new HashMap<Integer, Double>();
-			}
-			sRow.put(reactant.getReactionId(), -reactant.getStoic());
+		this.sMatrix = new ArrayList<Map<Integer, Double>>(metabolites.size());
+		for (int i = 0; i < metabolites.size(); i++) {
+			Map<Integer, Double> sRow = new HashMap<Integer, Double>();
+			sMatrix.add(sRow);
 		}
 		
-		for (Integer i = 0; i < productList.size(); i++) {
-			SBMLProduct product = (SBMLProduct) productList.get(i);
-			Map<Integer, Double> sRow = sMatrix.elementAt(product.getMetaboliteId());
-			if (sRow == null) {
-				sRow = new HashMap<Integer, Double>();
+		for (int i = 0; i < reactantList.size(); i++) {
+			SBMLReactant reactant = (SBMLReactant) reactantList.get(i);
+			if (reactant.getMetaboliteId() <= metabolites.size()) {
+				sMatrix.get(reactant.getMetaboliteId() - 1).put(reactant.getReactionId() - 1, -reactant.getStoic());
 			}
-			sRow.put(product.getReactionId(), product.getStoic());			
+		}
+		
+		for (int i = 0; i < productList.size(); i++) {
+			SBMLProduct product = (SBMLProduct) productList.get(i);
+			if (product.getMetaboliteId() <= metabolites.size()) {
+				sMatrix.get(product.getMetaboliteId() - 1).put(product.getReactionId() - 1, product.getStoic());
+			}
 		}
 	}
 	
@@ -53,7 +54,7 @@ public class FBAModel {
 	    return this.objective;
 	}
 	
-	public Vector<Map<Integer, Double>> getSMatrix() {
+	public ArrayList<Map<Integer, Double>> getSMatrix() {
 		return this.sMatrix;
 	}
 	

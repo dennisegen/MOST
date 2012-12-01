@@ -131,8 +131,8 @@ public class SBMLProductCollection implements ModelProductCollection {
 	
 
 	public static void main(String[] args) {
-		ProductFactory aProductFactory = new ProductFactory();
-		ArrayList<ModelProduct> products = aProductFactory.getProductsByReactionId(1, "SBML", "test_03182012");
+		ProductFactory aProductFactory = new ProductFactory("SBML", "test_03182012");
+		ArrayList<ModelProduct> products = aProductFactory.getProductsByReactionId(1);
 		Iterator<ModelProduct> iterator = products.iterator();
 		 
 		while(iterator.hasNext()){

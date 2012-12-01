@@ -3,7 +3,15 @@ package edu.rutgers.MOST.data;
 import java.util.ArrayList;
 
 public class ReactantFactory {
-	public ModelReactant getReactantByReactionId(Integer reactionId, String sourceType, String databaseName) {
+	private String sourceType;
+	private String databaseName;
+	
+	public ReactantFactory(String sourceType, String databaseName) {
+		this.sourceType = sourceType;
+		this.databaseName = databaseName;
+	}
+		
+	public ModelReactant getReactantByReactionId(Integer reactionId) {
 		if("SBML".equals(sourceType)){
 			SBMLReactant reactant = new SBMLReactant();
 			reactant.setDatabaseName(databaseName);
@@ -13,7 +21,7 @@ public class ReactantFactory {
 		return new SBMLReactant(); //Default behavior.
 	}
 	
-	public ArrayList<ModelReactant> getReactantsByReactionId(Integer reactionId, String sourceType, String databaseName) {
+	public ArrayList<ModelReactant> getReactantsByReactionId(Integer reactionId) {
 		SBMLReactantCollection aReactantCollection = new SBMLReactantCollection();
 		if("SBML".equals(sourceType)){			
 			aReactantCollection.setDatabaseName(databaseName);
@@ -23,7 +31,7 @@ public class ReactantFactory {
 		return aReactantCollection.getReactantList();		
 	}
 	
-	public ArrayList<ModelReactant> getAllReactants(String sourceType, String databaseName) {
+	public ArrayList<ModelReactant> getAllReactants() {
 		SBMLReactantCollection aReactantCollection = new SBMLReactantCollection();
 		if("SBML".equals(sourceType)){			
 			aReactantCollection.setDatabaseName(databaseName);

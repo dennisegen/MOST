@@ -6,16 +6,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Vector;
 
-import edu.rutgers.MOST.config.LocalConfig;
-import edu.rutgers.MOST.presentation.ProgressConstants;
-
 public class ReactionFactory {
+	private String sourceType;
+	private String databaseName;
+	
+	public ReactionFactory(String sourceType, String databaseName) {
+		this.sourceType = sourceType;
+		this.databaseName = databaseName;
+	}
 
-	public ModelReaction getReactionById(Integer reactionId, String sourceType, String databaseName){
-
-
+	public ModelReaction getReactionById(Integer reactionId){
 		if("SBML".equals(sourceType)){
 			SBMLReaction reaction = new SBMLReaction();
 			reaction.setDatabaseName(databaseName);
@@ -25,7 +28,7 @@ public class ReactionFactory {
 		return new SBMLReaction(); //Default behavior.
 	}
 
-	public int reactantUsedCount(Integer id, String databaseName) {
+	public int reactantUsedCount(Integer id) {
 		int count = 0;
 		String queryString = "jdbc:sqlite:" + databaseName + ".db"; //TODO:DEGEN:Call LocalConfig
 		//not necessary to call LocalConfig since this method is only called in the Graphical Interface 
@@ -51,7 +54,7 @@ public class ReactionFactory {
 		return count;
 	}
 
-	public int productUsedCount(Integer id, String databaseName) {
+	public int productUsedCount(Integer id) {
 		int count = 0;
 		String queryString = "jdbc:sqlite:" + databaseName + ".db"; 
 		try {
@@ -75,7 +78,7 @@ public class ReactionFactory {
 		return count;
 	}
 
-	public Vector<ModelReaction> getAllReactions(String sourceType, String databaseName) {
+	public Vector<ModelReaction> getAllReactions() {
 		Vector<ModelReaction> reactions = new Vector<ModelReaction>();
 
 		if("SBML".equals(sourceType)){
@@ -128,7 +131,7 @@ public class ReactionFactory {
 	 * @param args
 	 */
 
-	public Vector<Double> getObjective(String sourceType, String databaseName) {
+	public Vector<Double> getObjective() {
 		Vector<Double> objective = new Vector<Double>();
 
 		if("SBML".equals(sourceType)){
@@ -160,11 +163,37 @@ public class ReactionFactory {
 
 		return objective;
 	}
+	
+	public void setFluxes(ArrayList<Double> fluxes) {
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Connection conn;
+		try {
+			conn = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db"); 
+
+			Statement stat = conn.createStatement();
+			String query = "update reactions set flux_value = case id";
+			for (int i = 0; i < fluxes.size(); i++) {
+				query = query + " when " + (i + 1) + " then " + fluxes.get(i);
+			}
+			query = query + " end";
+			stat.executeUpdate(query);
+			
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
 
 	public static void main(String[] args) {
 
-		ReactionFactory aFactory = new ReactionFactory();
-		//		SBMLReaction aReaction = (SBMLReaction)aFactory.getReactionById("1", "SBML","small"); //You can change this reactionId to be any reaction ID string
+		ReactionFactory aFactory = new ReactionFactory("SBML","small");
+		//		SBMLReaction aReaction = (SBMLReaction)aFactory.getReactionById("1"); //You can change this reactionId to be any reaction ID string
 		//		aReaction.setBiologicalObjective(8.999); //testing update of biological Objective
 		//		aReaction.update();
 		//Vector<ModelReaction> reactions =  aFactory.getAllReactions("SBML", "small");

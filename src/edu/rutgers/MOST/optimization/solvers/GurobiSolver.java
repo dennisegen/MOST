@@ -2,18 +2,10 @@ package edu.rutgers.MOST.optimization.solvers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.sbml.jsbml.ext.groups.GroupList;
-
-import edu.rutgers.MOST.config.LocalConfig;
-import edu.rutgers.MOST.data.ReactionFactory;
-import edu.rutgers.MOST.data.SBMLReaction;
-import edu.rutgers.MOST.optimization.FBA.Optimize;
-import edu.rutgers.MOST.config.LocalConfig;
 
 import gurobi.*;
 
@@ -22,7 +14,7 @@ public class GurobiSolver extends Solver {
 	static Logger log = Logger.getLogger(GurobiSolver.class);
 	private GRBEnv env;
 	private GRBModel model;
-	private List<GRBVar> vars = new ArrayList<GRBVar>();
+	private ArrayList<GRBVar> vars = new ArrayList<GRBVar>();
 
 	public GurobiSolver(String logName) {
 		try {
@@ -69,11 +61,21 @@ public class GurobiSolver extends Solver {
 			e.printStackTrace();
 		}
 	}
-
-	public List<GRBVar> getVars() {
-		return vars;
+	
+	public ArrayList<Double> getSoln() {
+		ArrayList<Double> soln = new ArrayList<Double>(vars.size());
+		for (int i = 0; i < this.vars.size(); i++) {
+			try {
+				soln.add(this.vars.get(i).get(GRB.DoubleAttr.X));
+			} catch (GRBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();				
+			}
+		}
+		
+		return soln;
 	}
-
+	
 	@Override
 	public void setVars(VarType[] types, double[] lb, double[] ub) {
 		// TODO Auto-generated method stub

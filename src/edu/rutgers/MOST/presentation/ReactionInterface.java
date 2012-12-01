@@ -629,8 +629,7 @@ public class ReactionInterface extends JFrame {
 		//create listeners
 
 		ActionListener revActionListener = new ActionListener() {
-			public void actionPerformed(ActionEvent revActionEvent) {
-				ReactionFactory rFactory = new ReactionFactory();			
+			public void actionPerformed(ActionEvent revActionEvent) {		
 				cbProduct[0].grabFocus();
 				if (trueButton.isSelected()) {
 					setArrowString(" <==> ");

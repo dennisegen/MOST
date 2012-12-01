@@ -12,8 +12,15 @@ import edu.rutgers.MOST.config.LocalConfig;
 import edu.rutgers.MOST.presentation.GraphicalInterface;
 
 public class MetaboliteFactory {
+	private String sourceType;
+	private String databaseName;
+	
+	public MetaboliteFactory(String sourceType, String databaseName) {
+		this.sourceType = sourceType;
+		this.databaseName = databaseName;
+	}
 
-	public ModelMetabolite getMetaboliteById(Integer metaboliteId, String sourceType, String databaseName){
+	public ModelMetabolite getMetaboliteById(Integer metaboliteId){
 
 
 		if("SBML".equals(sourceType)){
@@ -25,7 +32,7 @@ public class MetaboliteFactory {
 		return new SBMLMetabolite(); //Default behavior.
 	}
 
-	public int metaboliteCount(String metabolite, String databaseName) {
+	public int metaboliteCount(String metabolite) {
 		int count = 0;
 		String queryString = "jdbc:sqlite:" + databaseName + ".db"; 
 		try {
@@ -50,7 +57,7 @@ public class MetaboliteFactory {
 		return count;
 	}
 
-	public void addMetabolite(String metabolite, String databaseName) {
+	public void addMetabolite(String metabolite) {
 		String queryString = "jdbc:sqlite:" + databaseName + ".db"; 
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -77,7 +84,7 @@ public class MetaboliteFactory {
 		}		
 	}
 
-	public boolean isUnused(int id, String databaseName) {
+	public boolean isUnused(int id) {
 		String used = "";
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
 		try {
@@ -108,7 +115,7 @@ public class MetaboliteFactory {
 		return false;		
 	}
 
-	public void setMetaboliteUsedValue(Integer metaboliteId, String databaseName, String booleanValue) {
+	public void setMetaboliteUsedValue(Integer metaboliteId, String booleanValue) {
 		String queryString = "jdbc:sqlite:" + databaseName + ".db"; 
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -134,7 +141,7 @@ public class MetaboliteFactory {
 		}
 	}
 
-	public int maximumId(String databaseName) {
+	public int maximumId() {
 		int max = 0;
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
 		try {
@@ -158,7 +165,7 @@ public class MetaboliteFactory {
 		return max;
 	}
 
-	public void deleteAllUnusedMetabolites(String databaseName) {
+	public void deleteAllUnusedMetabolites() {
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -181,7 +188,7 @@ public class MetaboliteFactory {
 		}		
 	}
 
-	public Integer metaboliteId(String databaseName, String metaboliteAbbreviation) {
+	public Integer metaboliteId(String metaboliteAbbreviation) {
 		Integer metaboliteId = 0;
 
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
@@ -210,7 +217,7 @@ public class MetaboliteFactory {
 		return metaboliteId;
 	}
 	
-	public Vector<ModelMetabolite> getAllInternalMetabolites(String sourceType, String databaseName) {
+	public Vector<ModelMetabolite> getAllInternalMetabolites() {
 		Vector<ModelMetabolite> metabolites = new Vector<ModelMetabolite>();
 		
 		if("SBML".equals(sourceType)){
@@ -258,8 +265,8 @@ public class MetaboliteFactory {
 
 	public static void main(String[] args) {
 		String databaseName = "Model_Reconstruction_corrected";
-		MetaboliteFactory mFactory = new MetaboliteFactory();
-		mFactory.deleteAllUnusedMetabolites(databaseName);
+		MetaboliteFactory mFactory = new MetaboliteFactory("SBML", databaseName);
+		mFactory.deleteAllUnusedMetabolites();
 	}
 
 }

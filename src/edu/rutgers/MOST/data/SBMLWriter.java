@@ -138,9 +138,9 @@ public class SBMLWriter {
 	
 	
 	public void parseAllReactions(ReactionFactory rFactory) {
-		int length = rFactory.getAllReactions(sourceType, databaseName).size();
+		int length = rFactory.getAllReactions().size();
 		for (int i=0; i < length; i++) {
-			this.allReactions.add((SBMLReaction) rFactory.getReactionById(i, sourceType, databaseName));
+			this.allReactions.add((SBMLReaction) rFactory.getReactionById(i));
 		}
 		
 		for (SBMLReaction react : allReactions) {
@@ -152,9 +152,9 @@ public class SBMLWriter {
 	}
 	
 	public void parseAllMetabolites(MetaboliteFactory mFactory) {
-		int length = mFactory.metaboliteCount(sourceType, databaseName);
+		int length = mFactory.metaboliteCount(sourceType);
 		for (int i=0; i < length; i++) {
-			this.allMetabolites.add((SBMLMetabolite) mFactory.getMetaboliteById(i, sourceType, databaseName));
+			this.allMetabolites.add((SBMLMetabolite) mFactory.getMetaboliteById(i));
 		}
 	}
 	

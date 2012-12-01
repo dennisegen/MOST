@@ -131,8 +131,8 @@ public class SBMLReactantCollection implements ModelReactantCollection {
 	
 
 	public static void main(String[] args) {
-		ReactantFactory aReactantFactory = new ReactantFactory();
-		ArrayList<ModelReactant> reactants = aReactantFactory.getReactantsByReactionId(1, "SBML", "test_03182012");
+		ReactantFactory aReactantFactory = new ReactantFactory("SBML", "test_03182012");
+		ArrayList<ModelReactant> reactants = aReactantFactory.getReactantsByReactionId(1);
 		Iterator<ModelReactant> iterator = reactants.iterator();
 		 
 		while(iterator.hasNext()){
