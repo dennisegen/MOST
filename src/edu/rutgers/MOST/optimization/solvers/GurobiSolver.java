@@ -168,7 +168,7 @@ public class GurobiSolver extends Solver {
 	}
 
 	public void finalize() {
-		// Not guarrantee to be invoked
+		// Not guaranteed to be invoked
 		this.model.dispose();
 		try {
 			this.env.dispose();
@@ -220,23 +220,22 @@ public class GurobiSolver extends Solver {
 
 	@Override
 	public double optimize() {
-		// TODO Auto-generated method stub
 		try {
 			model.optimize();
-			model.write("model.lp");
-			model.write("model.mps");
-
+//			model.write("model.lp");
+//			model.write("model.mps");
 		} catch (GRBException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
+			e.printStackTrace();	
 		}
+		
 		try {
 			return this.model.get(GRB.DoubleAttr.ObjVal);
 		} catch (GRBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		return 0;
 	}
 
