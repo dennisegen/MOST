@@ -77,8 +77,7 @@ public class SBMLModelReader {
 			e.printStackTrace();
 		}
 		try{
-			Connection conn =
-				DriverManager.getConnection(queryString);
+			Connection conn = DriverManager.getConnection(queryString);
 			Statement stat = conn.createStatement();
 
 			new SBMLModelReader(doc);
@@ -86,6 +85,7 @@ public class SBMLModelReader {
 			ArrayList<String> metabMetaColumnNames = new ArrayList();
 
 			try {
+//				long startTime = System.currentTimeMillis();
 				stat.executeUpdate("BEGIN TRANSACTION");
 				
 				ListOf<Species> metabolites = doc.getModel().getListOfSpecies();
@@ -259,6 +259,11 @@ public class SBMLModelReader {
 				LocalConfig.getInstance().setMaxMetaboliteId(metabolites.size());
 				LocalConfig.getInstance().setMetaboliteIdNameMap(metaboliteIdNameMap);
 				System.out.println("id name map " + LocalConfig.getInstance().getMetaboliteIdNameMap());
+				
+//				long endTime = System.currentTimeMillis();
+//				System.out.println("Metabolite read time: " + (endTime - startTime));
+//								
+//				startTime = System.currentTimeMillis();				
 								
 				ListOf<Reaction> reactions = doc.getModel().getListOfReactions();
 				for (int j = 0; j < reactions.size(); j++) {
@@ -539,6 +544,9 @@ public class SBMLModelReader {
 					stat.executeUpdate(reacInsert);	
 				}
 				stat.executeUpdate("COMMIT");
+				
+//				endTime = System.currentTimeMillis();
+//				System.out.println("Reaction read time: " + (endTime - startTime));				
 			} catch (Exception e) {
 				e.printStackTrace();
 				stat.executeUpdate("ROLLBACK"); // throw away all updates since BEGIN TRANSACTION
