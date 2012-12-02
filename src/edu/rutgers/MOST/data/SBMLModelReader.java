@@ -1,9 +1,13 @@
 package edu.rutgers.MOST.data;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.xml.stream.XMLStreamException;
+
 import org.sbml.jsbml.*;
 
 import edu.rutgers.MOST.config.LocalConfig;
@@ -29,7 +33,7 @@ public class SBMLModelReader {
 		this.doc = doc;
 	}
 
-	private static ArrayList<String> reactionsMetaColumnNames = new ArrayList();
+	private static ArrayList<String> reactionsMetaColumnNames = new ArrayList<String>();
 
 	public ArrayList<String> getReactionsMetaColumnNames() {
 		return reactionsMetaColumnNames;
@@ -39,7 +43,7 @@ public class SBMLModelReader {
 		this.reactionsMetaColumnNames = reactionsMetaColumnNames;
 	}
 
-	private static ArrayList<String> metabolitesMetaColumnNames = new ArrayList();
+	private static ArrayList<String> metabolitesMetaColumnNames = new ArrayList<String>();
 
 	public ArrayList<String> getMetabolitesMetaColumnNames() {
 		return metabolitesMetaColumnNames;
@@ -82,7 +86,7 @@ public class SBMLModelReader {
 
 			new SBMLModelReader(doc);
 
-			ArrayList<String> metabMetaColumnNames = new ArrayList();
+			ArrayList<String> metabMetaColumnNames = new ArrayList<String>();
 
 			try {
 //				long startTime = System.currentTimeMillis();
@@ -139,25 +143,27 @@ public class SBMLModelReader {
 					String metabMeta15 = " ";
 
 					if (metabolites.get(i).isSetNotes()) {
-						ArrayList<String> metabNoteItemList = new ArrayList();
+						ArrayList<String> metabNoteItemList = new ArrayList<String>();
 
-						for (int u = 0; u < metabolites.get(i).getNotes().getNumChildren(); u++) {
-							String noteString = metabolites.get(i).getNotes().getChild(u).toXMLString();
-							String noteItem = "";
-							//removes xmlns (xml namespace tags)
-							if (noteString.contains("xmlns")) {
-								noteString = noteString.substring(noteString.indexOf('>') + 1, noteString.lastIndexOf('<'));
-								String endtag = noteString.substring(noteString.lastIndexOf('<'));
-								String[] nameSpaces = noteString.split(endtag);
-								for (int n = 0; n < nameSpaces.length; n++) {
-									noteItem = nameSpaces[n].substring(nameSpaces[n].indexOf('>') + 1); 
+						for (int u = 0; u < metabolites.get(i).getNotes().getChildCount(); u++) {
+							if (!metabolites.get(i).getNotes().getChildAt(u).getName().isEmpty()) {
+								String noteString = metabolites.get(i).getNotes().getChildAt(u).toXMLString();
+								String noteItem = "";
+								//removes xmlns (xml namespace tags)
+								if (noteString.contains("xmlns")) {
+									noteString = noteString.substring(noteString.indexOf('>') + 1, noteString.lastIndexOf('<'));
+									String endtag = noteString.substring(noteString.lastIndexOf('<'));
+									String[] nameSpaces = noteString.split(endtag);
+									for (int n = 0; n < nameSpaces.length; n++) {
+										noteItem = nameSpaces[n].substring(nameSpaces[n].indexOf('>') + 1); 
+										metabNoteItemList.add(noteItem);
+									}
+								} else {
+									//for "<>", "</>" types of nodes, tags are removed
+									noteItem = noteString.substring(noteString.indexOf('>') + 1, noteString.lastIndexOf('<'));
 									metabNoteItemList.add(noteItem);
 								}
-							} else {
-								//for "<>", "</>" types of nodes, tags are removed
-								noteItem = noteString.substring(noteString.indexOf('>') + 1, noteString.lastIndexOf('<'));
-								metabNoteItemList.add(noteItem);
-							}			
+							}
                             
 							if (i == 0) {
 								//set list of notes names to meta columns			
@@ -429,32 +435,34 @@ public class SBMLModelReader {
 					String meta15 = " ";
 
 					if (reactions.get(j).isSetNotes() && readNotes == true) {
-						ArrayList<String> noteItemList = new ArrayList();	
-
-						for (int u = 0; u < reactions.get(j).getNotes().getNumChildren(); u++) {
-							String noteString = reactions.get(j).getNotes().getChild(u).toXMLString();
-							String noteItem = "";
-							//removes xmlns (xml namespace tags)
-							if (noteString.contains("xmlns")) {
-								if (!noteString.endsWith("/>")) {
-									noteString = noteString.substring(noteString.indexOf(">") + 1, noteString.lastIndexOf("<"));
-									String endtag = noteString.substring(noteString.lastIndexOf("<"));
-									String[] nameSpaces = noteString.split(endtag);
-									for (int n = 0; n < nameSpaces.length; n++) {
-										noteItem = nameSpaces[n].substring(nameSpaces[n].indexOf(">") + 1); 
-										noteItemList.add(noteItem);
+						ArrayList<String> noteItemList = new ArrayList<String>();	
+						
+						for (int u = 0; u < reactions.get(j).getNotes().getChildCount(); u++) {
+							if (!reactions.get(j).getNotes().getChildAt(u).getName().isEmpty()) {
+								String noteString = reactions.get(j).getNotes().getChildAt(u).toXMLString();
+								String noteItem = "";
+								//removes xmlns (xml namespace tags)
+								if (noteString.contains("xmlns")) {
+									if (!noteString.endsWith("/>")) {
+										noteString = noteString.substring(noteString.indexOf(">") + 1, noteString.lastIndexOf("<"));
+										String endtag = noteString.substring(noteString.lastIndexOf("<"));
+										String[] nameSpaces = noteString.split(endtag);
+										for (int n = 0; n < nameSpaces.length; n++) {
+											noteItem = nameSpaces[n].substring(nameSpaces[n].indexOf(">") + 1); 
+											noteItemList.add(noteItem);
+										}
 									}
-								}
-							} else {
-								//for "<>", "</>" types of nodes, tags are removed
-								noteItem = noteString.substring(noteString.indexOf(">") + 1, noteString.lastIndexOf("<"));
-								noteItemList.add(noteItem);
-							}				
+								} else {
+									//for "<>", "</>" types of nodes, tags are removed
+									noteItem = noteString.substring(noteString.indexOf(">") + 1, noteString.lastIndexOf("<"));
+									noteItemList.add(noteItem);
+								}	
+							}
 						}
 
 						if (j == 0) {
 							//set list of notes names to meta columns
-							ArrayList<String> reactionsMetaColumnNames = new ArrayList();				
+							ArrayList<String> reactionsMetaColumnNames = new ArrayList<String>();				
 							for (int n = 0; n < noteItemList.size(); n++) {
 								if (noteItemList.get(n).contains(":")) {
 									//accounts for condition of multiple ":"
@@ -563,5 +571,23 @@ public class SBMLModelReader {
 		}
 
 		//System.out.println("Done");
+	}
+	
+	public static void main(String[] args) {
+		SBMLReader reader = new SBMLReader();
+		SBMLDocument doc;
+		try {
+			doc = reader.readSBML("C:\\Users\\dslun\\GitHub\\desmondlun_MOST\\etc\\sbml\\Ec_core_flux1.xml");
+			SBMLModelReader modelReader = new SBMLModelReader(doc);
+			modelReader.setDatabaseName("Ec_core_flux1.db");
+			modelReader.load();
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
