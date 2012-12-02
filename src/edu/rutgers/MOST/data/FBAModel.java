@@ -2,6 +2,7 @@ package edu.rutgers.MOST.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -44,6 +45,17 @@ public class FBAModel {
 				sMatrix.get(product.getMetaboliteId() - 1).put(product.getReactionId() - 1, product.getStoic());
 			}
 		}
+		
+//		for (int i = 0; i < metabolites.size(); i++) {
+//			Iterator<Integer> iterator = sMatrix.get(i).keySet().iterator();
+//			
+//			while (iterator.hasNext()) {
+//				Integer j = iterator.next();
+//				Double s = sMatrix.get(i).get(j);
+//				
+//				System.out.println((i + 1) + "\t" + (j + 1) + "\t" + s);
+//			}
+//		}
 	}
 	
 	public Vector<ModelReaction> getReactions() {

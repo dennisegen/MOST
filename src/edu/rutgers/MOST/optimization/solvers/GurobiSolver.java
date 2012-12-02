@@ -47,8 +47,9 @@ public class GurobiSolver extends Solver {
 		try {
 			GRBVar var = this.model.addVar(lb, ub, 0.0, getGRBVarType(types),
 					varName);
-			System.out.println("adding var: lb = " + lb + " ub = " + ub +
-			 " type = " + types + " name = " + varName);
+//			System.out.println("adding var: lb = " + lb + " ub = " + ub +
+//			 " type = " + types + " name = " + varName);
+			System.out.println(lb + '\t' + ub);
 			this.vars.add(var);
 		} catch (GRBException e) {
 			// TODO Auto-generated catch block
@@ -221,7 +222,6 @@ public class GurobiSolver extends Solver {
 	public double optimize() {
 		// TODO Auto-generated method stub
 		try {
-
 			model.optimize();
 			model.write("model.lp");
 			model.write("model.mps");

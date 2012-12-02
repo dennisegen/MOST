@@ -4,13 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.rutgers.MOST.data.SBMLModelReader;
-
 public class LocalConfig {
-	
-	
-	
-	
+		
 	//Singleton pattern:
     private static final LocalConfig instance = new LocalConfig();
 
@@ -20,8 +15,7 @@ public class LocalConfig {
     public static LocalConfig getInstance() {
             return instance;
     }
-    
-    
+        
     private String databaseName;
 
 	public String getDatabaseName() {

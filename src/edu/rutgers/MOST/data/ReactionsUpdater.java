@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import edu.rutgers.MOST.config.LocalConfig;
-import edu.rutgers.MOST.logic.ReactionParser1;
+import edu.rutgers.MOST.logic.ReactionParser;
 import edu.rutgers.MOST.presentation.GraphicalInterface;
 import edu.rutgers.MOST.presentation.GraphicalInterfaceConstants;
 
@@ -21,9 +21,9 @@ public class ReactionsUpdater {
 		//update MetabolitesUsedMap by decrementing count or removing metabolite
 		//based on oldReactions that are being replaced
 		for (int i = 0; i < oldReactionsList.size(); i++) {
-			ReactionParser1 parser1 = new ReactionParser1();
+			ReactionParser parser1 = new ReactionParser();
 			if (parser1.isValid(oldReactionsList.get(i)) && !LocalConfig.getInstance().getInvalidReactions().contains(oldReactionsList.get(i))) {
-				ArrayList<ArrayList> oldReactionList = parser1.reactionList(oldReactionsList.get(i));
+				ArrayList<ArrayList<ArrayList<String>>> oldReactionList = parser1.reactionList(oldReactionsList.get(i));
 
 				//remove old species from used map
 				for (int x = 0; x < oldReactionList.size(); x++) {
@@ -97,14 +97,14 @@ public class ReactionsUpdater {
 						reactionName = " ";
 					}
 					
-					ReactionParser1 parser1 = new ReactionParser1();
+					ReactionParser parser1 = new ReactionParser();
 					String reactionEquation = (String) GraphicalInterface.reactionsTable.getModel().getValueAt(rowList.get(i), GraphicalInterfaceConstants.REACTION_STRING_COLUMN);
 					if (reactionEquation != null) {
 						if (reactionEquation.contains("'")) {
 							reactionEquation = reactionEquation.replaceAll("'", "''");
 						}
 						if (parser1.isValid(reactionEquation)) {
-							ArrayList<ArrayList> newReactionList = parser1.reactionList(reactionEquation);
+							ArrayList<ArrayList<ArrayList<String>>> newReactionList = parser1.reactionList(reactionEquation);
 
 							System.out.println("ru new " + LocalConfig.getInstance().getMetaboliteUsedMap());
 							//add new species to used map
@@ -321,7 +321,7 @@ public class ReactionsUpdater {
 	//used for updating when a single row is edited
 	public void updateReactionEquations(int id, String oldEquation, String newEquation, String databaseName) {
 
-		ReactionParser1 parser1 = new ReactionParser1();
+		ReactionParser parser1 = new ReactionParser();
 
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
 
@@ -332,7 +332,7 @@ public class ReactionsUpdater {
 
 			//update for old reaction
 			if (parser1.isValid(oldEquation)) {
-				ArrayList<ArrayList> oldReactionList = parser1.reactionList(oldEquation);
+				ArrayList<ArrayList<ArrayList<String>>> oldReactionList = parser1.reactionList(oldEquation);
 
 				//remove old species from used map
 				for (int x = 0; x < oldReactionList.size(); x++) {
@@ -367,11 +367,11 @@ public class ReactionsUpdater {
 			//update for new reaction
 			int maxMetabId = LocalConfig.getInstance().getMaxMetaboliteId();
 			try {
-				ReactionParser1 parser = new ReactionParser1();
+				ReactionParser parser = new ReactionParser();
 				boolean valid = true;
 				
 				if (parser.isValid(newEquation)) {
-					ArrayList<ArrayList> reactants = parser.reactionList(newEquation.trim()).get(0);
+					ArrayList<ArrayList<String>> reactants = parser.reactionList(newEquation.trim()).get(0);
 					//reactions of the type ==> b will be size 1, assigned the value [0] in parser
 					if (reactants.get(0).size() == 1) {
 					} else {
@@ -464,7 +464,7 @@ public class ReactionsUpdater {
 						}
 					}
 					//reactions of the type a ==> will be size 1, assigned the value [0] in parser
-					ArrayList<ArrayList> products = parser.reactionList(newEquation.trim()).get(1);
+					ArrayList<ArrayList<String>> products = parser.reactionList(newEquation.trim()).get(1);
 					if (products.get(0).size() == 1) {
 					} else {
 						for (int p = 0; p < products.size(); p++) {
@@ -611,11 +611,11 @@ public class ReactionsUpdater {
 
 		}
 		
-		ReactionParser1 parser1 = new ReactionParser1();
+		ReactionParser parser1 = new ReactionParser();
 		
 		for (int r = 0; r < deletedReactions.size(); r++) {
 			if (parser1.isValid(deletedReactions.get(r))) {
-				ArrayList<ArrayList> oldReactionList = parser1.reactionList(deletedReactions.get(r));
+				ArrayList<ArrayList<ArrayList<String>>> oldReactionList = parser1.reactionList(deletedReactions.get(r));
 				//remove old species from used map
 				for (int x = 0; x < oldReactionList.size(); x++) {
 					for (int y = 0; y < oldReactionList.get(x).size(); y++) {

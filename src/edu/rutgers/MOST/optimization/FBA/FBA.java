@@ -2,7 +2,6 @@ package edu.rutgers.MOST.optimization.FBA;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -18,22 +17,17 @@ public class FBA {
 	private FBAModel model;
 	private static Solver solver;
 	private Vector<String> varNames;
-	private String databaseName;
 	private double maxObj;
 
 	public FBA() {
-		this.setSolver(SolverFactory.createSolver());
+		FBA.setSolver(SolverFactory.createSolver());
 		this.varNames = new Vector<String>();
 	}
 
 	public FBA(FBAModel m) {
 		this.model = m;
-		this.setSolver(SolverFactory.createSolver());
+		FBA.setSolver(SolverFactory.createSolver());
 		this.varNames = new Vector<String>();
-	}
-
-	public void setDatabaseName(String name) {
-		this.databaseName = name;
 	}
 
 	private void setVars() {
@@ -44,7 +38,7 @@ public class FBA {
 			double lb = reac.getLowerBound();
 			double ub = reac.getUpperBound();
 
-			this.getSolver().setVar(varName, VarType.CONTINUOUS, lb, ub);
+			FBA.getSolver().setVar(varName, VarType.CONTINUOUS, lb, ub);
 
 			this.varNames.add(varName);
 		}
@@ -58,12 +52,12 @@ public class FBA {
 	private void setConstraints(Vector<ModelReaction> reactions, ConType conType, double bValue) {
 		ArrayList<Map<Integer, Double>> sMatrix = this.model.getSMatrix();
 		for (int i = 0; i < sMatrix.size(); i++) {
-			this.getSolver().addConstraint(sMatrix.get(i), conType, bValue);
+			FBA.getSolver().addConstraint(sMatrix.get(i), conType, bValue);
 		}
 	}
 
 	private void setObjective() {
-		this.getSolver().setObjType(ObjType.Maximize);
+		FBA.getSolver().setObjType(ObjType.Maximize);
 		Vector<Double> objective = this.model.getObjective();
 
 		Map<Integer, Double> map = new HashMap<Integer, Double>();
@@ -72,7 +66,7 @@ public class FBA {
 				map.put(i, objective.elementAt(i));
 			}
 		}
-		this.getSolver().setObj(map);
+		FBA.getSolver().setObj(map);
 		
 	}
 
@@ -88,9 +82,9 @@ public class FBA {
 		log.debug("setObjective");
 		this.setObjective();
 		log.debug("optimize");
-		this.maxObj = this.getSolver().optimize();
+		this.maxObj = FBA.getSolver().optimize();
 		
-		return this.getSolver().getSoln();
+		return FBA.getSolver().getSoln();
 	}
 
 	public double getMaxObj() {
@@ -101,7 +95,6 @@ public class FBA {
 		String databaseName = "Ec_iAF1260_anaerobic_glc10_acetate";
 				
 		FBA fba = new FBA();
-		fba.setDatabaseName(databaseName);
 		
 		FBAModel model = new FBAModel(databaseName);	
 		fba.setFBAModel(model);

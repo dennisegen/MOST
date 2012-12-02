@@ -18,12 +18,10 @@ import edu.rutgers.MOST.config.LocalConfig;
 import edu.rutgers.MOST.data.DatabaseCopier;
 import edu.rutgers.MOST.data.DatabaseCreator;
 import edu.rutgers.MOST.data.FBAModel;
-import edu.rutgers.MOST.data.JSBMLWriteTest;
 import edu.rutgers.MOST.data.JSBMLWriter;
 import edu.rutgers.MOST.data.MetaboliteFactory;
 import edu.rutgers.MOST.data.MetabolitesMetaColumnManager;
 import edu.rutgers.MOST.data.MetabolitesUpdater;
-import edu.rutgers.MOST.data.ModelReaction;
 import edu.rutgers.MOST.data.ReactionFactory;
 import edu.rutgers.MOST.data.ReactionsMetaColumnManager;
 import edu.rutgers.MOST.data.ReactionsUpdater;
@@ -36,7 +34,6 @@ import edu.rutgers.MOST.data.TextMetabolitesWriter;
 import edu.rutgers.MOST.data.TextReactionsModelReader;
 import edu.rutgers.MOST.data.TextReactionsWriter;
 import edu.rutgers.MOST.optimization.FBA.FBA;
-import edu.rutgers.MOST.optimization.solvers.GurobiSolver;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -68,11 +65,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
-import java.util.List;
-import gurobi.GRB;
-import gurobi.GRBException;
-import gurobi.GRBVar;
 
 import org.apache.log4j.Logger;
 
@@ -652,7 +644,6 @@ public class GraphicalInterface extends JFrame {
 
 				log.debug("create an optimize");
 				FBA fba = new FBA();
-				fba.setDatabaseName(getOptimizePath());
 				fba.setFBAModel(model);
 				log.debug("about to optimize");
 				ArrayList<Double> soln = fba.run();

@@ -4,69 +4,110 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ReactionParser1 {
+public class ReactionParser {
 	
 	static boolean parse = true;
 
-	public static ArrayList<ArrayList> reactionList(String reactionEquation){
-		reactionEquation = compartmentPrefixRemoved(reactionEquation);
-		ArrayList<ArrayList> reactionList = new ArrayList();
-		ArrayList<String> reactantAndStoicList = new ArrayList();
-		ArrayList<String> productAndStoicList = new ArrayList();
+	public static ArrayList<ArrayList<ArrayList<String>>> reactionList(String reactionEquation){
+		reactionEquation = reactionEquation.trim();
 		
-		java.util.List<String> halfEquations = Arrays.asList(reactionEquation.split(splitString(reactionEquation)));	
-		if (reactionEquation.trim().startsWith(splitString(reactionEquation))) {
+		String splitString = "";
+		//reversible options
+		if (reactionEquation.contains("<==>")) {
+			//trailing space on splitString gets rid of preceding space on first split
+			//of productsAndCoeff
+			splitString = "<==> ";
+		} else if (reactionEquation.contains("<=>")) {
+			splitString = "<=> ";
+		} else if (reactionEquation.contains("=") && !reactionEquation.contains(">")) {
+			splitString = "= ";
+			//not reversible options
+		} else if (reactionEquation.contains("=>")) {
+			splitString = "=> ";
+		} else if (reactionEquation.contains("-->")) {
+			splitString = "--> ";
+		} else if (reactionEquation.contains("->")) {
+			splitString = "-> ";
+		}		
+		
+		//removes compartment prefix such as "[c] :"
+		char prefixCompartment = 0;
+		if (reactionEquation.startsWith("[") && reactionEquation.indexOf("]") == 2 && reactionEquation.contains(":")) {
+			prefixCompartment = reactionEquation.charAt(1);
+			reactionEquation = reactionEquation.substring(reactionEquation.indexOf(":") + 1, reactionEquation.length()).trim();
+		}
+		
+		ArrayList<ArrayList<ArrayList<String>>> reactionList = new ArrayList<ArrayList<ArrayList<String>>>();
+		
+		ArrayList<ArrayList<String>> reactants;
+		ArrayList<ArrayList<String>> products;
+		if (reactionEquation.startsWith(splitString)) {
+			ArrayList<String> reactantAndStoicList = new ArrayList<String>();
 			reactantAndStoicList.add("0");
 			
-			ArrayList<ArrayList> reactants = new ArrayList();
+			reactants = new ArrayList<ArrayList<String>>();
 			reactants.add(reactantAndStoicList);
-			reactionList.add(reactants);
 			
-			String productHalfEquation = reactionEquation.substring(splitString(reactionEquation).length(), reactionEquation.length());
-			java.util.List<String> productsAndCoeff = Arrays.asList(productHalfEquation.split("\\s+"));
+			String productHalfEquation = reactionEquation.substring(splitString.length(), reactionEquation.length());
+			List<String> productsAndCoeff = Arrays.asList(productHalfEquation.split("\\s+"));
 			
-			ArrayList<ArrayList> rawProducts = rawSpeciesAndCoeffList(productsAndCoeff);
-			ArrayList<ArrayList> products = stoicAndSpeciesList(rawProducts);			
-			reactionList.add(products);
+			ArrayList<ArrayList<String>> rawProducts = rawSpeciesAndCoeffList(productsAndCoeff);
+			products = stoicAndSpeciesList(rawProducts);			
 			
-		} else if (reactionEquation.trim().endsWith(splitString(reactionEquation).trim())) {			
+		} else if (reactionEquation.endsWith(splitString.trim())) {			
 			
-			String reactantHalfEquation = reactionEquation.substring(0, reactionEquation.length() - splitString(reactionEquation).length());
-			java.util.List<String> reactantsAndCoeff = Arrays.asList(reactantHalfEquation.split("\\s+"));			
+			String reactantHalfEquation = reactionEquation.substring(0, reactionEquation.length() - splitString.length());
+			List<String> reactantsAndCoeff = Arrays.asList(reactantHalfEquation.split("\\s+"));			
 			
-			ArrayList<ArrayList> rawReactants = rawSpeciesAndCoeffList(reactantsAndCoeff);
-			ArrayList<ArrayList> reactants = stoicAndSpeciesList(rawReactants);			
-			reactionList.add(reactants);
+			ArrayList<ArrayList<String>> rawReactants = rawSpeciesAndCoeffList(reactantsAndCoeff);
+			reactants = stoicAndSpeciesList(rawReactants);			
 			
+			ArrayList<String> productAndStoicList = new ArrayList<String>();
 			productAndStoicList.add("0");
 			
-			ArrayList<ArrayList> products = new ArrayList();
+			products = new ArrayList<ArrayList<String>>();
 			products.add(productAndStoicList);
-			reactionList.add(products);
 			
 		} else {	
+			List<String> halfEquations = Arrays.asList(reactionEquation.split(splitString));
+			
 			String reactantHalfEquation = halfEquations.get(0).trim();
-			java.util.List<String> reactantsAndCoeff = Arrays.asList(halfEquations.get(0).trim().split("\\s+"));
+			List<String> reactantsAndCoeff = Arrays.asList(reactantHalfEquation.split("\\s+"));
 						
-			ArrayList<ArrayList> rawReactants = rawSpeciesAndCoeffList(reactantsAndCoeff);
-			ArrayList<ArrayList> reactants = stoicAndSpeciesList(rawReactants);
-			reactionList.add(reactants);
+			ArrayList<ArrayList<String>> rawReactants = rawSpeciesAndCoeffList(reactantsAndCoeff);
+			reactants = stoicAndSpeciesList(rawReactants);
 			
 			String productHalfEquation = halfEquations.get(1).trim();
-			java.util.List<String> productsAndCoeff = Arrays.asList(productHalfEquation.split("\\s+"));
+			List<String> productsAndCoeff = Arrays.asList(productHalfEquation.split("\\s+"));
 			
-			ArrayList<ArrayList> rawProducts = rawSpeciesAndCoeffList(productsAndCoeff);
-			ArrayList<ArrayList> products = stoicAndSpeciesList(rawProducts);
-			reactionList.add(products);
-		}		
+			ArrayList<ArrayList<String>> rawProducts = rawSpeciesAndCoeffList(productsAndCoeff);
+			products = stoicAndSpeciesList(rawProducts);
+		}	
+		
+		if (prefixCompartment != 0) {
+			for (int i = 0; i < reactants.size(); i++) {
+				ArrayList<String> reactant = reactants.get(i);
+				if (reactant.size() > 1) {
+					reactant.set(1, reactant.get(1) + "[" + prefixCompartment + "]");
+				}
+			}
+			for (int i = 0; i < products.size(); i++) {
+				ArrayList<String> product = products.get(i);
+				if (product.size() > 1) {
+					product.set(1, product.get(1) + "[" + prefixCompartment + "]");
+				}
+			}
+		}
+		reactionList.add(reactants);
+		reactionList.add(products);
 		
 		return reactionList;		
 	}
 	
 	//creates list of raw lists of coeff and species from half equations
-	public static ArrayList<ArrayList> rawSpeciesAndCoeffList(List<String> halfEquation) {
+	public static ArrayList<ArrayList<String>> rawSpeciesAndCoeffList(List<String> halfEquation) {
 		//need to make an array of speciesAndCoeff lists
-		ArrayList<ArrayList> rawSpeciesAndCoeffList = new ArrayList();
+		ArrayList<ArrayList<String>> rawSpeciesAndCoeffList = new ArrayList<ArrayList<String>>();
 		//list of coeff and species or species only
 		ArrayList<String> speciesAndCoeff[] = new ArrayList[getNumberOfSpecies(halfEquation)];
 		int currentSpecies = 0;
@@ -86,8 +127,8 @@ public class ReactionParser1 {
 		return rawSpeciesAndCoeffList;
 	}
 	
-	public static ArrayList<ArrayList> stoicAndSpeciesList(ArrayList<ArrayList> rawSpeciesList) {
-		ArrayList<ArrayList> stoicAndSpeciesList = new ArrayList();
+	public static ArrayList<ArrayList<String>> stoicAndSpeciesList(ArrayList<ArrayList<String>> rawSpeciesList) {
+		ArrayList<ArrayList<String>> stoicAndSpeciesList = new ArrayList<ArrayList<String>>();
 		ArrayList<String> stoicAndSpecies[] = new ArrayList[rawSpeciesList.size()];
 		for (int i = 0; i < rawSpeciesList.size(); i++) {
 			stoicAndSpecies[i] = stoicAndSpecies((ArrayList) rawSpeciesList.get(i));
@@ -141,16 +182,6 @@ public class ReactionParser1 {
 		return stoicAndSpecies;
 	}
 	
-	//removes compartment prefix such as "[c] :"
-	public static String compartmentPrefixRemoved(String reactionEquation) {
-		String correctedReaction = "";
-		if (reactionEquation.startsWith("[") && reactionEquation.indexOf("]") == 2 && reactionEquation.contains(":")) {
-			   correctedReaction = reactionEquation.substring(5, reactionEquation.length()).trim();
-			   return correctedReaction;			   
-		   }
-		return reactionEquation;
-	}
-	
 	public static boolean isNumber(String s) {
 		try {
 			Double.parseDouble(s);
@@ -159,29 +190,6 @@ public class ReactionParser1 {
 			return false;
 		}
 		return true;
-	}
-	
-	public static String splitString(String reactionEquation) {
-		String splitString = "";
-		//reversible options
-		if (reactionEquation.contains("<==>")) {
-			//trailing space on splitString gets rid of preceding space on first split
-			//of productsAndCoeff
-			splitString = "<==> ";
-		} else if (reactionEquation.contains("<=>")) {
-			splitString = "<=> ";
-		} else if (reactionEquation.contains("=") && !reactionEquation.contains(">")) {
-			splitString = "= ";
-			//not reversible options
-		} else if (reactionEquation.contains("=>")) {
-			splitString = "=> ";
-		} else if (reactionEquation.contains("-->")) {
-			splitString = "--> ";
-		} else if (reactionEquation.contains("->")) {
-			splitString = "-> ";
-		}
-		
-		return splitString;		
 	}
 	
 	//concatenates species if there are spaces
@@ -221,9 +229,9 @@ public class ReactionParser1 {
 	}
 	
 	public static void main(String[] args) {
-		//String reactionEquation = "a+2 + 3 h+ + c => c+ + d";
-		//ArrayList reaction = reactionList(reactionEquation);
-		//System.out.println(isNumber(s));
+		System.out.println(reactionList("a+2 + 3 h+ + c => c+ + d"));
+		System.out.println(reactionList("[c] : hedacp + nadph + o2 => hdeACP + nadp + h +2 h2o"));
+		System.out.println(reactionList("[c]: a+2 + 3 h+ + c =>"));
 	}
 	
 }
