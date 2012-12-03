@@ -11,7 +11,6 @@ import javax.xml.stream.XMLStreamException;
 import org.sbml.jsbml.*;
 
 import edu.rutgers.MOST.config.LocalConfig;
-import edu.rutgers.MOST.presentation.GraphicalInterface;
 import edu.rutgers.MOST.presentation.GraphicalInterfaceConstants;
 import edu.rutgers.MOST.presentation.ProgressConstants;
 
@@ -83,6 +82,9 @@ public class SBMLModelReader {
 		try{
 			Connection conn = DriverManager.getConnection(queryString);
 			Statement stat = conn.createStatement();
+			PreparedStatement metabInsertPrep = conn.prepareStatement("INSERT INTO metabolites(metabolite_abbreviation, metabolite_name, "
+					+ " charge, compartment, boundary, meta_1, meta_2, meta_3, meta_4, meta_5, meta_6, meta_7, meta_8, meta_9, meta_10, "
+					+ " meta_11, meta_12, meta_13, meta_14, meta_15) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
 
 			new SBMLModelReader(doc);
 
@@ -256,11 +258,28 @@ public class SBMLModelReader {
 						}
 					}
 
-					String metabInsert = "INSERT INTO metabolites(metabolite_abbreviation, metabolite_name, charge, compartment, boundary, meta_1, meta_2, "
-						+ " meta_3, meta_4, meta_5, meta_6, meta_7, meta_8, meta_9, meta_10, "
-						+ " meta_11, meta_12, meta_13, meta_14, meta_15) values" 
-						+ " (" + "'" + metaboliteAbbreviation + "', '" + metaboliteName + "', '" + chargeString + "', '" + compartment + "', '" + boundary + "', '" + metabMeta1 + "', '" + metabMeta2 + "', '" + metabMeta3 + "', '" + metabMeta4 + "', '" + metabMeta5 + "', '" + metabMeta6 + "', '" + metabMeta7 + "', '" + metabMeta8 + "', '" + metabMeta9 + "', '" + metabMeta10 + "', '" + metabMeta11 + "', '" + metabMeta12 + "', '" + metabMeta13 + "', '" + metabMeta14 + "', '" + metabMeta15 + "');";
-					stat.executeUpdate(metabInsert);	
+					metabInsertPrep.setString(1, metaboliteAbbreviation);
+					metabInsertPrep.setString(2, metaboliteName);
+					metabInsertPrep.setString(3, chargeString);
+					metabInsertPrep.setString(4, compartment);
+					metabInsertPrep.setString(5, boundary);
+					metabInsertPrep.setString(6, metabMeta1);
+					metabInsertPrep.setString(7, metabMeta2);
+					metabInsertPrep.setString(8, metabMeta3);
+					metabInsertPrep.setString(9, metabMeta4);
+					metabInsertPrep.setString(10, metabMeta5);
+					metabInsertPrep.setString(11, metabMeta6);
+					metabInsertPrep.setString(12, metabMeta7);
+					metabInsertPrep.setString(13, metabMeta8);
+					metabInsertPrep.setString(14, metabMeta9);
+					metabInsertPrep.setString(15, metabMeta10);
+					metabInsertPrep.setString(16, metabMeta11);
+					metabInsertPrep.setString(17, metabMeta12);
+					metabInsertPrep.setString(18, metabMeta13);
+					metabInsertPrep.setString(19, metabMeta14);
+					metabInsertPrep.setString(20, metabMeta15);
+					
+					metabInsertPrep.executeUpdate();	
 				}
 				LocalConfig.getInstance().setMaxMetaboliteId(metabolites.size());
 				LocalConfig.getInstance().setMetaboliteIdNameMap(metaboliteIdNameMap);
@@ -269,7 +288,14 @@ public class SBMLModelReader {
 //				long endTime = System.currentTimeMillis();
 //				System.out.println("Metabolite read time: " + (endTime - startTime));
 //								
-//				startTime = System.currentTimeMillis();				
+//				startTime = System.currentTimeMillis();
+				
+				PreparedStatement reacInsertPrep = conn.prepareStatement("INSERT INTO reactions(knockout, flux_value, reaction_abbreviation, " 
+						+ " reaction_name, reaction_string, reversible, lower_bound, upper_bound, biological_objective," 
+						+ " meta_1, meta_2, meta_3, meta_4, meta_5, meta_6, meta_7, meta_8, meta_9, meta_10, meta_11, "
+						+ "meta_12, meta_13, meta_14, meta_15) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
+				PreparedStatement rrInsertPrep = conn.prepareStatement("INSERT INTO reaction_reactants(reaction_id, stoic, metabolite_id) values (?, ?, ?)");
+				PreparedStatement rpInsertPrep = conn.prepareStatement("INSERT INTO reaction_products(reaction_id, stoic, metabolite_id) values (?, ?, ?)");
 								
 				ListOf<Reaction> reactions = doc.getModel().getListOfReactions();
 				for (int j = 0; j < reactions.size(); j++) {
@@ -294,8 +320,10 @@ public class SBMLModelReader {
 						for (int r = 0; r < reactants.size(); r++) {
 							if (reactants.get(r).isSetSpecies()) {
 								Integer id = (Integer) metaboliteIdNameMap.get(reactants.get(r).getSpecies());
-								String rrInsert = "INSERT INTO reaction_reactants(reaction_id, stoic, metabolite_id) values (" + (j + 1) + ", " + reactants.get(r).getStoichiometry() + ", " + id + ");";
-								stat.executeUpdate(rrInsert);
+								rrInsertPrep.setInt(1, j + 1);
+								rrInsertPrep.setDouble(2, reactants.get(r).getStoichiometry());
+								rrInsertPrep.setInt(3, id);
+								rrInsertPrep.executeUpdate();
 								if (LocalConfig.getInstance().getMetaboliteUsedMap().containsKey(reactants.get(r).getSpecies())) {
 									int usedCount = (Integer) LocalConfig.getInstance().getMetaboliteUsedMap().get(reactants.get(r).getSpecies());
 									LocalConfig.getInstance().getMetaboliteUsedMap().put(reactants.get(r).getSpecies(), new Integer(usedCount + 1));
@@ -336,8 +364,10 @@ public class SBMLModelReader {
 						for (int p = 0; p < products.size(); p++) {	
 							if (products.get(p).isSetSpecies()) {
 								Integer id = (Integer) metaboliteIdNameMap.get(products.get(p).getSpecies());
-								String rpInsert = "INSERT INTO reaction_products(reaction_id, stoic, metabolite_id) values (" + (j + 1) + ", " + products.get(p).getStoichiometry() + ", " + id + ");";
-								stat.executeUpdate(rpInsert);
+								rpInsertPrep.setInt(1, j + 1);
+								rpInsertPrep.setDouble(2, products.get(p).getStoichiometry());
+								rpInsertPrep.setInt(3, id);
+								rpInsertPrep.executeUpdate();
 								if (LocalConfig.getInstance().getMetaboliteUsedMap().containsKey(products.get(p).getSpecies())) {
 									int usedCount = (Integer) LocalConfig.getInstance().getMetaboliteUsedMap().get(products.get(p).getSpecies());
 									LocalConfig.getInstance().getMetaboliteUsedMap().put(products.get(p).getSpecies(), new Integer(usedCount + 1));
@@ -543,13 +573,33 @@ public class SBMLModelReader {
 							}
 						}	
 					}
-                 				
-					String reacInsert = "INSERT INTO reactions(knockout, flux_value, reaction_abbreviation, " 
-						+ " reaction_name, reaction_string, reversible, lower_bound, upper_bound, biological_objective," 
-						+ " meta_1, meta_2, meta_3, meta_4, meta_5, meta_6, meta_7, meta_8, "
-						+ " meta_9, meta_10, meta_11, meta_12, meta_13, meta_14, meta_15) values " 
-						+ " (" + "'" + knockout + "', '" + fluxValue + "', '" + reactionAbbreviation + "', '" + reactionName + "', '" + reactionString + "', '" + reversible + "', '" + lowerBound + "', '" + upperBound + "', '" + objective + "', '" + meta1 + "', '" + meta2 + "', '" + meta3 + "', '" + meta4 + "', '" + meta5 + "', '" + meta6 + "', '" + meta7 + "', '" + meta8 + "', '" + meta9 + "', '" + meta10 + "', '" + meta11 + "', '" + meta12 + "', '" + meta13 + "', '" + meta14 + "', '" + meta15 + "');";
-					stat.executeUpdate(reacInsert);	
+                 	
+					reacInsertPrep.setString(1, knockout);
+					reacInsertPrep.setDouble(2, fluxValue);
+					reacInsertPrep.setString(3, reactionAbbreviation);
+					reacInsertPrep.setString(4, reactionName);
+					reacInsertPrep.setString(5, reactionString);
+					reacInsertPrep.setString(6, reversible);
+					reacInsertPrep.setDouble(7, lowerBound);
+					reacInsertPrep.setDouble(8, upperBound);
+					reacInsertPrep.setDouble(9, objective);
+					reacInsertPrep.setString(10, meta1);
+					reacInsertPrep.setString(11, meta2);
+					reacInsertPrep.setString(12, meta3);
+					reacInsertPrep.setString(13, meta4);
+					reacInsertPrep.setString(14, meta5);
+					reacInsertPrep.setString(15, meta6);
+					reacInsertPrep.setString(16, meta7);
+					reacInsertPrep.setString(17, meta8);
+					reacInsertPrep.setString(18, meta9);
+					reacInsertPrep.setString(19, meta10);
+					reacInsertPrep.setString(20, meta11);
+					reacInsertPrep.setString(21, meta12);
+					reacInsertPrep.setString(22, meta13);
+					reacInsertPrep.setString(23, meta14);
+					reacInsertPrep.setString(24, meta15);
+					
+					reacInsertPrep.executeUpdate();
 				}
 				stat.executeUpdate("COMMIT");
 				
@@ -577,7 +627,8 @@ public class SBMLModelReader {
 		SBMLReader reader = new SBMLReader();
 		SBMLDocument doc;
 		try {
-			doc = reader.readSBML("C:\\Users\\dslun\\GitHub\\desmondlun_MOST\\etc\\sbml\\Ec_core_flux1.xml");
+			//doc = reader.readSBML("C:\\Users\\dslun\\GitHub\\desmondlun_MOST\\etc\\sbml\\Ec_core_flux1.xml");
+			doc = reader.readSBML("C:\\Users\\dslun\\GitHub\\desmondlun_MOST\\etc\\sbml\\Ec_iAF1260_anaerobic_glc10_acetate.xml");
 			SBMLModelReader modelReader = new SBMLModelReader(doc);
 			modelReader.setDatabaseName("Ec_core_flux1.db");
 			modelReader.load();

@@ -49,7 +49,6 @@ public class GurobiSolver extends Solver {
 					varName);
 //			System.out.println("adding var: lb = " + lb + " ub = " + ub +
 //			 " type = " + types + " name = " + varName);
-			System.out.println(lb + '\t' + ub);
 			this.vars.add(var);
 		} catch (GRBException e) {
 			// TODO Auto-generated catch block
