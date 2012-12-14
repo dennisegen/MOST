@@ -1077,11 +1077,10 @@ public class GraphicalInterface extends JFrame {
 			if (retval == JFileChooser.APPROVE_OPTION) {
 				//... The user selected a file, get it, use it.
 				File file = fileChooser.getSelectedFile();          	
-				String rawFilename = fileChooser.getSelectedFile().getName();
-				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
+				String rawPathName = file.getAbsolutePath();
 				curSettings.add("LastSBML", rawPathName);
 				
-				String filename = "";
+				String rawFilename = file.getName();				
 				if (!rawFilename.endsWith(".xml") && !rawFilename.endsWith(".sbml")) {
 					JOptionPane.showMessageDialog(null,                
 							"Not a Valid SBML File.",                
@@ -1091,6 +1090,8 @@ public class GraphicalInterface extends JFrame {
 					fileList.setSelectedIndex(-1);
 					listModel.clear();
 					fileList.setModel(listModel);
+					
+					String filename;
 					if (rawFilename.endsWith(".xml")) {
 						filename = rawFilename.substring(0, rawFilename.length() - 4);
 					} else {
@@ -1240,9 +1241,12 @@ public class GraphicalInterface extends JFrame {
 			}
 			if (retval == JFileChooser.APPROVE_OPTION) {            	  
 				//... The user selected a file, get it, use it.
+				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
+				curSettings.add("LastCSV", rawPathName);
+				
+				//checks if filename endswith .csv else renames file to end with .csv
 				String path = fileChooser.getSelectedFile().getPath();
 				String filename = fileChooser.getSelectedFile().getName();
-				//checks if filename endswith .csv else renames file to end with .csv
 				if (!path.endsWith(".csv")) {
 					path = path + ".csv";
 				}
@@ -1324,9 +1328,12 @@ public class GraphicalInterface extends JFrame {
 			}
 			if (retval == JFileChooser.APPROVE_OPTION) {            	  
 				//... The user selected a file, get it, use it.
-				String path = fileChooser.getSelectedFile().getPath();
-				String filename = fileChooser.getSelectedFile().getName();
+				String rawPathName = fileChooser.getSelectedFile().getAbsolutePath();
+				curSettings.add("LastCSV", rawPathName);
+				
 				//checks if filename endswith .csv else renames file to end with .csv
+				String path = fileChooser.getSelectedFile().getPath();
+				String filename = fileChooser.getSelectedFile().getName();				
 				if (!path.endsWith(".csv")) {
 					path = path + ".csv";
 				}
