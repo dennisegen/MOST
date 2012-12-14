@@ -1,5 +1,6 @@
 package edu.rutgers.MOST.config;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -344,5 +345,35 @@ public class LocalConfig {
 	public void setMetaboliteUsedMap(Map<String, Object> metaboliteUsedMap) {
 		this.metaboliteUsedMap = metaboliteUsedMap;
 	}
+	
+	private static File metabolitesCSVFile;
+
+	public void setMetabolitesCSVFile(File metabolitesCSVFile) {
+		this.metabolitesCSVFile = metabolitesCSVFile;
+	}
+
+	public static File getMetabolitesCSVFile() {
+		return metabolitesCSVFile;
+	}
+
+	private static File reactionsCSVFile;
+
+	public void setReactionsCSVFile(File reactionsCSVFile) {
+		this.reactionsCSVFile = reactionsCSVFile;
+	}
+
+	public static File getReactionsCSVFile() {
+		return reactionsCSVFile;
+	}
+	
+	private static ArrayList<Integer> participatingReactions;
+
+	public void setParticipatingReactions(ArrayList<Integer> participatingReactions) {
+		this.participatingReactions = participatingReactions;
+	}
+
+	public ArrayList<Integer> getParticipatingReactions() {
+		return participatingReactions;
+	}  
 	
 }

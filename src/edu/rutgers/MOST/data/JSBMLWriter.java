@@ -216,11 +216,11 @@ public class JSBMLWriter implements TreeModelListener{
 		
 		public void setModel(Model model) {
 			this.model = model;
-			this.parseAllMetabolites();
+			//this.parseAllMetabolites();
 		}
 		
 		public void parseAllMetabolites() {
-			MetaboliteFactory mFactory = new MetaboliteFactory();
+			MetaboliteFactory mFactory = new MetaboliteFactory("SBML", databaseName);
 			int length = mFactory.maximumId(databaseName);
 			
 			//mFactory.getMetaboliteById(metaboliteId, sourceType, databaseName);
@@ -286,17 +286,19 @@ public class JSBMLWriter implements TreeModelListener{
 		}
 		public void setModel(Model model) {
 			this.model = model;
-			this.parseAllReactions();
+			//this.parseAllReactions();
 		}
 		
 		public void parseAllReactions() {
-			ReactionFactory rFactory = new ReactionFactory();
+			ReactionFactory rFactory = new ReactionFactory("SBML", databaseName);
 			
-			int length = rFactory.getAllReactions(sourceType, databaseName).size();
-			
+			// changes in reaction factory class methods, different arguments now required
+			// source type and database name now in constructor
+			//int length = rFactory.getAllReactions(sourceType, databaseName).size();
+			int length = rFactory.getAllReactions().size();
 			
 			for (int i = 1 ; i<= length; i++) {
-				SBMLReaction curReact = (SBMLReaction) rFactory.getReactionById(i, sourceType, databaseName);
+				SBMLReaction curReact = (SBMLReaction) rFactory.getReactionById(i);
 				//System.out.println(curReact);
 				allReactions.add(curReact);
 			}
@@ -325,9 +327,9 @@ public class JSBMLWriter implements TreeModelListener{
 			System.out.println();
 			model.addNamespace("html");
 			model.addNamespace("html:p");
-			MetaboliteFactory mFactory = new MetaboliteFactory();
-			ReactantFactory reFactory = new ReactantFactory();
-			ProductFactory prFactory = new ProductFactory();
+			MetaboliteFactory mFactory = new MetaboliteFactory("SBML", databaseName);
+			ReactantFactory reFactory = new ReactantFactory("SBML", databaseName);
+			ProductFactory prFactory = new ProductFactory("SBML", databaseName);
 			
 			for (SBMLReaction cur : allReactions) {
 				
@@ -425,11 +427,9 @@ public class JSBMLWriter implements TreeModelListener{
 					
 				}
 				
+				ArrayList<ModelReactant> curReactants = reFactory.getReactantsByReactionId(cur.getId());
 				
-				
-				ArrayList<ModelReactant> curReactants = reFactory.getReactantsByReactionId(cur.getId(), sourceType, databaseName);
-				
-				ArrayList<ModelProduct> curProducts = prFactory.getProductsByReactionId(cur.getId(), sourceType, databaseName);
+				ArrayList<ModelProduct> curProducts = prFactory.getProductsByReactionId(cur.getId());
 				
 				for (ModelReactant curReactant : curReactants) {
 					SpeciesReference curSpec = new SpeciesReference();
@@ -458,7 +458,7 @@ public class JSBMLWriter implements TreeModelListener{
 					
 					curReact.addProduct(curSpec);
 				}
-				
+
 				//curReact.addNamespace("html:p");
 				//curReact.appendNotes(attr);
 				

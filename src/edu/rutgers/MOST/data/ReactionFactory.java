@@ -28,11 +28,10 @@ public class ReactionFactory {
 		return new SBMLReaction(); //Default behavior.
 	}
 
+	// TODO : check if method is actually used. Probably replaced with MetabolitesUsedMap 
 	public int reactantUsedCount(Integer id) {
 		int count = 0;
-		String queryString = "jdbc:sqlite:" + databaseName + ".db"; //TODO:DEGEN:Call LocalConfig
-		//not necessary to call LocalConfig since this method is only called in the Graphical Interface 
-		//where the database name is supplied
+		String queryString = "jdbc:sqlite:" + databaseName + ".db"; 
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
@@ -54,6 +53,7 @@ public class ReactionFactory {
 		return count;
 	}
 
+	// TODO : check if method is actually used. Probably replaced with MetabolitesUsedMap 
 	public int productUsedCount(Integer id) {
 		int count = 0;
 		String queryString = "jdbc:sqlite:" + databaseName + ".db"; 
@@ -191,17 +191,6 @@ public class ReactionFactory {
 	}
 
 	public static void main(String[] args) {
-
-		ReactionFactory aFactory = new ReactionFactory("SBML","small");
-		//		SBMLReaction aReaction = (SBMLReaction)aFactory.getReactionById("1"); //You can change this reactionId to be any reaction ID string
-		//		aReaction.setBiologicalObjective(8.999); //testing update of biological Objective
-		//		aReaction.update();
-		//Vector<ModelReaction> reactions =  aFactory.getAllReactions("SBML", "small");
-		//System.out.println(reactions.size());
-		//System.out.println(((SBMLReaction)reactions.elementAt(0)).getId());
-		//ReactantFactory rFactory = new ReactantFactory();
-		//ArrayList<ModelReactant> reactants = rFactory.getReactantsByReactionId(1, "SBML", "small");
-		//System.out.println(reactants.size());
 
 	}
 

@@ -30,10 +30,7 @@ public class TextReactionsModelReader {
 		try {
 			CSVFile = new BufferedReader(new FileReader(file));
 			String dataRow = CSVFile.readLine();
-
-			if ((GraphicalInterface.getSplitCharacter().compareTo(',')) == 0) {
-				dataArray = dataRow.split(",");				
-			} 
+			dataArray = dataRow.split(",");				
 
 			//add all column names to list			
 			for (int h = 0; h < dataArray.length; h++) { 
@@ -54,11 +51,7 @@ public class TextReactionsModelReader {
 			if (row > 0) {
 				for (int i = 0; i < row; i++) {
 					dataRow = CSVFile.readLine();
-
-					if ((GraphicalInterface.getSplitCharacter().compareTo(',')) == 0) {
-						dataArray = dataRow.split(",");				
-					} 
-					
+					dataArray = dataRow.split(",");								
 					columnNamesFromFile.clear();
 					//add all column names to list			
 					for (int h = 0; h < dataArray.length; h++) { 
@@ -94,7 +87,7 @@ public class TextReactionsModelReader {
 		int count = 0;
 		CSVReader reader;
 		try {
-			reader = new CSVReader(new FileReader(file), GraphicalInterface.getSplitCharacter());
+			reader = new CSVReader(new FileReader(file), ',');
 			String[] dataArray;
 			try {
 				while ((dataArray = reader.readNext()) != null) {
@@ -112,12 +105,12 @@ public class TextReactionsModelReader {
 		return count;		
 	}
 
-	public void load(File file, String databaseName){
+	public void load(File file, String databaseName){		
 		//if first row of file in not column names, starts reading after row that contains names
 		int correction = LocalConfig.getInstance().getReactionsNextRowCorrection();
 		int row = 1;
 		int maxMetabId = LocalConfig.getInstance().getMaxMetaboliteId();
-
+		
 		LocalConfig.getInstance().getMetaboliteUsedMap().clear();
 		
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
@@ -153,7 +146,7 @@ public class TextReactionsModelReader {
 			
 			CSVReader reader;
 			try {
-				reader = new CSVReader(new FileReader(file), GraphicalInterface.getSplitCharacter());
+				reader = new CSVReader(new FileReader(file), ',');
 				String [] dataArray;
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -161,7 +154,7 @@ public class TextReactionsModelReader {
 			}
 
 			try {
-				reader = new CSVReader(new FileReader(file), GraphicalInterface.getSplitCharacter());
+				reader = new CSVReader(new FileReader(file), ',');
 				
 				int numLines = numberOfLines(file);
 				
@@ -260,6 +253,7 @@ public class TextReactionsModelReader {
 						try {
 							ReactionParser parser = new ReactionParser();
 							boolean valid = true;
+							ArrayList<ArrayList<ArrayList<String>>> reactionList = parser.reactionList(reactionString.trim());
 							
 							if (parser.isValid(reactionString)) {
 								ArrayList<ArrayList<String>> reactants = parser.reactionList(reactionString.trim()).get(0);
@@ -566,13 +560,13 @@ public class TextReactionsModelReader {
 
 			conn.close();
 			LocalConfig.getInstance().setProgress(100);	
-
+			
 		}catch(SQLException e){
 
 			e.printStackTrace();
 
 		}
-
+		GraphicalInterface.showPrompt = true;
 		//System.out.println("Done");
 	}
 }
