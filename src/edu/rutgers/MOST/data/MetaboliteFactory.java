@@ -1,18 +1,24 @@
 package edu.rutgers.MOST.data;
 
+import edu.rutgers.MOST.config.LocalConfig;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-
-import edu.rutgers.MOST.config.LocalConfig;
-import edu.rutgers.MOST.presentation.GraphicalInterface;
+import java.util.ArrayList;
+import java.util.Vector;
 
 public class MetaboliteFactory {
-
-	public ModelMetabolite getMetaboliteById(Integer metaboliteId, String sourceType, String databaseName){
+	private String sourceType;
+	private String databaseName;
+	
+	public MetaboliteFactory(String sourceType, String databaseName) {
+		this.sourceType = sourceType;
+		this.databaseName = databaseName;
+	}
+	
+	public ModelMetabolite getMetaboliteById(Integer metaboliteId){
 
 
 		if("SBML".equals(sourceType)){
@@ -24,163 +30,107 @@ public class MetaboliteFactory {
 		return new SBMLMetabolite(); //Default behavior.
 	}
 
-	public int metaboliteCount(String metabolite, String databaseName) {
-		int count = 0;
-		String queryString = "jdbc:sqlite:" + databaseName + ".db"; 
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Connection conn;
-		try {
-			conn = DriverManager.getConnection(queryString);
-			PreparedStatement prep = conn.prepareStatement("select count(metabolite_abbreviation) from metabolites where metabolite_abbreviation=?;");
-			prep.setString(1, metabolite);
-			ResultSet rs = prep.executeQuery();
-			//if metabolite_abbreviation is in table will return 1, else 0
-			count = rs.getInt("count(metabolite_abbreviation)");			
-			conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();			
-		}
-		return count;
-	}
-
-	public void addMetabolite(String metabolite, String databaseName) {
-		String queryString = "jdbc:sqlite:" + databaseName + ".db"; 
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Connection conn;
-		try {
-			conn = DriverManager.getConnection(queryString);
-			PreparedStatement prep1 = conn.prepareStatement("insert into metabolites (metabolite_abbreviation, boundary, used) values(?, 'false', 'true');");
-			prep1.setString(1, metabolite);
-
-			prep1.addBatch();
-
-			conn.setAutoCommit(false);
-			prep1.executeBatch();
-			conn.setAutoCommit(true);
-
-			conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();			
-		}		
-	}
-
-	public boolean isUnused(int id, String databaseName) {
-		String used = "";
-		String queryString = "jdbc:sqlite:" + databaseName + ".db";
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Connection conn;
-		try {
-			conn = DriverManager.getConnection(queryString);
-			PreparedStatement prep1 = conn.prepareStatement("select used from metabolites where id=?;");
-			prep1.setInt(1, id);
-
-			ResultSet rs = prep1.executeQuery();
-			used = rs.getString("used");
-
-			conn.close();
-
-			if (used.compareTo("false") == 0) {
-				return true;
+	public ArrayList<Integer> participatingReactions(String metaboliteAbbreviation) {
+		int reactionId = 0;
+		ArrayList<Integer> participatingReactions = new ArrayList<Integer>();
+		System.out.println("id mf " + LocalConfig.getInstance().getMetaboliteIdNameMap());
+		if (metaboliteAbbreviation != null) {
+			int metabId = (Integer) LocalConfig.getInstance().getMetaboliteIdNameMap().get(metaboliteAbbreviation);
+			System.out.println(metabId);
+			
+			String queryString = "jdbc:sqlite:" + databaseName + ".db";
+			try {
+				Class.forName("org.sqlite.JDBC"); 
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			Connection conn;
+			try {
+				conn = DriverManager.getConnection(queryString);
+				PreparedStatement prep1 = conn.prepareStatement("select reaction_id from reaction_reactants where metabolite_id=?;");
+				prep1.setInt(1, metabId);
 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();			
+				conn.setAutoCommit(true);
+				ResultSet rs1 = prep1.executeQuery();			
+				while (rs1.next()) {
+					reactionId = rs1.getInt("reaction_id");
+					participatingReactions.add(reactionId);
+				}
+
+				PreparedStatement prep2 = conn.prepareStatement("select reaction_id from reaction_products where metabolite_id=?;");
+				prep2.setInt(1, metabId);
+
+				conn.setAutoCommit(true);
+				ResultSet rs2 = prep2.executeQuery();			
+				while (rs2.next()) {
+					reactionId = rs2.getInt("reaction_id");
+					if (!participatingReactions.contains(reactionId)) {
+						participatingReactions.add(reactionId);
+					}
+				}
+				
+				conn.close();				
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();			
+			}	
 		}
-		return false;		
+		
+		
+		
+		System.out.println(participatingReactions);
+		return participatingReactions;
 	}
 
-	public void setMetaboliteUsedValue(Integer metaboliteId, String databaseName, String booleanValue) {
-		String queryString = "jdbc:sqlite:" + databaseName + ".db"; 
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Connection conn;
-		try {
-			conn = DriverManager.getConnection(queryString);    		    		
-			PreparedStatement prep1 = conn.prepareStatement(
-			"update metabolites set used=? where id=?;");
-			prep1.setString(1, booleanValue);
-			prep1.setInt(2, metaboliteId);
+	public Vector<ModelMetabolite> getAllInternalMetabolites() {
+		Vector<ModelMetabolite> metabolites = new Vector<ModelMetabolite>();
+		
+		if("SBML".equals(sourceType)){
+			try {
+				Class.forName("org.sqlite.JDBC");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return metabolites;
+			}
+			Connection conn;
+			try {
+				conn = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db"); // TODO:
+				// Make
+				// this
+				// configurable
+				PreparedStatement prep = conn
+				.prepareStatement("select id, metabolite_abbreviation, metabolite_name, charge, compartment, "
+						+ " boundary "
+						+ " from metabolites where length(metabolite_abbreviation) > 0 and boundary = 'false';");
+				conn.setAutoCommit(true);
+				ResultSet rs = prep.executeQuery();
+				while (rs.next()) {
+					SBMLMetabolite metabolite = new SBMLMetabolite();
+					metabolite.setId(rs.getInt("id"));
+					metabolite.setMetaboliteAbbreviation(rs.getString("metabolite_abbreviation"));
+					metabolite.setMetaboliteName(rs.getString("metabolite_name"));
+					metabolite.setCharge(rs.getString("charge"));
+					metabolite.setCompartment(rs.getString("compartment"));
+					metabolite.setBoundary(rs.getString("boundary"));
 
-			prep1.execute();
-			conn.setAutoCommit(true);   		    
-
-			conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();			
+					metabolites.add(metabolite);
+				}
+				rs.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return metabolites;
+			}
 		}
+		
+		return metabolites;
 	}
-
-	public int maximumId(String databaseName) {
-		int max = 0;
-		String queryString = "jdbc:sqlite:" + databaseName + ".db";
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Connection conn;
-		try {
-			conn = DriverManager.getConnection(queryString);
-			PreparedStatement prep = conn.prepareStatement("select max(id) from metabolites;");
-			ResultSet rs = prep.executeQuery();
-			//if metabolite_abbreviation is in table will return 1, else 0
-			max = rs.getInt("max(id)");			
-			conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();			
-		}
-		return max;
-	}
-
-	public void deleteAllUnusedMetabolites(String databaseName) {
-		String queryString = "jdbc:sqlite:" + databaseName + ".db";
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Connection conn;
-		try {
-			conn = DriverManager.getConnection(queryString);
-			Statement st = conn.createStatement();
-			String str = ("DELETE FROM metabolites where used like 'false';");
-
-			st.executeUpdate(str);
-
-			conn.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();			
-		}		
-	}
-
-	public Integer metaboliteId(String databaseName, String metaboliteAbbreviation) {
+	
+	public Integer metaboliteId(String metaboliteAbbreviation) {
 		Integer metaboliteId = 0;
 
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
@@ -207,13 +157,34 @@ public class MetaboliteFactory {
 		}	
 
 		return metaboliteId;
-
 	}
-
+	
+	public int maximumId() {
+		int max = 0;
+		String queryString = "jdbc:sqlite:" + databaseName + ".db";
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Connection conn;
+		try {
+			conn = DriverManager.getConnection(queryString);
+			PreparedStatement prep = conn.prepareStatement("select max(id) from metabolites;");
+			ResultSet rs = prep.executeQuery();
+			//if metabolite_abbreviation is in table will return 1, else 0
+			max = rs.getInt("max(id)");			
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();			
+		}
+		return max;
+	}
+	
 	public static void main(String[] args) {
-		String databaseName = "Model_Reconstruction_corrected";
-		MetaboliteFactory mFactory = new MetaboliteFactory();
-		mFactory.deleteAllUnusedMetabolites(databaseName);
+		
 	}
 
 }
