@@ -25,7 +25,7 @@ public class ReactionParser {
 		ArrayList<String> productAndStoicList = new ArrayList<String>();
 		if (reactionEquation != null) {
 			reactionEquation = compartmentPrefixRemoved(reactionEquation);
-			
+						
 			java.util.List<String> halfEquations = Arrays.asList(reactionEquation.split(splitString(reactionEquation)));	
 			if (reactionEquation.trim().startsWith(splitString(reactionEquation))) {
 				reactantAndStoicList.add("0");
@@ -159,7 +159,8 @@ public class ReactionParser {
 	public static String compartmentPrefixRemoved(String reactionEquation) {
 		if (reactionEquation != null) {
 			String correctedReaction = "";
-			if (reactionEquation.startsWith("[") && reactionEquation.indexOf("]") == 2 && reactionEquation.contains(":")) {
+			if (hasPrefix(reactionEquation)) {
+			//if (reactionEquation.startsWith("[") && reactionEquation.indexOf("]") == 2 && reactionEquation.contains(":")) {
 				correctedReaction = reactionEquation.substring(reactionEquation.indexOf(":") + 1, reactionEquation.length()).trim();
 				hasPrefix = true;
 				suffixFromPrefix = reactionEquation.substring(0, 3);
@@ -277,7 +278,30 @@ public class ReactionParser {
 		return true;
 	}
 
-	/*
+	
+	public static boolean hasPrefix(String reactionEquation) {
+		if (reactionEquation.startsWith("[") && reactionEquation.indexOf("]") == 2 && reactionEquation.contains(":")) {
+			return true;
+		}
+		return false;		
+	}
+	
+	public static String existingPrefix(String reactionEquation) {
+		String existingPrefix = "";
+		if (hasPrefix(reactionEquation)) {
+			existingPrefix = reactionEquation.substring(0, 3);
+		}
+		return existingPrefix;		
+	}
+	
+	public static boolean hasSuffix(String species) {
+		if (species.indexOf("[") == species.length() - 3 && species.endsWith("]")) {
+			return true;
+		}
+		return false;		
+	}
+	
+	
 	public static String existingSuffix(String species) {
 		String existingSuffix = "";
 		if (species.indexOf("[") == species.length() - 3 && species.endsWith("]")) {
@@ -286,7 +310,6 @@ public class ReactionParser {
 		}
 		return existingSuffix;		
 	}
-	*/
 	
 	public static void main(String[] args) {
 		
