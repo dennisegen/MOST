@@ -107,6 +107,7 @@ public class TextReactionsModelReader {
 	}
 
 	public void load(File file, String databaseName){	
+		ReactionParser parser = new ReactionParser();		
 		//if first row of file in not column names, starts reading after row that contains names
 		int correction = LocalConfig.getInstance().getReactionsNextRowCorrection();
 		int row = 1;
@@ -138,7 +139,7 @@ public class TextReactionsModelReader {
 					+ " meta_6 varchar(500), meta_7 varchar(500), meta_8 varchar(500), meta_9 varchar(500), "
 					+ " meta_10 varchar(500), meta_11 varchar(500), meta_12 varchar(500), "
 					+ " meta_13 varchar(500), meta_14 varchar(500), meta_15 varchar(500));");
-			
+					
 			stat.executeUpdate("drop table if exists reaction_reactants;");
 			stat.executeUpdate("CREATE TABLE reaction_reactants (reaction_id INTEGER, " 
 					+ " metabolite_id INTEGER, stoic FLOAT);");
@@ -148,7 +149,14 @@ public class TextReactionsModelReader {
 					+ " metabolite_id INTEGER, stoic FLOAT);");
 			
 			if (!LocalConfig.getInstance().hasMetabolitesFile) {
-								
+						
+				LocalConfig.getInstance().getMetaboliteUsedMap().clear();
+				LocalConfig.getInstance().getDuplicateIds().clear();
+				LocalConfig.getInstance().getSuspiciousMetabolites().clear();
+				LocalConfig.getInstance().getMetaboliteIdNameMap().clear();
+				LocalConfig.getInstance().setMaxMetaboliteId(0);
+				maxMetabId = 0;
+				
 				String metaString = "";
 				for (int i = 0; i < 15; i++) {
 					String meta = ", meta_" + (i + 1)+ " varchar(500)";
@@ -160,9 +168,6 @@ public class TextReactionsModelReader {
 						+ " metabolite_abbreviation varchar(255), metabolite_name varchar(255), "
 						+ " charge varchar(5), compartment varchar(255), boundary varchar(5) " 
 						+ metaString + ");");
-				
-				stat.executeUpdate("drop table if exists reactions_meta_info;");		    
-				stat.executeUpdate("CREATE TABLE reactions_meta_info (id INTEGER PRIMARY KEY, meta_column_name varchar(100));");
 
 				stat.executeUpdate("drop table if exists metabolites_meta_info;");		    
 				stat.executeUpdate("CREATE TABLE metabolites_meta_info (id INTEGER PRIMARY KEY, meta_column_name varchar(100));");
@@ -278,7 +283,6 @@ public class TextReactionsModelReader {
 						}
 						
 						try {
-							ReactionParser parser = new ReactionParser();
 							boolean valid = true;
 							
 							ArrayList<ArrayList<ArrayList<String>>> reactionList = parser.reactionList(reactionString.trim());
@@ -349,6 +353,11 @@ public class TextReactionsModelReader {
 											if (!newMetabolite || LocalConfig.getInstance().addMetaboliteOption) {
 												String insert = "INSERT INTO reaction_reactants(reaction_id, stoic, metabolite_id) values (" + (i - correction) + ", " + stoicStr + ", " + id + ");";
 												stat.executeUpdate(insert);
+												if (parser.isSuspicious(reactant)) {
+													if (!LocalConfig.getInstance().getSuspiciousMetabolites().contains(id)) {
+														LocalConfig.getInstance().getSuspiciousMetabolites().add(id);
+													}							
+												}
 												if (LocalConfig.getInstance().getMetaboliteUsedMap().containsKey(reactant)) {
 													int usedCount = (Integer) LocalConfig.getInstance().getMetaboliteUsedMap().get(reactant);
 													LocalConfig.getInstance().getMetaboliteUsedMap().put(reactant, new Integer(usedCount + 1));									
@@ -424,6 +433,11 @@ public class TextReactionsModelReader {
 											if (!newMetabolite || LocalConfig.getInstance().addMetaboliteOption) {
 												String insert = "INSERT INTO reaction_products(reaction_id, stoic, metabolite_id) values (" + (i - correction) + ", " + stoicStr + ", " + id + ");";
 												stat.executeUpdate(insert);	
+												if (parser.isSuspicious(product)) {
+													if (!LocalConfig.getInstance().getSuspiciousMetabolites().contains(id)) {
+														LocalConfig.getInstance().getSuspiciousMetabolites().add(id);
+													}							
+												}
 												if (LocalConfig.getInstance().getMetaboliteUsedMap().containsKey(product)) {
 													int usedCount = (Integer) LocalConfig.getInstance().getMetaboliteUsedMap().get(product);
 													LocalConfig.getInstance().getMetaboliteUsedMap().put(product, new Integer(usedCount + 1));									
@@ -471,7 +485,7 @@ public class TextReactionsModelReader {
 								stat.executeUpdate(deleteProd);
 								if (reactionString != null && reactionString.length() > 0) {
 									LocalConfig.getInstance().getInvalidReactions().add(reactionString);
-								}	
+								}
 							}										
 						} catch (Throwable t) {
 							
@@ -630,6 +644,7 @@ public class TextReactionsModelReader {
 
 		}
 		GraphicalInterface.showPrompt = true;
+		LocalConfig.getInstance().hasMetabolitesFile = false;
 	}
 	
 	// methods used if "No" button is pressed in order to reconstruct reaction equation with species omitted
