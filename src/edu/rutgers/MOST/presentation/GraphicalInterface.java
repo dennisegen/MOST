@@ -7,6 +7,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -40,6 +41,7 @@ import edu.rutgers.MOST.data.SBMLModelReader;
 import edu.rutgers.MOST.data.SBMLReaction;
 import edu.rutgers.MOST.data.SQLiteLoader;
 import edu.rutgers.MOST.data.SettingsFactory;
+import edu.rutgers.MOST.data.Solution;
 import edu.rutgers.MOST.data.TextMetabolitesModelReader;
 import edu.rutgers.MOST.data.TextMetabolitesWriter;
 import edu.rutgers.MOST.data.TextReactionsModelReader;
@@ -453,6 +455,8 @@ public class GraphicalInterface extends JFrame {
 
 	ArrayList<String> invalidNew = null;
 	Map<String, Object> usedNew = null;
+
+	private DynamicTreeDemo newContentPane;
 	
 	public static ArrayList<ArrayList<Integer>> reactionsFindLocationsList;
 	
@@ -549,7 +553,53 @@ public class GraphicalInterface extends JFrame {
 	@SuppressWarnings("unchecked")
 	public GraphicalInterface(final Connection con)
 	throws SQLException {
+		gi = this;
 		
+		// Tree Panel
+		newContentPane = new DynamicTreeDemo(new DynamicTree() {
+			private static final long serialVersionUID = 1L;
+			
+			public void valueChanged(TreeSelectionEvent e) {
+	        DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                    tree.getLastSelectedPathComponent();
+
+	        if (node == null) return;
+	        
+			Solution nodeInfo = (Solution)node.getUserObject();
+				if (node.isLeaf()) {						
+					String databaseName = nodeInfo.getDatabaseName();
+					LocalConfig.getInstance().setLoadedDatabase(databaseName);
+					try {
+						Class.forName("org.sqlite.JDBC");
+						Connection con = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db");
+						LocalConfig.getInstance().setCurrentConnection(con);
+						highlightUnusedMetabolites = false;
+						highlightUnusedMetabolitesItem.setState(false);
+						setUpMetabolitesTable(con);
+						setUpReactionsTable(con);						
+						setTitle(GraphicalInterfaceConstants.TITLE + " - " + databaseName);
+						con.close();
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (SQLException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+			 	}
+			}
+		});
+		
+		textInput = new TextInputDemo(gi);
+        textInput.setModal(true);
+        textInput.setIconImages(icons);
+        textInput.setTitle("GDBB");
+        textInput.setSize(300, 200);
+        textInput.setResizable(false);
+        textInput.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        textInput.setLocationRelativeTo(null);
+        textInput.setAlwaysOnTop(true);
+        
 		//System.out.println("max memory " + java.lang.Runtime.getRuntime().maxMemory());
 
 		LocalConfig.getInstance().setProgress(0);
@@ -607,6 +657,7 @@ public class GraphicalInterface extends JFrame {
 		setBooleanDefaults();
 		
 		listModel.addElement(GraphicalInterfaceConstants.DEFAULT_DATABASE_NAME);
+		DynamicTreeDemo.treePanel.addObject(new Solution(GraphicalInterfaceConstants.DEFAULT_DATABASE_NAME, GraphicalInterfaceConstants.DEFAULT_DATABASE_NAME));
 		
 		ArrayList<Integer> participatingReactions = new ArrayList<Integer>();
 		LocalConfig.getInstance().setParticipatingReactions(participatingReactions);
@@ -757,7 +808,20 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 			
+		DynamicTreeDemo.treePanel.saveAsCSVItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent a) { 
+				saveOptFile = true;	
+				saveReactionsTextFileChooser();
+			}
+		});
+		
 		fileList.saveAsSBMLItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent a) { 
+				// Add action here when save SBML works	
+			}
+		});
+		
+		DynamicTreeDemo.treePanel.saveAsSBMLItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent a) { 
 				// Add action here when save SBML works	
 			}
@@ -808,7 +872,77 @@ public class GraphicalInterface extends JFrame {
 			}
 		});
 
+		DynamicTreeDemo.treePanel.deleteItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent a) {
+				closeConnection();
+				Object[] options = {"    Yes    ", "    No    ",};
+				int choice = JOptionPane.showOptionDialog(null, 
+						GraphicalInterfaceConstants.DELETE_ASSOCIATED_FILES, 
+						GraphicalInterfaceConstants.DELETE_ASSOCIATED_FILES_TITLE, 
+						JOptionPane.YES_NO_OPTION, 
+						JOptionPane.QUESTION_MESSAGE, 
+						null, options, options[0]);
+				if (choice == JOptionPane.YES_OPTION) {//here
+					System.out.println("database name: "
+							+ LocalConfig.getInstance()
+									.getOptimizationFilesList()
+									.get(DynamicTree.getRow() - 1) + ".db");
+					delete(LocalConfig.getInstance().getOptimizationFilesList().get(DynamicTree.getRow() - 1) + ".db");
+					File f = new File(LocalConfig.getInstance().getOptimizationFilesList().get(DynamicTree.getRow() - 1) + ".log");
+					if (f.exists()) {
+						delete(LocalConfig.getInstance().getOptimizationFilesList().get(DynamicTree.getRow() - 1) + ".log");
+					}
+					// TODO: Determine why MIP Files do not usually delete. (???)
+					File f1 = new File(LocalConfig.getInstance().getOptimizationFilesList().get(DynamicTree.getRow() - 1).substring(4) + "_MIP.log");						
+					if (f1.exists()) {
+						delete(LocalConfig.getInstance().getOptimizationFilesList().get(DynamicTree.getRow() - 1).substring(4) + "_MIP.log");						
+					}
+				}
+				if (choice == JOptionPane.NO_OPTION) {
+
+				}
+				String fileString = "jdbc:sqlite:" + getDatabaseName() + ".db";
+				LocalConfig.getInstance().setLoadedDatabase(getDatabaseName());
+				try {
+					Class.forName("org.sqlite.JDBC");
+					Connection con = DriverManager.getConnection(fileString);
+					LocalConfig.getInstance().setCurrentConnection(con);
+					setUpMetabolitesTable(con);
+					setUpReactionsTable(con);
+					setTitle(GraphicalInterfaceConstants.TITLE + " - " + getDatabaseName());
+					clearOutputPane();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}				
+			}
+		});
+		
 		fileList.clearItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent a) {
+				closeConnection();
+				Object[] options = {"    Yes    ", "    No    ",};
+				int choice = JOptionPane.showOptionDialog(null, 
+						GraphicalInterfaceConstants.DELETE_ASSOCIATED_FILES, 
+						GraphicalInterfaceConstants.DELETE_ASSOCIATED_FILES_TITLE, 
+						JOptionPane.YES_NO_OPTION, 
+						JOptionPane.QUESTION_MESSAGE, 
+						null, options, options[0]);
+				if (choice == JOptionPane.YES_OPTION) {
+					
+					deleteAllOptimizationFiles();
+				}
+				if (choice == JOptionPane.NO_OPTION) {
+
+				}
+				setUpTables();				
+			}
+		});
+		
+		DynamicTreeDemo.treePanel.clearItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent a) {
 				closeConnection();
 				Object[] options = {"    Yes    ", "    No    ",};
@@ -974,6 +1108,9 @@ public class GraphicalInterface extends JFrame {
 				LocalConfig.getInstance().getOptimizationFilesList().add(optimizePath);
 				setOptimizePath(optimizePath);
 				fileList.setSelectedIndex(listModel.size() - 1);
+				
+//				String solutionName = GraphicalInterface.listModel.get(GraphicalInterface.listModel.getSize() - 1);
+				DynamicTreeDemo.treePanel.addObject(new Solution(GraphicalInterface.listModel.get(GraphicalInterface.listModel.getSize() - 1)));
 				
 				// create deep copies of invalidReactions and metaboliteUsedMap
 				// see ObjectCloner for more explanation
@@ -1431,19 +1568,8 @@ public class GraphicalInterface extends JFrame {
 //				DynamicTreeDemo.treePanel.addObject(DynamicTreeDemo.treePanel.getCurrentParent());
 				
 				setOptimizePath(optimizePath);
-
-		        textInput = new TextInputDemo(gi);
-
-		        textInput.setModal(true);
-		        textInput.setIconImages(icons);
-
-		        textInput.setTitle("GDBB");
-		        textInput.setSize(300, 200);
-		        textInput.setResizable(false);
-		        textInput.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		        textInput.setLocationRelativeTo(null);
+				
 		        textInput.setVisible(true);
-		        textInput.setAlwaysOnTop(true);
 			}
 		});
 		
@@ -1801,7 +1927,8 @@ public class GraphicalInterface extends JFrame {
 
 		add (formulaBar, "1, 1, 1, 1");
 		add (tabbedPane, "1, 3, 1, 1"); // Left
-		add (fileListPane, "3, 1, 1, 5"); // Right
+		add (newContentPane, "3, 1, 1, 5");
+//		add (fileListPane, "3, 1, 1, 5"); // Right
 		add (outputPane, "1, 5, 1, 1"); // Bottom
 		add (statusBar, "1, 7, 3, 1");
 
@@ -1884,6 +2011,8 @@ public class GraphicalInterface extends JFrame {
 					fileList.setSelectedIndex(-1);
 					listModel.clear();
 					fileList.setModel(listModel);
+					
+					DynamicTreeDemo.treePanel.clear();
 					
 					String filename;
 					if (rawFilename.endsWith(".xml")) {
@@ -2096,6 +2225,7 @@ public class GraphicalInterface extends JFrame {
 		//refresh fileList with new names
 		for (int i = 0; i < suffixList.size(); i++) {
 			listModel.addElement(GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + filename + suffixList.get(i));
+			DynamicTreeDemo.treePanel.addObject(new DefaultMutableTreeNode(GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + filename + suffixList.get(i)));
 			copier.copyDatabase(GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + oldName + suffixList.get(i), GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + filename + suffixList.get(i));
 			copier.copyLogFile(GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + oldName + suffixList.get(i), GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + filename + suffixList.get(i));
 		}
@@ -2211,6 +2341,7 @@ public class GraphicalInterface extends JFrame {
 			}
 
 			fileList.setModel(listModel);
+			DynamicTreeDemo.treePanel.addObject(new DefaultMutableTreeNode(GraphicalInterface.listModel.get(GraphicalInterface.listModel.getSize() - 1)));
 			clearOutputPane();
 		}	
 		saveOptFile = false;
@@ -2497,6 +2628,7 @@ public class GraphicalInterface extends JFrame {
 				listModel.addElement(ConfigConstants.DEFAULT_DATABASE_NAME);
 				fileList.setModel(listModel);
 				fileList.setSelectedIndex(0);
+				DynamicTreeDemo.treePanel.addObject(new DefaultMutableTreeNode(ConfigConstants.DEFAULT_DATABASE_NAME));
 				metabolitesTable.changeSelection(0, 1, false, false);
 				metabolitesTable.requestFocus();
 				reactionsTable.changeSelection(0, 1, false, false);
@@ -3030,6 +3162,7 @@ public class GraphicalInterface extends JFrame {
 			listModel.addElement(titleName);
 			fileList.setModel(listModel);
 			fileList.setSelectedIndex(0);
+			DynamicTreeDemo.treePanel.addObject(new Solution(GraphicalInterface.listModel.get(GraphicalInterface.listModel.getSize() - 1), getDatabaseName()));
 			setReactionsSortColumnIndex(0);
 			setMetabolitesSortColumnIndex(0);
 			setReactionsSortOrder(SortOrder.ASCENDING);
@@ -6393,59 +6526,60 @@ JMenu selectMenu = new JMenu("Select");
 			return null;
 		}
 	}
-
-	private static class Solution {
-        private final ArrayList<Double> soln;
-        Solution(ArrayList<Double> soln) {
-            this.soln = soln;
-        }
-    }
 	
 	class GDBBTask extends SwingWorker<Void, Solution> {
 		private GDBB gdbb;
-		private int count;
 		private GDBBModel model;
 		private ReactionFactory rFactory;
 		private Vector<String> uniqueGeneAssociations;
 		private int knockoutOffset;
 		private Writer writer;
 		private StringBuffer outputText;
+		private DatabaseCopier copier;
+		private ArrayList<Double> soln;
+		private String dateTimeStamp;
+		private String optimizePath;
 		
 		GDBBTask() {
 			model = new GDBBModel(getDatabaseName());
-//			System.out.println(getDatabaseName());
 		}
 		
         @Override
         protected Void doInBackground() {
-//        	model = new GDBBModel(getDatabaseName());
-			
+        	copier = new DatabaseCopier();
         	rFactory = new ReactionFactory("SBML", getOptimizePath());
 			uniqueGeneAssociations = rFactory.getUniqueGeneAssociations();
 			
-			log.debug("create an optimize");
+			outputText = new StringBuffer();
+			
+//			log.debug("create an optimize");
 			gdbb = new GDBB();
+			GDBB.intermediateSolution.clear();
 			
-			GDBB.objIntermediate = new ArrayList<Double>();
 			gdbb.setGDBBModel(model);
-			
 			gdbb.start();
-//			ArrayList<Double> soln = gdbb.run();
 			
-			count = 0;
-	        while (gdbb.isAlive()) {   	
-	            try {
-					gdbb.join(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	            
-//	            System.out.println("Main ObjIntermediate Size: " + GDBB.objIntermediate.size());
-	            if (GDBB.objIntermediate.size() > count) {
-	            	publish(new Solution(GDBB.objIntermediate));
+			knockoutOffset = 4*model.getNumReactions() + model.getNumMetabolites();
+			
+			soln = new ArrayList<Double>();
+			Format formatter;
+			formatter = new SimpleDateFormat("_yyMMdd_HHmmss");
+			Solution solution;
+	        while (gdbb.isAlive() || GDBB.intermediateSolution.size() > 0) {
+	            if (GDBB.intermediateSolution.size() > 0) {
+					dateTimeStamp = formatter.format(new Date());
+					optimizePath = GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + getDatabaseName() + dateTimeStamp;
+					copier.copyDatabase(getDatabaseName(), optimizePath);
+					listModel.addElement(GraphicalInterfaceConstants.OPTIMIZATION_PREFIX
+							+ (getDatabaseName().substring(getDatabaseName().lastIndexOf("\\") + 1) + dateTimeStamp));				
+					LocalConfig.getInstance().getOptimizationFilesList().add(optimizePath);
+//					setOptimizePath(optimizePath);
+					
+					// need to lock if process is busy
+					solution = GDBB.intermediateSolution.poll();
+					solution.setDatabaseName(optimizePath);
+	            	publish(solution);
 	            }
-	            
 	        }
             return null;
         }
@@ -6464,64 +6598,43 @@ JMenu selectMenu = new JMenu("Select");
 
 		@Override
         protected void process(List<Solution> solutions) {
-			if (knockoutOffset == 0) {
-				knockoutOffset = 4*model.getNumReactions() + model.getNumMetabolites();
-			}
-			double[] x = GDBB.knockoutVectors.get(count);
+			Solution solution = solutions.get(solutions.size() - 1);
+			double[] x = solution.getKnockoutVector();
+			double objectiveValue = solution.getObjectiveValue();
 			
 			String kString = "";
-			for (int j = 0; j < uniqueGeneAssociations.size(); j++) {
-				if (x[j + knockoutOffset] >= 0.5) {
-//					knockedGenes.add(uniqueGeneAssociations.elementAt(j));
-					kString += "\n\t" + uniqueGeneAssociations.elementAt(j);
-//					System.out.println("Solution " + j + ": " + uniqueGeneAssociations.elementAt(j));
+			soln.clear();
+			for (int j = 0; j < x.length; j++) {
+				soln.add(x[j]);
+				if ((j >= knockoutOffset) && (x[j] >= 0.5)) {	// compiler optimizes: boolean short circuiting
+					kString += "\n\t" + uniqueGeneAssociations.elementAt(j - knockoutOffset);
 				}
 			}
 			
-//			String solutionDesc = "";
-//			String solutionDesc = getDatabaseName() + "\n";
-			String solutionDesc = model.getNumMetabolites() + " metabolites, " + model.getNumReactions() + " reactions, " + model.getNumGeneAssociations() + " unique gene associations\n" + "Maximum synthetic objective: " + GDBB.objIntermediate.get(count).doubleValue() + "\nKnockouts:" + kString;
+			rFactory = new ReactionFactory("SBML", solution.getDatabaseName());
+			rFactory.setFluxes(new ArrayList<Double>(soln.subList(0, model.getNumReactions())));
+			rFactory.setKnockouts(soln.subList(knockoutOffset, soln.size()));
 			
-            DynamicTreeDemo.treePanel.addObject((DefaultMutableTreeNode)DynamicTreeDemo.treePanel.getRootNode().getChildAt(DynamicTreeDemo.treePanel.getRootNode().getChildCount() - 1), DynamicTreeDemo.treePanel.new SolutionInfo("" + GDBB.objIntermediate.get(count).doubleValue(), solutionDesc), true);
-			GraphicalInterface.outputTextArea.setText(solutionDesc);
-			outputTextArea.setCaretPosition(0);
-            count++;
+			DynamicTreeDemo.treePanel.addObject((DefaultMutableTreeNode)DynamicTreeDemo.treePanel.getRootNode().getChildAt(DynamicTreeDemo.treePanel.getRootNode().getChildCount() - 1), solution, true);
+			GraphicalInterface.outputTextArea.append("\n\n" + model.getNumMetabolites() + " metabolites, " + model.getNumReactions() + " reactions, " + model.getNumGeneAssociations() + " unique gene associations\n" + "Maximum synthetic objective: " + objectiveValue + "\nKnockouts:" + kString);
         }
         
         @Override
         protected void done() {
 //        	System.out.println("GDBB is done!");
-        	
-        	ArrayList<Double> soln = gdbb.getSolution();
+        	soln = gdbb.getSolution();
 			
 			log.debug("optimization complete");
-			
-			ArrayList<String> knockoutGenes = new ArrayList<String>();
-			
-			try {
-				ReactionFactory rFactory = new ReactionFactory("SBML", getOptimizePath());
-				ArrayList<Double> solnGDBB = new ArrayList<Double>(soln.subList(0, model.getNumReactions()));
-				rFactory.setFluxes(solnGDBB);
-				
-				knockoutGenes = rFactory.setKnockouts(soln.subList(4*model.getNumReactions() + model.getNumMetabolites(), soln.size()));
-			}
-			catch (Exception e) {
-			}
 			
 			textInput.enableStart();
 			textInput.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			
 			writer = null;
 			try {
-				outputText = new StringBuffer();
 //				outputText.append(getDatabaseName() + "\n");
 				outputText.append(model.getNumMetabolites() + " metabolites, " + model.getNumReactions() + " reactions, " + model.getNumGeneAssociations() + " unique gene associations\n");
 				outputText.append("Maximum synthetic objective: "	+ gdbb.getMaxObj() + "\n");
 				outputText.append("knockouts: \n");
-				
-				for (int i = 0; i < knockoutGenes.size(); i++) {
-					outputText.append("\t" + knockoutGenes.get(i) + "\n");
-				}
 				
 				File file = new File(optimizePath + ".log");
 				writer = new BufferedWriter(new FileWriter(file));
@@ -6539,30 +6652,12 @@ JMenu selectMenu = new JMenu("Select");
 					e.printStackTrace();
 				}
 			}
-			loadOutputPane(getOptimizePath() + ".log");
+//			loadOutputPane(getOptimizePath() + ".log");
 			if (getPopout() != null) {
 				getPopout().load(getOptimizePath() + ".log");
 			}				
 			
 			closeConnection();
-			String fileString = "jdbc:sqlite:" + getOptimizePath() + ".db";
-			LocalConfig.getInstance().setLoadedDatabase(getOptimizePath());
-			try {
-				Class.forName("org.sqlite.JDBC");
-				Connection con = DriverManager.getConnection(fileString);
-				LocalConfig.getInstance().setCurrentConnection(con);
-				setUpMetabolitesTable(con);
-				setUpReactionsTable(con);
-				setTitle(GraphicalInterfaceConstants.TITLE + " - " + getOptimizePath());	
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (SQLException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-			fileList.setSelectedIndex(listModel.size() - 1);
-			
 			//	Reset GDBB Dialog
         }   
     }
