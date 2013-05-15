@@ -306,6 +306,6 @@ public class GraphicalInterfaceConstants {
     {"=>", "-->", "->"
     };
     
-    public static final String LOAD_FROM_MODEL_COLLECTION_TABLE_TITLE = "Load";
+    public static final String LOAD_FROM_MODEL_COLLECTION_TABLE_TITLE = "Load from Model Collection Database";
 }
 
