@@ -291,7 +291,7 @@ public class ReactionFactory {
 				Class.forName("org.sqlite.JDBC");
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 				return geneAssociations;
 			}
 			Connection conn;
