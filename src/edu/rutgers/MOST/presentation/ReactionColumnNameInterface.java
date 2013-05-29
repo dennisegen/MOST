@@ -579,7 +579,6 @@ public class ReactionColumnNameInterface  extends JDialog {
 						LocalConfig.getInstance().setReactionNameColumnIndex(getColumnNamesFromFile().indexOf(cbReactionName.getSelectedItem()));
 						usedIndices.add(getColumnNamesFromFile().indexOf(cbReactionName.getSelectedItem()));
 					}
-					System.out.println("index" + cbReactionAbbreviation.getSelectedIndex());
 					if (getColumnNamesFromFile().contains(cbReactionEquation.getSelectedItem())) {
 						LocalConfig.getInstance().setReactionEquationColumnIndex(getColumnNamesFromFile().indexOf(cbReactionEquation.getSelectedItem()));
 						usedIndices.add(getColumnNamesFromFile().indexOf(cbReactionEquation.getSelectedItem()));
@@ -778,12 +777,12 @@ public class ReactionColumnNameInterface  extends JDialog {
 			} else if((columnNamesFromFile.get(c).toLowerCase()).contains(GraphicalInterfaceConstants.GENE_ASSOCIATION_COLUMN_FILTER[0]) && (columnNamesFromFile.get(c).toLowerCase()).contains(GraphicalInterfaceConstants.GENE_ASSOCIATION_COLUMN_FILTER[1])) {
 				cbGeneAssociation.setSelectedIndex(c);
 				LocalConfig.getInstance().setGeneAssociationColumnIndex(c);
-			} else if((columnNamesFromFile.get(c).toLowerCase()).contains(GraphicalInterfaceConstants.ABBREVIATION_COLUMN_FILTER[0]) || (columnNamesFromFile.get(c).toLowerCase()).compareTo(GraphicalInterfaceConstants.ABBREVIATION_COLUMN_FILTER[1]) == 0) {
+			} else if(((columnNamesFromFile.get(c).toLowerCase()).contains(GraphicalInterfaceConstants.ABBREVIATION_COLUMN_FILTER[0]) || (columnNamesFromFile.get(c).toLowerCase()).compareTo(GraphicalInterfaceConstants.ABBREVIATION_COLUMN_FILTER[1]) == 0) && !(columnNamesFromFile.get(c).toLowerCase()).contains(GraphicalInterfaceConstants.ABBREVIATION_COLUMN_NOT_FILTER[0])) {
 				cbReactionAbbreviation.setSelectedIndex(c);
 				LocalConfig.getInstance().setReactionAbbreviationColumnIndex(c); 
-			} else if((columnNamesFromFile.get(c).toLowerCase()).contains(GraphicalInterfaceConstants.NAME_COLUMN_FILTER[0])) {
+			} else if((columnNamesFromFile.get(c).toLowerCase()).contains(GraphicalInterfaceConstants.NAME_COLUMN_FILTER[0]) && !(columnNamesFromFile.get(c).toLowerCase()).contains(GraphicalInterfaceConstants.NAME_COLUMN_NOT_FILTER[0])) {
 				cbReactionName.setSelectedIndex(c);
-				LocalConfig.getInstance().setReactionNameColumnIndex(c); 
+				LocalConfig.getInstance().setReactionNameColumnIndex(c);
 			} else if((columnNamesFromFile.get(c).toLowerCase()).contains(GraphicalInterfaceConstants.EQUATION_COLUMN_FILTER[0]) || (columnNamesFromFile.get(c).toLowerCase()).equals(GraphicalInterfaceConstants.EQUATION_COLUMN_FILTER[1])) {
 				cbReactionEquation.setSelectedIndex(c);
 				LocalConfig.getInstance().setReactionEquationColumnIndex(c); 
