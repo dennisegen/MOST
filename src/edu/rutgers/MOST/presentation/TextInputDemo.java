@@ -41,6 +41,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.rutgers.MOST.tree.DynamicTreeDemo;
 
+import edu.rutgers.MOST.data.Solution;
 import edu.rutgers.MOST.optimization.solvers.Callback;
 
 /**
@@ -139,10 +140,6 @@ public class TextInputDemo extends JDialog
      */
     public void actionPerformed(ActionEvent e) {
         if ("clear".equals(e.getActionCommand())) {
-//            addressSet = false;
-//            numKnockouts.setText("1");
-//            totalTime.setText("300");
-//            gi.gdbbTask.getGdbb().stopGDBB();
         	Callback.setAbort(true);
             startButton.setEnabled(true);
             stopButton.setEnabled(false);
@@ -150,15 +147,14 @@ public class TextInputDemo extends JDialog
             timer.stop();
             //We can't just setText on the formatted text
             //field, since its value will remain set.
-//            zipField.setValue(null);
         } else if ("Start".equals(e.getActionCommand())) {
-//            addressSet = true;
         	count = 0;
         	timer.restart();
         	startButton.setEnabled(false);
             stopButton.setEnabled(true);
             
-			DynamicTreeDemo.treePanel.addObject(new DefaultMutableTreeNode(GraphicalInterface.listModel.get(GraphicalInterface.listModel.getSize() - 1)));
+            String solutionName = GraphicalInterface.listModel.get(GraphicalInterface.listModel.getSize() - 1);
+			DynamicTreeDemo.treePanel.addObject(new Solution(solutionName, solutionName));
 			
 			gi.gdbbTask = gi.new GDBBTask();
 			Callback.setAbort(false);
@@ -169,7 +165,6 @@ public class TextInputDemo extends JDialog
         	gi.gdbbTask.execute();
         	this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         }
-//        System.out.println("Time: " + count++);
         counter.setText("" + count++);
         updateDisplays();
     }
@@ -245,8 +240,8 @@ public class TextInputDemo extends JDialog
 
         String[] labelStrings = {
             "Number of Knockouts ",
-            "Total Running Time: ",
-            "Number of Threads"
+            "Optimizer time limit ",
+            "Number of Threads "
         };
 
         JLabel[] labels = new JLabel[labelStrings.length];

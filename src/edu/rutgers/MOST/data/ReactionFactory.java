@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import edu.rutgers.MOST.presentation.GraphicalInterfaceConstants;
+
 public class ReactionFactory {
 	private String sourceType;
 	private String databaseName;
@@ -207,30 +209,39 @@ public class ReactionFactory {
 			
 			Vector<String> uniqueGeneAssociations = getUniqueGeneAssociations();
 			Vector<String> geneAssocaitons = getGeneAssociations();
-			
+		
+			String queryKVector = "";
 			for (int i = 0; i < geneAssocaitons.size(); i++) {
 				for (int j = 0; j < uniqueGeneAssociations.size(); j++) {
 					if (geneAssocaitons.elementAt(i).equals(uniqueGeneAssociations.elementAt(j))) {
 							kVector.add(knockouts.get(j).doubleValue());
 					}
+					
+					if (knockouts.get(j).doubleValue() != 0.0) {
+						knockoutGenes.add(uniqueGeneAssociations.elementAt(j));
+					}
+				}
+				
+				if(kVector.get(i).doubleValue() != 0.0) {
+					queryKVector += " when " + (i + 1) + " then " + "\"" + GraphicalInterfaceConstants.BOOLEAN_VALUES[1] + "\"";
 				}
 			}
 			
-			for (int i = 0; i < uniqueGeneAssociations.size(); i++) {
-				if (knockouts.get(i).doubleValue() != 0) {
-					knockoutGenes.add(uniqueGeneAssociations.elementAt(i));
-//					System.out.println(uniqueGeneAssociations.elementAt(i));
-				}
-			}
+//			for (int i = 0; i < uniqueGeneAssociations.size(); i++) {
+//				if (knockouts.get(i).doubleValue() != 0) {
+//					knockoutGenes.add(uniqueGeneAssociations.elementAt(i));
+////					System.out.println(uniqueGeneAssociations.elementAt(i));
+//				}
+//			}
 			
 			conn = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db"); 
 
-			String queryKVector = "";
-			for (int i = 0; i < geneAssocaitons.size(); i++) {
-				if(kVector.get(i).doubleValue() != 0) {
-					queryKVector += " when " + (i + 1) + " then " + kVector.get(i);
-				}
-			}
+//			String queryKVector = "";
+//			for (int i = 0; i < geneAssocaitons.size(); i++) {
+//				if(kVector.get(i).doubleValue() != 0.0) {
+//					queryKVector += " when " + (i + 1) + " then " + kVector.get(i);
+//				}
+//			}
 			
 			if (queryKVector.length() != 0) {
 				Statement stat = conn.createStatement();
@@ -318,6 +329,39 @@ public class ReactionFactory {
 		}
 
 		return geneAssociations;
+	}
+	
+	public Vector<Double> getSyntheticObjectiveVector() {
+		Vector<Double> syntheticObjectiveVector = new Vector<Double>();
+
+		if("SBML".equals(sourceType)){
+			try {
+				Class.forName("org.sqlite.JDBC");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return syntheticObjectiveVector;
+			}
+			Connection conn;
+			try {
+				conn = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db"); 
+
+				Statement stat = conn.createStatement();
+				ResultSet rs = stat.executeQuery("select meta_5 from reactions;");
+
+				while (rs.next()) {
+					syntheticObjectiveVector.add(rs.getDouble("meta_5")); 
+				}
+				rs.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return syntheticObjectiveVector;
+			}
+		}
+
+		return syntheticObjectiveVector;
 	}
 	
 	public static void main(String[] args) {
