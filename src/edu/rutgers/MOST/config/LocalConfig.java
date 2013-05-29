@@ -227,6 +227,16 @@ public class LocalConfig {
 		this.biologicalObjectiveColumnIndex = biologicalObjectiveColumnIndex;
 	}
 	
+	private static Integer geneAssociationColumnIndex;
+
+	public Integer getGeneAssociationColumnIndex() {
+		return geneAssociationColumnIndex;
+	}
+
+	public void setGeneAssociationColumnIndex(Integer geneAssociationColumnIndex) {
+		this.geneAssociationColumnIndex = geneAssociationColumnIndex;
+	}
+	
     private static ArrayList<Integer> reactionsMetaColumnIndexList;
 	
 	public ArrayList<Integer> getReactionsMetaColumnIndexList() {
