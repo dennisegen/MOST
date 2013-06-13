@@ -29,6 +29,7 @@ import edu.rutgers.MOST.data.DatabaseCreator;
 import edu.rutgers.MOST.data.FBAModel;
 import edu.rutgers.MOST.data.GDBBModel;
 import edu.rutgers.MOST.data.JSBMLWriter;
+import edu.rutgers.MOST.data.MemoryDatabaseCopier;
 import edu.rutgers.MOST.data.MetaboliteFactory;
 import edu.rutgers.MOST.data.MetabolitesMetaColumnManager;
 import edu.rutgers.MOST.data.MetabolitesUpdater;
@@ -394,12 +395,6 @@ public class GraphicalInterface extends JFrame {
 	public static void setMetabolitesReplaceLocation(ArrayList<Integer> metabolitesReplaceLocation) {
 		GraphicalInterface.metabolitesReplaceLocation = metabolitesReplaceLocation;
 	}
-	
-    public static ArrayList<ArrayList<Integer>> reactionsFindLocationsList;
-	
-	public static ArrayList<ArrayList<Integer>> getReactionsFindLocationsList() {
-		return reactionsFindLocationsList;
-	}
 
 	public static void setReactionsFindLocationsList(
 			ArrayList<ArrayList<Integer>> reactionsFindLocationsList) {
@@ -517,12 +512,9 @@ public class GraphicalInterface extends JFrame {
 	
 	public static String participatingMetabolite;
 
-<<<<<<< HEAD
 	public void setParticipatingMetabolite(String participatingMetabolite) {
 		GraphicalInterface.participatingMetabolite = participatingMetabolite;
-=======
-	ArrayList<String> invalidNew = null;
-	Map<String, Object> usedNew = null;
+	}
 
 	private DynamicTreeDemo newContentPane;
 	
@@ -530,7 +522,6 @@ public class GraphicalInterface extends JFrame {
 	
 	public static ArrayList<ArrayList<Integer>> getReactionsFindLocationsList() {
 		return reactionsFindLocationsList;
->>>>>>> 238ba7d6a5e477e8cbfda6a9c41be344101883b2
 	}
 
 	public static String getParticipatingMetabolite() {
@@ -666,7 +657,7 @@ public class GraphicalInterface extends JFrame {
         textInput.setModal(true);
         textInput.setIconImages(icons);
         textInput.setTitle("GDBB");
-        textInput.setSize(300, 200);
+        textInput.setSize(300, 250);
         textInput.setResizable(false);
         textInput.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         textInput.setLocationRelativeTo(null);
@@ -718,15 +709,12 @@ public class GraphicalInterface extends JFrame {
 		LocalConfig.getInstance().setReactionsLocationsListCount(0);
 		LocalConfig.getInstance().setMetabolitesLocationsListCount(0);
 		
-<<<<<<< HEAD
 		listModel.addElement(GraphicalInterfaceConstants.DEFAULT_DATABASE_NAME);			
 		outputTextArea.setEditable(false);
-=======
 		setBooleanDefaults();
 		
 		listModel.addElement(GraphicalInterfaceConstants.DEFAULT_DATABASE_NAME);
 		DynamicTreeDemo.treePanel.addObject(new Solution(GraphicalInterfaceConstants.DEFAULT_DATABASE_NAME, GraphicalInterfaceConstants.DEFAULT_DATABASE_NAME));
->>>>>>> 238ba7d6a5e477e8cbfda6a9c41be344101883b2
 		
 		// lists populated in file load
         ArrayList<Integer> blankMetabIds = new ArrayList<Integer>();
@@ -1127,10 +1115,11 @@ public class GraphicalInterface extends JFrame {
 		menuBar.add(modelMenu);
 
 		//Simulate menu
-		JMenu simulateMenu = new JMenu("Simulate");
-		simulateMenu.setMnemonic(KeyEvent.VK_S);
+		JMenu simulateMenu = new JMenu("Analysis");
+		simulateMenu.setMnemonic(KeyEvent.VK_A);
 		
 		simulateMenu.add(fbaItem);
+		fbaItem.setMnemonic(KeyEvent.VK_F);
 		
 		fbaItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent a) {
@@ -1579,14 +1568,15 @@ public class GraphicalInterface extends JFrame {
 		menuBar.add(editMenu);
 
 		//Optimize menu
-		JMenu optimizeMenu = new JMenu("Optimize");
-		optimizeMenu.setMnemonic(KeyEvent.VK_O);
+//		JMenu optimizeMenu = new JMenu("Optimize");
+//		optimizeMenu.setMnemonic(KeyEvent.VK_O);
 
 		JMenuItem gdbbItem = new JMenuItem("GDBB");
-		optimizeMenu.add(gdbbItem);
+//		optimizeMenu.add(gdbbItem);
+		simulateMenu.add(gdbbItem);
 		// note that eventually this menu will have GDLS and other items
 		// so the choice of "G" for mnemonic is not a good choice
-		gdbbItem.setMnemonic(KeyEvent.VK_B);
+		gdbbItem.setMnemonic(KeyEvent.VK_G);
 
 //		TODO Optimization using GDBB
 		//	Action Listener for GDBB optimization
@@ -1644,11 +1634,13 @@ public class GraphicalInterface extends JFrame {
 				
 				setOptimizePath(optimizePath);
 				
+				textInput.setObjectiveColumnNames(LocalConfig.getInstance().getLoadedDatabase());
+				
 		        textInput.setVisible(true);
 			}
 		});
 		
-		menuBar.add(optimizeMenu);
+//		menuBar.add(optimizeMenu);
 
 		JMenu helpMenu = new JMenu("Help");
 		helpMenu.setMnemonic(KeyEvent.VK_H);
@@ -2314,7 +2306,7 @@ public class GraphicalInterface extends JFrame {
 		//refresh fileList with new names
 		for (int i = 0; i < suffixList.size(); i++) {
 			listModel.addElement(GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + filename + suffixList.get(i));
-			DynamicTreeDemo.treePanel.addObject(new DefaultMutableTreeNode(GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + filename + suffixList.get(i)));
+			DynamicTreeDemo.treePanel.addObject(new Solution(GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + filename + suffixList.get(i)));
 			copier.copyDatabase(GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + oldName + suffixList.get(i), GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + filename + suffixList.get(i));
 			copier.copyLogFile(GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + oldName + suffixList.get(i), GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + filename + suffixList.get(i));
 		}
@@ -2430,7 +2422,7 @@ public class GraphicalInterface extends JFrame {
 			}
 
 			fileList.setModel(listModel);
-			DynamicTreeDemo.treePanel.addObject(new DefaultMutableTreeNode(GraphicalInterface.listModel.get(GraphicalInterface.listModel.getSize() - 1)));
+			DynamicTreeDemo.treePanel.addObject(new Solution(GraphicalInterface.listModel.get(GraphicalInterface.listModel.getSize() - 1)));
 			clearOutputPane();
 		}	
 		saveOptFile = false;
@@ -2717,7 +2709,7 @@ public class GraphicalInterface extends JFrame {
 				listModel.addElement(ConfigConstants.DEFAULT_DATABASE_NAME);
 				fileList.setModel(listModel);
 				fileList.setSelectedIndex(0);
-				DynamicTreeDemo.treePanel.addObject(new DefaultMutableTreeNode(ConfigConstants.DEFAULT_DATABASE_NAME));
+				DynamicTreeDemo.treePanel.addObject(new Solution(ConfigConstants.DEFAULT_DATABASE_NAME));
 				metabolitesTable.changeSelection(0, 1, false, false);
 				metabolitesTable.requestFocus();
 				reactionsTable.changeSelection(0, 1, false, false);
@@ -3250,15 +3242,12 @@ public class GraphicalInterface extends JFrame {
 			listModel.addElement(titleName);
 			fileList.setModel(listModel);
 			fileList.setSelectedIndex(0);
-<<<<<<< HEAD
 			setSortDefault();
-=======
 			DynamicTreeDemo.treePanel.addObject(new Solution(GraphicalInterface.listModel.get(GraphicalInterface.listModel.getSize() - 1), getDatabaseName()));
 			setReactionsSortColumnIndex(0);
 			setMetabolitesSortColumnIndex(0);
 			setReactionsSortOrder(SortOrder.ASCENDING);
 			setMetabolitesSortOrder(SortOrder.ASCENDING);
->>>>>>> 238ba7d6a5e477e8cbfda6a9c41be344101883b2
 			//set focus to top left
 			setTableCellFocused(0, 1, reactionsTable);
 			setTableCellFocused(0, 1, metabolitesTable);
@@ -6666,6 +6655,7 @@ public class GraphicalInterface extends JFrame {
 		private Writer writer;
 		private StringBuffer outputText;
 		private DatabaseCopier copier;
+//		private MemoryDatabaseCopier copier;
 		private ArrayList<Double> soln;
 		private String dateTimeStamp;
 		private String optimizePath;
@@ -6677,6 +6667,7 @@ public class GraphicalInterface extends JFrame {
         @Override
         protected Void doInBackground() {
         	copier = new DatabaseCopier();
+//        	copier = new MemoryDatabaseCopier();
         	rFactory = new ReactionFactory("SBML", getOptimizePath());
 			uniqueGeneAssociations = rFactory.getUniqueGeneAssociations();
 			
@@ -6695,11 +6686,16 @@ public class GraphicalInterface extends JFrame {
 			Format formatter;
 			formatter = new SimpleDateFormat("_yyMMdd_HHmmss");
 			Solution solution;
+			
+//			String oldOptimizaePath = getDatabaseName();
+//			copier.copyDatabase(oldOptimizaePath, optimizePath, true);
+			
 	        while (gdbb.isAlive() || GDBB.intermediateSolution.size() > 0) {
 	            if (GDBB.intermediateSolution.size() > 0) {
 					dateTimeStamp = formatter.format(new Date());
 					optimizePath = GraphicalInterfaceConstants.OPTIMIZATION_PREFIX + getDatabaseName() + dateTimeStamp;
 					copier.copyDatabase(getDatabaseName(), optimizePath);
+//					copier.copyDatabase(getDatabaseName(), optimizePath, false);
 					listModel.addElement(GraphicalInterfaceConstants.OPTIMIZATION_PREFIX
 							+ (getDatabaseName().substring(getDatabaseName().lastIndexOf("\\") + 1) + dateTimeStamp));				
 					LocalConfig.getInstance().getOptimizationFilesList().add(optimizePath);
@@ -7967,5 +7963,3 @@ public class GraphicalInterface extends JFrame {
 
 	}
 }
-
-

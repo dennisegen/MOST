@@ -15,6 +15,7 @@ import edu.rutgers.MOST.presentation.GraphicalInterfaceConstants;
 public class ReactionFactory {
 	private String sourceType;
 	private String databaseName;
+	private static String columnName;
 	
 	public ReactionFactory(String sourceType, String databaseName) {
 		this.sourceType = sourceType;
@@ -347,10 +348,14 @@ public class ReactionFactory {
 				conn = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db"); 
 
 				Statement stat = conn.createStatement();
-				ResultSet rs = stat.executeQuery("select meta_5 from reactions;");
+				ResultSet rs = stat.executeQuery("select meta_4 from reactions;");
+				System.out.println("ReactionFactory, columnName = "
+						+ columnName);
+//				ResultSet rs = stat.executeQuery("select " + columnName + " from reactions;");
 
 				while (rs.next()) {
-					syntheticObjectiveVector.add(rs.getDouble("meta_5")); 
+					syntheticObjectiveVector.add(rs.getDouble("meta_4"));
+//					syntheticObjectiveVector.add(rs.getDouble(columnName));
 				}
 				rs.close();
 				conn.close();
@@ -364,6 +369,14 @@ public class ReactionFactory {
 		return syntheticObjectiveVector;
 	}
 	
+	public static String getColumnName() {
+		return columnName;
+	}
+
+	public static void setColumnName(String columnName) {
+		ReactionFactory.columnName = columnName;
+	}
+
 	public static void main(String[] args) {
 
 	}

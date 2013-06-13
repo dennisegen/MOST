@@ -41,6 +41,7 @@ public class GDBBModel extends FBAModel {
 		this.geneAssociations = rFactory.getGeneAssociations();
 		this.distinctGeneAssociations = rFactory.getUniqueGeneAssociations();		
 		this.syntheticObjectiveVector = rFactory.getSyntheticObjectiveVector();
+//		this.syntheticObjective = rFactory.getSyntheticObjectiveVector();
 		
 		//	GPR Matrix
 		gprMatrix = new ArrayList<Map<Integer, Double>>();
@@ -51,8 +52,7 @@ public class GDBBModel extends FBAModel {
 		
 		//	Populating Values
 		for (int i = 0; i < distinctGeneAssociations.size(); i++) {
-			Map<Integer, Double> sRow = new HashMap<Integer, Double>();
-			gprMatrix.add(sRow);
+			gprMatrix.add(new HashMap<Integer, Double>());
 			for(int j = 0; j < geneAssociations.size(); j++) {
 				if(distinctGeneAssociations.elementAt(i).equals(geneAssociations.elementAt(j))) {
 					gprMatrix.get(i).put(j, 1.0);
@@ -64,8 +64,8 @@ public class GDBBModel extends FBAModel {
 		C = 1;
 		
 		//	TODO Need to retrieve actual synthetic objective function
-		syntheticObjective = new Vector<Double>();
 		
+		syntheticObjective = new Vector<Double>();
 //		for (int i = 0; i < reactions.size(); i++) {
 //			SBMLReaction reac = (SBMLReaction) (reactions.elementAt(i));
 //			if (reac.getId() != 729) {
