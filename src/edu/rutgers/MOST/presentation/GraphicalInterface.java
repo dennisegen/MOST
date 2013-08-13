@@ -2776,10 +2776,7 @@ public class GraphicalInterface extends JFrame {
 			//... Open a file dialog.
 			File file = null;
 			if (saveOptFile) {
-				//System.out.println(DynamicTreeDemo.treePanel.getTree().getLastSelectedPathComponent());
-				//file = new File(DynamicTreeDemo.treePanel.getTree().getLastSelectedPathComponent());
-				//file = new File(DynamicTreeDemo.treePanel.getTree().getLastSelectedPathComponent().toString());
-				file = new File(listModel.getElementAt(fileList.getSelectedIndex()));
+				file = new File(DynamicTreeDemo.treePanel.getTree().getLastSelectedPathComponent().toString());
 				fileChooser.setSelectedFile(file);
 			}
 			int retval = fileChooser.showSaveDialog(output);
