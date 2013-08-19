@@ -525,6 +525,7 @@ public class TextReactionsModelReader {
 								}
 								// revise reaction equation if "No" button clicked
 								if (valid && LocalConfig.getInstance().noButtonClicked) {
+									System.out.println("no");
 									String revisedReactants = "";
 									String revisedProducts = "";
 									String revisedReaction = "";
