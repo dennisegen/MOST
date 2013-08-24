@@ -50,10 +50,8 @@ import org.sbml.jsbml.xml.XMLAttributes;
 import org.sbml.jsbml.xml.XMLNamespaces;
 import org.sbml.jsbml.xml.XMLNode;
 
-
 import edu.rutgers.MOST.config.ConfigConstants;
 import edu.rutgers.MOST.config.LocalConfig;
-
 
 public class JSBMLWriter implements TreeModelListener{
 	public String sourceType;
@@ -109,7 +107,7 @@ public class JSBMLWriter implements TreeModelListener{
 	
 	public void formConnect(LocalConfig config) throws Exception {
 		//config.setLoadedDatabase(ConfigConstants.DEFAULT_DATABASE_NAME);
-		System.out.println(config.getDatabaseName());
+		//System.out.println(config.getDatabaseName());
 		curSettings = new SettingsFactory();
 		if (setOutFile()) {
 		
@@ -163,12 +161,18 @@ public class JSBMLWriter implements TreeModelListener{
 		chooser.setCurrentDirectory(new File(lastSaveSBML_path));
 		chooser.setApproveButtonText("Save");
 		chooser.setDialogTitle("Save to");
+		chooser.setFileFilter(new XMLFileFilter());
+		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		
 		int option = chooser.showOpenDialog(output); 
 		
 		if(option == JFileChooser.APPROVE_OPTION){  
 			if(chooser.getSelectedFile()!=null)	{  
-				File theFileToSave = chooser.getSelectedFile();
+				String path = chooser.getSelectedFile().getPath();
+				if (!path.endsWith(".xml")) {
+					path = path + ".xml";
+				}
+				File theFileToSave = new File(path);				
 				this.setOutFile(theFileToSave);
 				String rawPathName = chooser.getSelectedFile().getAbsolutePath();
 				curSettings.add("LastSaveSBML", rawPathName);
@@ -199,7 +203,7 @@ public class JSBMLWriter implements TreeModelListener{
 		
 		
 		// Create a new SBML model, and add a compartment to it.
-		System.out.println(databaseName);
+		//System.out.println(databaseName);
 		String dbN = databaseName.replace("Model", "");
 		
 
@@ -291,7 +295,7 @@ public class JSBMLWriter implements TreeModelListener{
 			sbmlwrite.write(doc, outFile, "MOST", "1.0");
 		}
 		
-		System.out.println("Successfully outputted to " + outFile);
+		//System.out.println("Successfully outputted to " + outFile);
 	}
 	
 	public class SMetabolites {
@@ -321,10 +325,11 @@ public class JSBMLWriter implements TreeModelListener{
 			MetaboliteFactory mFactory = new MetaboliteFactory(sourceType, databaseName);
 			int length = mFactory.maximumId();
 			//mFactory.getMetaboliteById(metaboliteId, sourceType, databaseName);
-			
+			/*
 			System.out.print("Currently of size: ");
 			System.out.print(length);
 			System.out.print("\n");
+			*/
 			compartments = new HashMap();
 			for (int i=1; i <= length; i++) {
 				SBMLMetabolite curMeta = (SBMLMetabolite) mFactory.getMetaboliteById(i);
@@ -426,9 +431,11 @@ public class JSBMLWriter implements TreeModelListener{
 				
 				}
 				catch (Exception e) {
+					/*
 					System.out.println("Error: " + e.getMessage());
 					System.out.println(mAbrv + " couldn't be added to model");
 					System.out.println();
+					*/
 				}
 				
 				//SpeciesReference curSpecRef = new SpeciesReference(); //TODO: figure spec ref
@@ -486,7 +493,7 @@ public class JSBMLWriter implements TreeModelListener{
 			Vector<Species> curSpecies;
 			
 			int count = 0;
-			System.out.println();
+			//System.out.println();
 			//model.addNamespace("html");
 			//model.addNamespace("html:p");
 			MetaboliteFactory mFactory = new MetaboliteFactory(sourceType, databaseName);
@@ -664,7 +671,7 @@ public class JSBMLWriter implements TreeModelListener{
 						curReact.addReactant(curSpec);
 					}
 					catch (Exception e) {
-						System.out.println("Error: " + e.getMessage());
+						//System.out.println("Error: " + e.getMessage());
 						
 					}
 				}
@@ -689,7 +696,7 @@ public class JSBMLWriter implements TreeModelListener{
 						curReact.addProduct(curSpec);
 					}
 					catch (Exception e) {
-						System.out.println(e.getMessage());
+						//System.out.println(e.getMessage());
 					
 					}
 				}
@@ -814,6 +821,16 @@ public class JSBMLWriter implements TreeModelListener{
 		public void setGeneAssoc(String assoc) {
 			
 		}
+	}
+	
+	class XMLFileFilter extends javax.swing.filechooser.FileFilter {
+	    public boolean accept(File f) {
+	        return f.isDirectory() || f.getName().toLowerCase().endsWith(".xml");
+	    }
+	    
+	    public String getDescription() {
+	        return ".xml files";
+	    }
 	}
 	
 }

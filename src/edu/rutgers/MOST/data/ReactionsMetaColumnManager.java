@@ -1,6 +1,5 @@
 package edu.rutgers.MOST.data;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,13 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class ReactionsMetaColumnManager {
 
 	public ArrayList<String> metaColumnNames;
 
-	public void setMetaColumnName(ArrayList metaColumnNames) {
+	public void setMetaColumnName(ArrayList<String> metaColumnNames) {
 		this.metaColumnNames = metaColumnNames;
 	}
 
@@ -136,7 +134,7 @@ public class ReactionsMetaColumnManager {
 		return columnNames;
 
 	}
-
+	
 	public void addColumnName(String databaseName, String columnName) {
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
 		try {
@@ -168,7 +166,7 @@ public class ReactionsMetaColumnManager {
 
 	public void changeColumnName(String databaseName, String columnName, int id) {
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
-		System.out.println("name " + columnName + "id " + id);
+		//System.out.println("name " + columnName + "id " + id);
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {

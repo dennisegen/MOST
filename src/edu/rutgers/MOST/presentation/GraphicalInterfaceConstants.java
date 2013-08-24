@@ -1,5 +1,6 @@
 package edu.rutgers.MOST.presentation;
 
+import java.awt.Color;
 import java.util.Arrays;
 
 public class GraphicalInterfaceConstants {
@@ -157,13 +158,19 @@ public class GraphicalInterfaceConstants {
     
     public static final String OPTIMIZATION_PREFIX = "OPT_";
     
-    public static final String MIP_SUFFIX = "_MIP"; 
+    public static final String MIP_SUFFIX = "_MIP";
+	
+	public static final String GDBB_PREFIX = "GDBB_";
     
     /*****************************************************************************/
     //metabolite column filtering names
     /*****************************************************************************/
     public static final String[] METAB_ABBREVIATION_FILTER =
     {"abbreviation", "id"
+    };
+    
+    public static final String[] METAB_ABBREVIATION_NOT_FILTER =
+    {"required", "recommended", "optional"
     };
     
     public static final String[] METAB_NAME_FILTER =
@@ -262,7 +269,8 @@ public class GraphicalInterfaceConstants {
     public static final String[] VALID_FALSE_VALUES = {"f"};
     public static final String[] VALID_TRUE_VALUES = {"t"};
     public static final String BOOLEAN_VALUE_ERROR_TITLE = "Boolean Value Error";
-    public static final String BOOLEAN_VALUE_ERROR_MESSAGE = "Invalid entry. Enter \"t\" for \"true\", \"f\" for \"false\"";
+    public static final String BOOLEAN_VALUE_ERROR_MESSAGE = "Invalid Boolean Value";
+    //public static final String BOOLEAN_VALUE_ERROR_MESSAGE = "Invalid entry. Enter \"t\" for \"true\", \"f\" for \"false\"";
 	
     // lower/upper bound/reversible
     public static final String LOWER_BOUND_ERROR_TITLE = "Lower Bound Error.";
@@ -288,6 +296,10 @@ public class GraphicalInterfaceConstants {
     public static final String PARTICIPATING_METAB_RENAME_MESSAGE_PREFIX = "Renaming ";
     public static final String PARTICIPATING_METAB_RENAME_MESSAGE_SUFFIX = " will result in changing one or more reactions. Are you sure you want to do this?";
         
+    // duplicate metabolite
+    public static final String DUPLICATE_METABOLITE_TITLE = "Duplicate Metabolite";
+    public static final String DUPLICATE_METABOLITE_MESSAGE = "Duplicate Metabolite. Add anyway?"; 
+    
     // invalid reactions
     public static final String INVALID_REACTIONS_ERROR_TITLE = "Invalid Reactions Warning";
     public static final String INVALID_REACTIONS_ERROR_MESSAGE = "Model contains invalid reactions. Are you sure you wish to save?";    
@@ -349,7 +361,49 @@ public class GraphicalInterfaceConstants {
     {"=>", "-->", "->"
     };
     
+    public static final int PROGRESS_BAR_WIDTH = 175;
+    public static final int PROGRESS_BAR_HEIGHT = 38;
+    
+    public static final int UNDO_MAX_VISIBLE_ROWS = 10;
+    public static final double UNDO_VISIBILITY_FRACTION = 0.1;
+    public static final int UNDO_BORDER_HEIGHT = 30;
+    
+    //public static final String UNDO_ICON_IMAGE_PATH = "etc/toolbarIcons/Sideways_Arrow_Icon16b.png";
+    public static final String UNDO_ICON_IMAGE_PATH = "etc/toolbarIcons/1374634434_back_undo.png";
+    public static final String REDO_ICON_IMAGE_PATH = "etc/toolbarIcons/1374634411_redo_forward.png";
+    //public static final String REDO_ICON_IMAGE_PATH = "etc/toolbarIcons/Sideways_Arrow_Icon16a.png";
+    //public static final String UNDO_GRAYED_ICON_IMAGE_PATH = "etc/toolbarIcons/Sideways_Arrow_Icon16d.png";
+    public static final String UNDO_GRAYED_ICON_IMAGE_PATH = "etc/toolbarIcons/1374634434_back_undo_grey.png";
+    //public static final String REDO_GRAYED_ICON_IMAGE_PATH = "etc/toolbarIcons/Sideways_Arrow_Icon16c.png";
+    public static final String REDO_GRAYED_ICON_IMAGE_PATH = "etc/toolbarIcons/1374634411_redo_forward_grey.png";
+    
+    // icons from http://www.veryicon.com/icons/application/toolbar-icons/
+    /*
+    Icon Author: Ruby Software
 
+    HomePage: http://www.rubysoftware.nl/free-toolbar-icon-collection/old.php?lang=en
+    License: Commercial usage: Allowed
+    */
+    public static final String OPEN_ICON_IMAGE_PATH = "etc/toolbarIcons/Open.png";
+    public static final String SAVE_ICON_IMAGE_PATH = "etc/toolbarIcons/Save.png";
+    // From a 48x48 image, resized in Photoshop and color and contrast changed
+    public static final String COPY_ICON_IMAGE_PATH = "etc/toolbarIcons/copy16.png";
+    public static final String PASTE_ICON_IMAGE_PATH = "etc/toolbarIcons/Paste16.png";
+    
+    // icons from http://www.softpedia.com/get/Desktop-Enhancements/Icons-Related/24x24-Free-Application-Icons.shtml
+    // also free license from Aha-soft
+    // resized to 16x16 in Photoshop
+    public static final String FIND_ICON_IMAGE_PATH = "etc/toolbarIcons/Search1.png";
+    
+    public static final Color FIND_ALL_COLOR = new Color(140,160,200);
+    //public static final Color FIND_ALL_COLOR = new Color(190,205,225);
+    public static final Color SELECTED_AREA_COLOR = new Color(190,205,225);
+    
+    public static final String GUROBI_PATH_INTERFACE_TITLE = "Gurobi Path Locator";
+    public static final String GUROBI_PATH_LABEL = "Gurobi Path";
+    public static final String GUROBI_PATH_BUTTON = "Load Gurobi Path";
+    public static final String NO_GUROBI_PATH_ERROR = "There is no Gurobi path set.\n FBA and GDBB will not function";
+    
     public static final String GUROBI_KEY_ERROR_TITLE = "Gurobi Key Error";
     public static final String GUROBI_KEY_ERROR = "Gurobi Key Error";
         
@@ -357,6 +411,5 @@ public class GraphicalInterfaceConstants {
     
     // spaces for alignment
     public static final String ROW_HEADER_TITLE = "   Row";
-
 }
 

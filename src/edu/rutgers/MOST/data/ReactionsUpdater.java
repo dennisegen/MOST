@@ -22,6 +22,7 @@ public class ReactionsUpdater {
 	public boolean noProducts;      // type r ==>
 	// used if no button is hit, for building new equation with species not included
 	public String reactionEqunAbbr = "";
+	public String reactionEqunNames = "";
 	
 	public void updateReactionRows(ArrayList<Integer> rowList, ArrayList<Integer> reacIdList, ArrayList<String> oldReactionsList, String databaseName) {
 			
@@ -51,7 +52,7 @@ public class ReactionsUpdater {
 					}
 				}
 			}
-			System.out.println("ru upd rxn old " + LocalConfig.getInstance().getMetaboliteUsedMap());
+			//System.out.println("ru upd rxn old " + LocalConfig.getInstance().getMetaboliteUsedMap());
 		}		
 		
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
@@ -98,6 +99,7 @@ public class ReactionsUpdater {
 						reactionName = " ";
 					}
 					String reactionEqunAbbr = (String) GraphicalInterface.reactionsTable.getModel().getValueAt(rowList.get(i), GraphicalInterfaceConstants.REACTION_EQUN_ABBR_COLUMN);
+					//reactionEqunNames = "test";
 					String reactionEqunNames = (String) GraphicalInterface.reactionsTable.getModel().getValueAt(rowList.get(i), GraphicalInterfaceConstants.REACTION_EQUN_NAMES_COLUMN);
 					String reversible = GraphicalInterfaceConstants.REVERSIBLE_DEFAULT;
 					
@@ -136,7 +138,7 @@ public class ReactionsUpdater {
 								}
 								
 							}
-							System.out.println("ru upd rxn new " + LocalConfig.getInstance().getMetaboliteUsedMap());													
+							//System.out.println("ru upd rxn new " + LocalConfig.getInstance().getMetaboliteUsedMap());													
 						} else {
 							reactionEqunAbbr = " ";
 						}
@@ -284,10 +286,16 @@ public class ReactionsUpdater {
 		
 		LocalConfig.getInstance().addMetaboliteOption = true;
 		
+		LocalConfig.getInstance().getAddedMetabolites().clear();
+		
 		ReactionParser parser = new ReactionParser();
 		DatabaseCreator creator = new DatabaseCreator();
 
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
+		
+		StringBuffer reacNamesBfr = new StringBuffer();
+		StringBuffer prodNamesBfr = new StringBuffer();
+		StringBuffer rxnNamesBfr = new StringBuffer();
 
 		try{
 			Connection conn =
@@ -297,8 +305,8 @@ public class ReactionsUpdater {
 			//update for old reaction
 			if (oldEquation != null && parser.isValid(oldEquation)) {
 				ArrayList<ArrayList<ArrayList<String>>> oldReactionList = parser.reactionList(oldEquation);
-				System.out.println(oldEquation);
-				System.out.println("old " + oldReactionList);
+				//System.out.println(oldEquation);
+				//System.out.println("old " + oldReactionList);
 				
 				//remove old species from used map
 				for (int x = 0; x < oldReactionList.size(); x++) {
@@ -315,7 +323,7 @@ public class ReactionsUpdater {
 						}					
 					}
 				}
-				System.out.println("ru ure old used " + LocalConfig.getInstance().getMetaboliteUsedMap());
+				//System.out.println("ru ure old used " + LocalConfig.getInstance().getMetaboliteUsedMap());
 			}
 
 			try {
@@ -341,7 +349,8 @@ public class ReactionsUpdater {
 					maxMetabId = idList.get(i);
 				}
 			}
-			
+			PreparedStatement reacNamePrep = conn.prepareStatement("SELECT metabolite_name from metabolites where id=?;");
+			PreparedStatement reversiblePrep = conn.prepareStatement("SELECT reversible from reactions where id=?;");
 			//update for new reaction
 			try {
 				boolean valid = true;
@@ -392,6 +401,7 @@ public class ReactionsUpdater {
 												creator.addMetaboliteRow(databaseName);
 												stat.executeUpdate(update);
 												LocalConfig.getInstance().getMetaboliteIdNameMap().put(reactant, (maxMetabId + 1));
+												LocalConfig.getInstance().getAddedMetabolites().add((maxMetabId + 1));
 												maxMetabId += 1;
 											}
 											//No option actually corresponds to "Yes to All" button
@@ -402,6 +412,7 @@ public class ReactionsUpdater {
 												creator.addMetaboliteRow(databaseName);
 												stat.executeUpdate(update);
 												LocalConfig.getInstance().getMetaboliteIdNameMap().put(reactant, (maxMetabId + 1));
+												LocalConfig.getInstance().getAddedMetabolites().add((maxMetabId + 1));
 												maxMetabId += 1;
 												LocalConfig.getInstance().yesToAllButtonClicked = true;
 											}
@@ -415,11 +426,50 @@ public class ReactionsUpdater {
 											creator.addMetaboliteRow(databaseName);
 											stat.executeUpdate(update);
 											LocalConfig.getInstance().getMetaboliteIdNameMap().put(reactant, (maxMetabId + 1));
+											LocalConfig.getInstance().getAddedMetabolites().add((maxMetabId + 1));
 											maxMetabId += 1;
-										}											
+										}
 									}										
 									
 									Integer metabId = (Integer) LocalConfig.getInstance().getMetaboliteIdNameMap().get(reactant);									
+									String metabName = "";
+									reacNamePrep.setInt(1, metabId);
+									ResultSet rs = reacNamePrep.executeQuery();
+									while (rs.next()) {
+										metabName = rs.getString("metabolite_name");
+									}
+									rs.close();
+									if (r == 0) {
+										if (stoicStr.length() == 0 || Double.valueOf(stoicStr) == 1.0) {
+											if (metabName != null && metabName.trim().length() > 0) {
+												reacNamesBfr.append(metabName);
+											} else {
+												reacNamesBfr.append(reactant);
+											}									
+										} else {
+											if (metabName != null && metabName.trim().length() > 0) {
+												reacNamesBfr.append(stoicStr + " " + metabName);
+											} else {
+												reacNamesBfr.append(stoicStr + " " + reactant);
+											}									
+										}
+
+									} else {
+										if (stoicStr.length() == 0 || Double.valueOf(stoicStr) == 1.0) {
+											if (metabName != null && metabName.trim().length() > 0) {
+												reacNamesBfr.append(" + " + metabName);
+											} else {
+												reacNamesBfr.append(" + " + reactant);
+											}
+											
+										} else {
+											if (metabName != null && metabName.trim().length() > 0) {
+												reacNamesBfr.append(" + " + stoicStr + " " + metabName);
+											} else {
+												reacNamesBfr.append(" + " + stoicStr + " " + reactant);
+											}
+										}				
+									}			
 									if (!newMetabolite || LocalConfig.getInstance().addMetaboliteOption) {
 										String insert = "INSERT INTO reaction_reactants(reaction_id, stoic, metabolite_id) values (" + id + ", " + stoicStr + ", " + metabId + ");";
 										stat.executeUpdate(insert);
@@ -437,7 +487,6 @@ public class ReactionsUpdater {
 											}	
 										}						
 									}								
-									
 								} else {
 									//Invalid reaction
 									valid = false;
@@ -482,6 +531,7 @@ public class ReactionsUpdater {
 												creator.addMetaboliteRow(databaseName);
 												stat.executeUpdate(update);
 											    LocalConfig.getInstance().getMetaboliteIdNameMap().put(product, (maxMetabId + 1));
+											    LocalConfig.getInstance().getAddedMetabolites().add((maxMetabId + 1));
 												maxMetabId += 1;
 											}
 											//No option actually corresponds to "Yes to All" button
@@ -492,6 +542,7 @@ public class ReactionsUpdater {
 												creator.addMetaboliteRow(databaseName);
 												stat.executeUpdate(update);
 												LocalConfig.getInstance().getMetaboliteIdNameMap().put(product, (maxMetabId + 1));
+												LocalConfig.getInstance().getAddedMetabolites().add((maxMetabId + 1));
 												maxMetabId += 1;
 												LocalConfig.getInstance().yesToAllButtonClicked = true;
 											}
@@ -505,11 +556,51 @@ public class ReactionsUpdater {
 											creator.addMetaboliteRow(databaseName);
 											stat.executeUpdate(update);
 											LocalConfig.getInstance().getMetaboliteIdNameMap().put(product, (maxMetabId + 1));
+											LocalConfig.getInstance().getAddedMetabolites().add((maxMetabId + 1));
 											maxMetabId += 1;
 										}		
 									}
 									
 									Integer metabId = (Integer) LocalConfig.getInstance().getMetaboliteIdNameMap().get(product);									
+									String metabName = "";
+									reacNamePrep.setInt(1, metabId);
+									ResultSet rs = reacNamePrep.executeQuery();
+									while (rs.next()) {
+										metabName = rs.getString("metabolite_name");
+									}
+									rs.close();
+									if (p == 0) {
+										if (stoicStr.length() == 0 || Double.valueOf(stoicStr) == 1.0) {
+											if (metabName != null && metabName.trim().length() > 0) {
+												prodNamesBfr.append(metabName);
+											} else {
+												prodNamesBfr.append(product);
+											}									
+										} else {
+											if (metabName != null && metabName.trim().length() > 0) {
+												prodNamesBfr.append(stoicStr + " " + metabName);
+											} else {
+												prodNamesBfr.append(stoicStr + " " + product);
+											}									
+										}
+
+									} else {
+										if (stoicStr.length() == 0 || Double.valueOf(stoicStr) == 1.0) {
+											if (metabName != null && metabName.trim().length() > 0) {
+												prodNamesBfr.append(" + " + metabName);
+											} else {
+												prodNamesBfr.append(" + " + product);
+											}
+											
+										} else {
+											if (metabName != null && metabName.trim().length() > 0) {
+												prodNamesBfr.append(" + " + stoicStr + " " + metabName);
+											} else {
+												prodNamesBfr.append(" + " + stoicStr + " " + product);
+											}
+										}				
+									}			
+									
 									if (!newMetabolite || LocalConfig.getInstance().addMetaboliteOption) {
 										String insert = "INSERT INTO reaction_products(reaction_id, stoic, metabolite_id) values (" + id + ", " + stoicStr + ", " + metabId + ");";
 										stat.executeUpdate(insert);	
@@ -527,7 +618,6 @@ public class ReactionsUpdater {
 											}
 										}				
 									}								
-									
 								} else {
 									//Invalid reaction
 									valid = false;
@@ -560,7 +650,7 @@ public class ReactionsUpdater {
 					//Invalid reaction
 					valid = false;
 				}
-				System.out.println("ru ure new used " + LocalConfig.getInstance().getMetaboliteUsedMap());
+				//System.out.println("ru ure new used " + LocalConfig.getInstance().getMetaboliteUsedMap());
 				
 				if (!valid) {
 					String deleteReac = "delete from reaction_reactants where reaction_id=" + id + ";";
@@ -569,13 +659,32 @@ public class ReactionsUpdater {
 					stat.executeUpdate(deleteProd);
 					if (newEquation != null && newEquation.trim().length() > 0) {
 						LocalConfig.getInstance().getInvalidReactions().add(newEquation);
-						System.out.println("invalid " + LocalConfig.getInstance().getInvalidReactions());
+						//System.out.println("invalid " + LocalConfig.getInstance().getInvalidReactions());
 					}	
 				}
 				parser.invalidSyntax = false;
 			} catch (Throwable t) {
 				
 			}
+			
+			rxnNamesBfr.append(reacNamesBfr).append(" " + parser.splitString(newEquation)).append(prodNamesBfr);
+			/*
+			String reversible = "";
+			reversiblePrep.setInt(1, id);
+			ResultSet rs = reversiblePrep.executeQuery();
+			while (rs.next()) {
+				reversible = rs.getString("reversible");
+			}
+			rs.close();
+			if (reversible == "false") {
+				rxnNamesBfr.append(reacNamesBfr).append(" --> ").append(prodNamesBfr);
+			} else {
+				rxnNamesBfr.append(reacNamesBfr).append(" <==> ").append(prodNamesBfr);
+			}
+			*/
+
+
+			reactionEqunNames = rxnNamesBfr.toString().trim();
 			
 			conn.close();
 			
@@ -644,7 +753,7 @@ public class ReactionsUpdater {
 				}
 			}			
 		}
-		System.out.println("del used map" + LocalConfig.getInstance().getMetaboliteUsedMap());		
+		//System.out.println("del used map" + LocalConfig.getInstance().getMetaboliteUsedMap());		
 	}
 	
 	// methods used if "No" button is pressed in order to reconstruct reaction equation with species omitted
@@ -711,7 +820,7 @@ public class ReactionsUpdater {
 	// method used when renaming metabolites
 	public void rewriteReactions(ArrayList<Integer> reactionIdList, String databaseName) {		
 		String queryString = "jdbc:sqlite:" + databaseName + ".db";
-
+		
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
@@ -824,5 +933,33 @@ public class ReactionsUpdater {
 			}
 		}
 		return null;
+	}
+	
+	public String getMetaboliteName(String metaboliteAbbreviation, String databaseName) {
+		// This method cannot be used if metabolite id is null
+		String metaboliteName = "";
+		
+		String queryString = "jdbc:sqlite:" + databaseName + ".db";
+				
+		try{
+			Connection conn =
+				DriverManager.getConnection(queryString);
+			PreparedStatement reacNamePrep = conn.prepareStatement("SELECT metabolite_name from metabolites where id=?;");
+
+			Integer metabId = (Integer) LocalConfig.getInstance().getMetaboliteIdNameMap().get(metaboliteAbbreviation);									
+			reacNamePrep.setInt(1, metabId);
+			ResultSet rs = reacNamePrep.executeQuery();
+			while (rs.next()) {
+				metaboliteName = rs.getString("metabolite_name");
+			}
+			rs.close();
+			
+			conn.close();
+			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
+		return metaboliteName;
 	}
 }

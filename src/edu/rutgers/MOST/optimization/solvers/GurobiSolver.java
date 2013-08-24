@@ -5,7 +5,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import org.apache.log4j.Logger;
+
+import edu.rutgers.MOST.config.LocalConfig;
+import edu.rutgers.MOST.presentation.GraphicalInterface;
+import edu.rutgers.MOST.presentation.GraphicalInterfaceConstants;
 
 import gurobi.*;
 
@@ -34,8 +40,31 @@ public class GurobiSolver extends Solver {
 			this.objType = ObjType.Minimize;
 
 		} catch (Exception e) {
-			log.error("Error code: " + e.getMessage() + ". "
-					+ e.getMessage());
+			GraphicalInterface.getTextInput().setVisible(false);
+			LocalConfig.getInstance().hasValidGurobiKey = false;
+			GraphicalInterface.outputTextArea.setText("ERROR: No validation file - run 'grbgetkey' to refresh it.");
+			Object[] options = {"    OK    "};
+			int choice = JOptionPane.showOptionDialog(null, 
+					"ERROR: No validation file - run 'grbgetkey' to refresh it.", 
+					GraphicalInterfaceConstants.GUROBI_KEY_ERROR_TITLE, 
+					JOptionPane.YES_NO_OPTION, 
+					JOptionPane.QUESTION_MESSAGE, 
+					null, options, options[0]);
+			if (choice == JOptionPane.YES_OPTION) {
+				try{
+					//Process p;
+					//p = Runtime.getRuntime().exec("cmd /c start cmd");
+					
+				}catch(Exception e1){}
+
+			}
+            /*
+			if (choice == JOptionPane.NO_OPTION) {
+
+			}
+			*/
+			//log.error("Error code: " + e.getMessage() + ". "
+					//+ e.getMessage());
 		}
 	}
 
@@ -48,22 +77,28 @@ public class GurobiSolver extends Solver {
 	@Override
 	public void setVar(String varName, VarType types, double lb, double ub) {
 		// TODO Auto-generated method stub
-		try {
-			GRBVar var = this.model.addVar(lb, ub, 0.0, getGRBVarType(types),
-					varName);
-//			System.out.println("adding var: lb = " + lb + " ub = " + ub +
-//			 " type = " + types + " name = " + varName);
-			this.vars.add(var);
-		} catch (GRBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			model.update();
-		} catch (GRBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		if (varName != null && types != null) {
+			try {
+				GRBVar var = this.model.addVar(lb, ub, 0.0, getGRBVarType(types),
+						varName);
+//				System.out.println("adding var: lb = " + lb + " ub = " + ub +
+//				 " type = " + types + " name = " + varName);
+				this.vars.add(var);			
+			} catch (GRBException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();		
+			} catch (Throwable t) {
+				
+			}
+			try {
+				model.update();
+			} catch (GRBException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			} catch (Throwable t) {
+				
+			}
+		}		
 	}
 	
 	public ArrayList<Double> getSoln() {
@@ -96,7 +131,7 @@ public class GurobiSolver extends Solver {
 					this.vars.add(var);
 				} catch (GRBException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 			try {
@@ -104,7 +139,7 @@ public class GurobiSolver extends Solver {
 				model.update();
 			} catch (GRBException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}
@@ -128,19 +163,21 @@ public class GurobiSolver extends Solver {
 			Double value = (Double) m.getValue();
 			GRBVar var = this.vars.get(key);
 			expr.addTerm(value, var);
-			System.out.println("key = " + key + " value = " + value);
-			System.out.println("objType: " + this.objType);
+			//System.out.println("key = " + key + " value = " + value);
+			//System.out.println("objType: " + this.objType);
 		}
 
 		try {
-			System.out.println(expr);
+			//System.out.println(expr);
 			model.setObjective(expr, getGRBObjType(this.objType));
 			//DEGEN: Debugging to see model
 			
 			
 		} catch (GRBException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+		} catch (Throwable t) {
+			
 		}
 	}
 
@@ -166,7 +203,7 @@ public class GurobiSolver extends Solver {
 
 		} catch (GRBException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 	}
@@ -178,7 +215,7 @@ public class GurobiSolver extends Solver {
 			this.env.dispose();
 		} catch (GRBException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 	}
@@ -236,14 +273,18 @@ public class GurobiSolver extends Solver {
 //			model.write("model.mps");
 		} catch (GRBException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();	
+			//e.printStackTrace();	
+		} catch (Throwable t) {
+			
 		}
 		
 		try {
 			return this.model.get(GRB.DoubleAttr.ObjVal);
 		} catch (GRBException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+		} catch (Throwable t) {
+			
 		}
 		
 		return 0;

@@ -74,6 +74,7 @@ class ModelCollectionTable
 		table.setColumnSelectionAllowed(false);
 		table.setRowSelectionAllowed(true); 
 		table.getSelectionModel().addListSelectionListener(new RowListener());
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  
 
 		// Create a panel to hold all other components
 		topPanel = new JPanel();

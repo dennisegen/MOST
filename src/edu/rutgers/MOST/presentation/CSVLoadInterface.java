@@ -27,11 +27,9 @@ import javax.swing.event.DocumentListener;
 import edu.rutgers.MOST.config.LocalConfig;
 import edu.rutgers.MOST.data.SettingsFactory;
 import edu.rutgers.MOST.presentation.GraphicalInterface;
-import edu.rutgers.MOST.presentation.GraphicalInterface.XMLFileFilter;
 
 public class CSVLoadInterface  extends JDialog {
 
-	public JTextField columnNameField = new JTextField();
 	public static JButton metabFileButton = new JButton(GraphicalInterfaceConstants.CSV_FILE_LOAD_METAB_BUTTON);
 	public static JButton reacFileButton = new JButton(GraphicalInterfaceConstants.CSV_FILE_LOAD_REAC_BUTTON);	
 	public static JButton okButton = new JButton("    OK    ");
@@ -124,13 +122,16 @@ public class CSVLoadInterface  extends JDialog {
 				if (textReacField.getText() != null && textReacField.getText().length() > 0) {
 					okButton.setEnabled(true);
 					LocalConfig.getInstance().hasReactionsFile = true;
+				} else {
+					LocalConfig.getInstance().hasReactionsFile = false;
 				}
 				if (textMetabField.getText() != null && textMetabField.getText().length() > 0) {
+					okButton.setEnabled(true);
 					LocalConfig.getInstance().hasMetabolitesFile = true;
 				} else {
 					LocalConfig.getInstance().hasMetabolitesFile = false;
 				}
-				System.out.println("csv load " + LocalConfig.getInstance().hasMetabolitesFile);
+				//System.out.println("csv load " + LocalConfig.getInstance().hasMetabolitesFile);
 			}
 		});
 		
@@ -199,7 +200,6 @@ public class CSVLoadInterface  extends JDialog {
 					String rawPathName = file.getAbsolutePath();
 					GraphicalInterface.curSettings.add("LastCSV", rawPathName);
 
-
 					String rawFilename = file.getName();
 					String filename = rawFilename.substring(0, rawFilename.length() - 4); 
 					
@@ -245,7 +245,7 @@ public class CSVLoadInterface  extends JDialog {
 					
 					String rawFilename = file.getName();
 					String filename = rawFilename.substring(0, rawFilename.length() - 4); 
-				
+					
 					String path = file.getPath();
 					if (!path.endsWith(".csv")) {
 						JOptionPane.showMessageDialog(null,                
@@ -265,8 +265,8 @@ public class CSVLoadInterface  extends JDialog {
 		
 		ActionListener cancelButtonActionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent prodActionEvent) {
-				setVisible(false);
-				dispose();
+				//setVisible(false);
+				//dispose();
 			}
 		}; 
 		

@@ -88,7 +88,7 @@ class FileList extends JList {
 				if (getRow() > 0) {
 					String item = GraphicalInterface.listModel.getElementAt(getRow());
 					LocalConfig.getInstance().getOptimizationFilesList().remove(item);	
-					System.out.println(LocalConfig.getInstance().getOptimizationFilesList());
+					//System.out.println(LocalConfig.getInstance().getOptimizationFilesList());
 				}				
 			}
 		});	
@@ -100,7 +100,7 @@ class FileList extends JList {
 				if (getRow() > 0) {
 					String item = GraphicalInterface.listModel.getElementAt(getRow());
 					LocalConfig.getInstance().getOptimizationFilesList().remove(item);	
-					System.out.println(LocalConfig.getInstance().getOptimizationFilesList());				
+					//System.out.println(LocalConfig.getInstance().getOptimizationFilesList());				
 				}				
 			}
 		});
@@ -141,10 +141,6 @@ class FileList extends JList {
 					String item = GraphicalInterface.listModel.getElementAt(getRow());
 					LocalConfig.getInstance().getOptimizationFilesList().remove(item);
 					GraphicalInterface.listModel.remove(getRow());
-					GraphicalInterface.fileList.setModel(GraphicalInterface.listModel);
-					GraphicalInterface.fileList.setSelectedIndex(0);
-					GraphicalInterface.fileListPane.repaint();							
-					System.out.println(LocalConfig.getInstance().getOptimizationFilesList());				
 				}				
 			}
 		});
@@ -156,11 +152,9 @@ class FileList extends JList {
 				LocalConfig.getInstance().setLoadedDatabase(LocalConfig.getInstance().getDatabaseName());
 				GraphicalInterface.listModel.clear();
 				GraphicalInterface.listModel.addElement(GraphicalInterface.getDatabaseName());
-				GraphicalInterface.fileList.setModel(GraphicalInterface.listModel);
-				GraphicalInterface.fileListPane.repaint();
 				GraphicalInterface.outputTextArea.setText("");
 				LocalConfig.getInstance().getOptimizationFilesList().clear();
-				System.out.println(LocalConfig.getInstance().getOptimizationFilesList());
+				//System.out.println(LocalConfig.getInstance().getOptimizationFilesList());
 				setSelectedIndex(0);
 			}
 		});

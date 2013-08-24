@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.sql.Connection;
 
-
-import java.sql.Connection;;
-
+import javax.swing.SortOrder;
 
 public class LocalConfig {	
 
@@ -22,7 +21,8 @@ public class LocalConfig {
     public static LocalConfig getInstance() {
             return instance;
     }
-        
+    
+    
     private String databaseName;
 
 	public String getDatabaseName() {
@@ -378,6 +378,16 @@ public class LocalConfig {
 		this.metaboliteUsedMap = metaboliteUsedMap;
 	}
 	
+    private static ArrayList<Integer> unusedList = new ArrayList<Integer>();
+	
+	public static ArrayList<Integer> getUnusedList() {
+		return unusedList;
+	}
+
+	public static void setUnusedList(ArrayList<Integer> unusedList) {
+		LocalConfig.unusedList = unusedList;
+	}
+	
 	private static File metabolitesCSVFile;
 
 	public void setMetabolitesCSVFile(File metabolitesCSVFile) {
@@ -432,17 +442,20 @@ public class LocalConfig {
 	public boolean reactionsTableChanged;
 	public boolean metabolitesTableChanged;
 	
-	public boolean findMode;
 	public boolean findFieldChanged;
 	public boolean replaceFieldChanged;
 	public boolean findReplaceFocusLost;
 	public boolean findReplaceFocusGained;
 	
 	public boolean addReactantPromptShown;
+	public boolean reactionEditorVisible;
+	public boolean loadExistingVisible;
+	public boolean addColumnInterfaceVisible;
 	
-	public static Integer reactionsLocationsListCount;
+	public boolean hasValidGurobiKey;
 	
-
+	private static Integer reactionsLocationsListCount;
+	
 	public void setReactionsLocationsListCount(Integer reactionsLocationsListCount) {
 		this.reactionsLocationsListCount = reactionsLocationsListCount;
 	}
@@ -451,7 +464,7 @@ public class LocalConfig {
 		return reactionsLocationsListCount;
 	}
 	
-	public static Integer metabolitesLocationsListCount;
+	private static Integer metabolitesLocationsListCount;
 
 	public static Integer getMetabolitesLocationsListCount() {
 		return metabolitesLocationsListCount;
@@ -491,5 +504,168 @@ public class LocalConfig {
 	public void setHiddenMetabolitesColumns(ArrayList<Integer> hiddenMetabolitesColumns) {
 		this.hiddenMetabolitesColumns = hiddenMetabolitesColumns;
 	}
+	
+	private static  ArrayList<String> findEntryList = new ArrayList<String>();
+	
+	public static ArrayList<String> getFindEntryList() {
+		return findEntryList;
+	}
+
+	public static void setFindEntryList(ArrayList<String> findEntryList) {
+		LocalConfig.findEntryList = findEntryList;
+	}
+
+	private static  ArrayList<String> replaceEntryList = new ArrayList<String>();
+	
+	public static ArrayList<String> getReplaceEntryList() {
+		return replaceEntryList;
+	}
+
+	public static void setReplaceEntryList(ArrayList<String> replaceEntryList) {
+		LocalConfig.replaceEntryList = replaceEntryList;
+	}
+	
+	/********************************************************************************/
+	// undo/redo
+	/********************************************************************************/
+	
+	private static Map<Object, Object> undoItemMap = new HashMap<Object, Object>();	
+
+	public static Map<Object, Object> getUndoItemMap() {
+		return undoItemMap;
+	}
+
+	public static void setUndoItemMap(Map<Object, Object> undoItemMap) {
+		LocalConfig.undoItemMap = undoItemMap;
+	}
+	
+	private static Map<Object, Object> redoItemMap = new HashMap<Object, Object>();	
+
+	public static Map<Object, Object> getRedoItemMap() {
+		return redoItemMap;
+	}
+
+	public static void setRedoItemMap(Map<Object, Object> redoItemMap) {
+		LocalConfig.redoItemMap = redoItemMap;
+	}
+	
+	private Integer undoMenuIndex;
+
+	public Integer getUndoMenuIndex() {
+		return undoMenuIndex;
+	}
+
+	public void setUndoMenuIndex(Integer undoMenuIndex) {
+		this.undoMenuIndex = undoMenuIndex;
+	}	
+	
+	// used for remembering sort events for undo
+	private ArrayList<Integer> reactionsSortColumns = new ArrayList<Integer>();	
+	private ArrayList<SortOrder> reactionsSortOrderList = new ArrayList<SortOrder>();	
+	private ArrayList<Integer> metabolitesSortColumns = new ArrayList<Integer>();	
+	private ArrayList<SortOrder> metabolitesSortOrderList = new ArrayList<SortOrder>();
+	private ArrayList<Integer> reactionsRedoSortColumns = new ArrayList<Integer>();	
+	private ArrayList<SortOrder> reactionsRedoSortOrderList = new ArrayList<SortOrder>();	
+	private ArrayList<Integer> metabolitesRedoSortColumns = new ArrayList<Integer>();	
+	private ArrayList<SortOrder> metabolitesRedoSortOrderList = new ArrayList<SortOrder>();
+	
+	public ArrayList<Integer> getReactionsSortColumns() {
+		return reactionsSortColumns;
+	}
+
+	public void setReactionsSortColumns(ArrayList<Integer> reactionsSortColumns) {
+		this.reactionsSortColumns = reactionsSortColumns;
+	}
+
+	public ArrayList<SortOrder> getReactionsSortOrderList() {
+		return reactionsSortOrderList;
+	}
+
+	public void setReactionsSortOrderList(ArrayList<SortOrder> reactionsSortOrderList) {
+		this.reactionsSortOrderList = reactionsSortOrderList;
+	}
+
+	public ArrayList<Integer> getMetabolitesSortColumns() {
+		return metabolitesSortColumns;
+	}
+
+	public void setMetabolitesSortColumns(ArrayList<Integer> metabolitesSortColumns) {
+		this.metabolitesSortColumns = metabolitesSortColumns;
+	}
+
+	public ArrayList<SortOrder> getMetabolitesSortOrderList() {
+		return metabolitesSortOrderList;
+	}
+
+	public void setMetabolitesSortOrderList(ArrayList<SortOrder> metabolitesSortOrderList) {
+		this.metabolitesSortOrderList = metabolitesSortOrderList;
+	}
+	
+	public ArrayList<Integer> getReactionsRedoSortColumns() {
+		return reactionsRedoSortColumns;
+	}
+
+	public void setReactionsRedoSortColumns(
+			ArrayList<Integer> reactionsRedoSortColumns) {
+		this.reactionsRedoSortColumns = reactionsRedoSortColumns;
+	}
+
+	public ArrayList<SortOrder> getReactionsRedoSortOrderList() {
+		return reactionsRedoSortOrderList;
+	}
+
+	public void setReactionsRedoSortOrderList(
+			ArrayList<SortOrder> reactionsRedoSortOrderList) {
+		this.reactionsRedoSortOrderList = reactionsRedoSortOrderList;
+	}
+
+	public ArrayList<Integer> getMetabolitesRedoSortColumns() {
+		return metabolitesRedoSortColumns;
+	}
+
+	public void setMetabolitesRedoSortColumns(
+			ArrayList<Integer> metabolitesRedoSortColumns) {
+		this.metabolitesRedoSortColumns = metabolitesRedoSortColumns;
+	}
+
+	public ArrayList<SortOrder> getMetabolitesRedoSortOrderList() {
+		return metabolitesRedoSortOrderList;
+	}
+
+	public void setMetabolitesRedoSortOrderList(
+			ArrayList<SortOrder> metabolitesRedoSortOrderList) {
+		this.metabolitesRedoSortOrderList = metabolitesRedoSortOrderList;
+	}
+
+	private int numReactionTablesCopied;
+	
+	private int numMetabolitesTableCopied;
+
+	public int getNumReactionTablesCopied() {
+		return numReactionTablesCopied;
+	}
+
+	public void setNumReactionTablesCopied(int numReactionTablesCopied) {
+		this.numReactionTablesCopied = numReactionTablesCopied;
+	}
+
+	public int getNumMetabolitesTableCopied() {
+		return numMetabolitesTableCopied;
+	}
+
+	public void setNumMetabolitesTableCopied(int numMetabolitesTableCopied) {
+		this.numMetabolitesTableCopied = numMetabolitesTableCopied;
+	}
+	
+	// used in undo for removing metabolites added when editing reactions
+	private ArrayList<Integer> addedMetabolites = new ArrayList<Integer>();
+
+	public ArrayList<Integer> getAddedMetabolites() {
+		return addedMetabolites;
+	}
+
+	public void setAddedMetabolites(ArrayList<Integer> addedMetabolites) {
+		this.addedMetabolites = addedMetabolites;
+	}	
 	
 }
