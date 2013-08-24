@@ -35,6 +35,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -73,12 +75,48 @@ public class TextInputDemo extends JDialog
 	private Timer timer;
 	private int count;
 	private JLabel counter;
-	private JFormattedTextField threadNum;
-	//private JComboBox<String> columnList;
+	private JComboBox<Integer> threadNum;
+	private JComboBox<String> columnList;
+	private double timeLimit;
+	private ReactionsMetaColumnManager metaManager;
+	private Map<String, String> reactionNameDBColumnMapping;
+	private static String finiteTimeString = "Finite optimizer time limit";
+	private static String infiniteTimeString = "Indefinite optimizer time";
+	private JRadioButton finiteTimeButton;
+	private JRadioButton indefiniteTimeButton;
+	private InputVerifier integerVerifier;
+	private JLabel exception;
+	
+	private class ParseIntegers extends InputVerifier {
+
+		@Override
+		public boolean verify(JComponent input) {
+			// TODO Auto-generated method stub
+			boolean isInteger = true;
+			JTextField tf = (JTextField) input;
+			try {
+				Integer.parseInt(tf.getText());
+				System.out.println("It is an integer");
+				exception.setText("");
+				startButton.setEnabled(true);
+			}
+			catch(NumberFormatException nfe) {
+				System.out.println("It is not an integer");
+				isInteger = false;
+				exception.setText("Not an integer!");
+				startButton.setEnabled(false);
+			}
+			return isInteger;
+		}
+		
+	}
 
     public TextInputDemo(GraphicalInterface parent) {
 //        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         gi = parent;
+        integerVerifier = new ParseIntegers();
+        exception = new JLabel("");
+        exception.setBackground(Color.RED);
         
         JPanel leftHalf = new JPanel() {
             /**
@@ -97,30 +135,93 @@ public class TextInputDemo extends JDialog
         leftHalf.setLayout(new BoxLayout(leftHalf,
                                          BoxLayout.PAGE_AXIS));
         leftHalf.add(createEntryFields());
-        //leftHalf.add(createComboBox());
+        leftHalf.add(createRadioButtonFields());
+//        leftHalf.add(createComboBox());
         leftHalf.add(createButtons());
         leftHalf.add(createTimer());
-
+        leftHalf.add(createExceptionSection());
         add(leftHalf);
 //        add(createAddressDisplay());
         
         //Set up timer to drive animation events.
         timer = new Timer(1000, this);
         count = 0;
-//        timer.setInitialDelay(1900);
-//        timer.start();
+        metaManager = new ReactionsMetaColumnManager();
+        reactionNameDBColumnMapping = new HashMap<String, String>();
+        reactionNameDBColumnMapping.put(GraphicalInterfaceConstants.REACTIONS_COLUMN_NAMES[GraphicalInterfaceConstants.FLUX_VALUE_COLUMN], GraphicalInterfaceConstants.REACTIONS_DB_COLUMN_NAMES[GraphicalInterfaceConstants.FLUX_VALUE_COLUMN]);
+        reactionNameDBColumnMapping.put(GraphicalInterfaceConstants.REACTIONS_COLUMN_NAMES[GraphicalInterfaceConstants.LOWER_BOUND_COLUMN], GraphicalInterfaceConstants.REACTIONS_DB_COLUMN_NAMES[GraphicalInterfaceConstants.LOWER_BOUND_COLUMN]);
+        reactionNameDBColumnMapping.put(GraphicalInterfaceConstants.REACTIONS_COLUMN_NAMES[GraphicalInterfaceConstants.UPPER_BOUND_COLUMN], GraphicalInterfaceConstants.REACTIONS_DB_COLUMN_NAMES[GraphicalInterfaceConstants.UPPER_BOUND_COLUMN]);
+        reactionNameDBColumnMapping.put(GraphicalInterfaceConstants.REACTIONS_COLUMN_NAMES[GraphicalInterfaceConstants.BIOLOGICAL_OBJECTIVE_COLUMN], GraphicalInterfaceConstants.REACTIONS_DB_COLUMN_NAMES[GraphicalInterfaceConstants.BIOLOGICAL_OBJECTIVE_COLUMN]);
+        reactionNameDBColumnMapping.put(GraphicalInterfaceConstants.REACTIONS_COLUMN_NAMES[GraphicalInterfaceConstants.SYNTHETIC_OBJECTIVE_COLUMN], GraphicalInterfaceConstants.REACTIONS_DB_COLUMN_NAMES[GraphicalInterfaceConstants.SYNTHETIC_OBJECTIVE_COLUMN]);
     }
 
-    /*
-    private Component createComboBox() {
+    private Component createExceptionSection() {
 		// TODO Auto-generated method stub
     	JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    	columnList = new JComboBox<String>();
-    	columnList.addItem("NULL");
-    	panel.add(columnList);
+    	panel.add(exception);
 		return panel;
 	}
-	*/
+
+	private Component createRadioButtonFields() {
+		// TODO Auto-generated method stub
+    	JPanel panel = new JPanel(new GridLayout(2, 1));
+    	
+    	JPanel labelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    	labelPanel.add(new JLabel("Optimizer time limit"));
+    	
+    	indefiniteTimeButton = new JRadioButton(infiniteTimeString);
+    	indefiniteTimeButton.setMnemonic(KeyEvent.VK_I);
+    	indefiniteTimeButton.setActionCommand(infiniteTimeString);
+    	indefiniteTimeButton.setSelected(true);
+        
+        finiteTimeButton = new JRadioButton(finiteTimeString);
+        finiteTimeButton.setMnemonic(KeyEvent.VK_F);
+        finiteTimeButton.setActionCommand(finiteTimeString);
+        
+        //Group the radio buttons.
+        ButtonGroup group = new ButtonGroup();
+        group.add(indefiniteTimeButton);
+        group.add(finiteTimeButton);
+        
+        //Register a listener for the radio buttons.
+        indefiniteTimeButton.addActionListener(this);
+        finiteTimeButton.addActionListener(this);
+        
+    	JPanel radioPanel = new JPanel(new SpringLayout());
+    	radioPanel.add(indefiniteTimeButton);
+    	radioPanel.add(new Label(""));
+    	radioPanel.add(finiteTimeButton);
+    	
+    	totalTime = new JFormattedTextField();
+    	totalTime.setColumns(6);
+    	totalTime.setText("300");
+    	totalTime.setEditable(false);
+    	totalTime.setInputVerifier(integerVerifier);
+    	radioPanel.add(totalTime);
+    	
+    	SpringUtilities.makeCompactGrid(radioPanel,
+                2, 2,
+                GAP, GAP, //init x,y
+                GAP, GAP/2);//xpad, ypad
+    	
+//    	panel.add(labelPanel);
+        panel.add(radioPanel);
+    	
+		return panel;
+	}
+
+	public Map<String, String> getReactionNameDBColumnMapping() {
+		return reactionNameDBColumnMapping;
+	}
+
+	private Component createComboBox() {
+		// TODO Auto-generated method stub
+    	JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    	setColumnList(new JComboBox<String>());
+    	panel.add(new JLabel("Synthetic Objective Vector "));
+    	panel.add(getColumnList());
+		return panel;
+	}
     
     private JComponent createTimer() {
     	JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -171,10 +272,6 @@ public class TextInputDemo extends JDialog
         	startButton.setEnabled(false);
             stopButton.setEnabled(true);
             
-            // database
-        	//System.out.println("comboBox, LocalConfig.getInstance().getLoadedDatabase() = " + LocalConfig.getInstance().getLoadedDatabase());
-        	//System.out.println("comboBox, LocalConfig.getInstance().getOptimizationFilesList() = " + LocalConfig.getInstance().getOptimizationFilesList().get(LocalConfig.getInstance().getOptimizationFilesList().size() - 1));
-        	
         	String solutionName = GraphicalInterface.listModel.get(GraphicalInterface.listModel.getSize() - 1);
 			DynamicTreeDemo.treePanel.addObject(new Solution(solutionName, solutionName));
 			
@@ -182,27 +279,23 @@ public class TextInputDemo extends JDialog
 			Callback.setAbort(false);
 			
         	gi.gdbbTask.getModel().setC((new Double(numKnockouts.getText())).doubleValue());
-        	if ((new Double(totalTime.getText())).doubleValue() != -1.0) {
-        		gi.gdbbTask.getModel().setTimeLimit((new Double(totalTime.getText())).doubleValue());
-        	}
-        	else {
+        	gi.gdbbTask.getModel().setTimeLimit(timeLimit);
+        	
+        	if (indefiniteTimeButton.isSelected()) {
         		gi.gdbbTask.getModel().setTimeLimit(Double.POSITIVE_INFINITY);
         	}
+        	else {
+        		gi.gdbbTask.getModel().setTimeLimit((new Double(totalTime.getText())).doubleValue());
+        	}
         	
-        	gi.gdbbTask.getModel().setThreadNum((new Integer(threadNum.getText())).intValue());
-        	
-        	// select column
-        	/*
-        	System.out.println("columnList.getSelectedIndex() = "
-					+ columnList.getSelectedIndex());
-        	*/
-        	//ReactionFactory.setColumnName("meta_" + (columnList.getSelectedIndex() + 1));
-        	/*
-        	System.out.println("ReactionFactory.getColumnName = "
-					+ ReactionFactory.getColumnName());
-					*/
+        	gi.gdbbTask.getModel().setThreadNum((Integer)threadNum.getSelectedItem());
         	gi.gdbbTask.execute();
+        	
         	this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        } else if (infiniteTimeString.equals(e.getActionCommand())) {
+        	totalTime.setEditable(false);
+        } else if (finiteTimeString.equals(e.getActionCommand())) {
+        	totalTime.setEditable(true);
         }
         counter.setText("" + count++);
         updateDisplays();
@@ -274,13 +367,15 @@ public class TextInputDemo extends JDialog
     //Needed for FocusListener interface.
     public void focusLost(FocusEvent e) { } //ignore
 
-    protected JComponent createEntryFields() {
+    @SuppressWarnings("unchecked")
+	protected JComponent createEntryFields() {
         JPanel panel = new JPanel(new SpringLayout());
 
         String[] labelStrings = {
             "Number of Knockouts ",
-            "Optimizer time limit ",
-            "Number of Threads "
+//            "Optimizer time limit ",
+            "Number of Threads ",
+            "Synthetic Objective Vector "
         };
 
         JLabel[] labels = new JLabel[labelStrings.length];
@@ -291,23 +386,34 @@ public class TextInputDemo extends JDialog
         numKnockouts  = new JFormattedTextField();
         numKnockouts.setColumns(6);
         numKnockouts.setText("1");
+        numKnockouts.setInputVerifier(integerVerifier);
         fields[fieldNum++] = numKnockouts;
 
-        totalTime = new JFormattedTextField();
-        totalTime.setColumns(6);
-        totalTime.setText("300");
-        fields[fieldNum++] = totalTime;
+//        totalTime = new JFormattedTextField();
+//        totalTime.setColumns(6);
+//        totalTime.setText("300");
+//        fields[fieldNum++] = totalTime;
 
-        threadNum = new JFormattedTextField();
-        threadNum.setColumns(6);
-        threadNum.setText("1");
+        threadNum = new JComboBox<Integer>();
+        threadNum.addItem(1);
+        threadNum.addItem(2);
+        threadNum.addItem(3);
+        threadNum.addItem(4);
         fields[fieldNum++] = threadNum;
+        
+        columnList = new JComboBox<String>();
+        columnList.addItem(GraphicalInterfaceConstants.REACTIONS_COLUMN_NAMES[GraphicalInterfaceConstants.FLUX_VALUE_COLUMN]);
+        columnList.addItem(GraphicalInterfaceConstants.REACTIONS_COLUMN_NAMES[GraphicalInterfaceConstants.LOWER_BOUND_COLUMN]);
+        columnList.addItem(GraphicalInterfaceConstants.REACTIONS_COLUMN_NAMES[GraphicalInterfaceConstants.UPPER_BOUND_COLUMN]);
+        columnList.addItem(GraphicalInterfaceConstants.REACTIONS_COLUMN_NAMES[GraphicalInterfaceConstants.BIOLOGICAL_OBJECTIVE_COLUMN]);
+        columnList.addItem(GraphicalInterfaceConstants.REACTIONS_COLUMN_NAMES[GraphicalInterfaceConstants.SYNTHETIC_OBJECTIVE_COLUMN]);
+        fields[fieldNum++] = columnList;
         
         //Associate label/field pairs, add everything,
         //and lay it out.
         for (int i = 0; i < labelStrings.length; i++) {
             labels[i] = new JLabel(labelStrings[i],
-                                   JLabel.TRAILING);
+                                   JLabel.LEADING);
             labels[i].setLabelFor(fields[i]);
             panel.add(labels[i]);
             panel.add(fields[i]);
@@ -316,6 +422,8 @@ public class TextInputDemo extends JDialog
             JTextField tf = null;
             if (fields[i] instanceof JSpinner) {
                 tf = getTextField((JSpinner)fields[i]);
+            } else if (fields[i] instanceof JComboBox){
+            	tf = new JTextField(((JComboBox<Integer>)fields[i]).getToolTipText());
             } else {
                 tf = (JTextField)fields[i];
             }
@@ -388,14 +496,26 @@ public class TextInputDemo extends JDialog
 
 	public void setObjectiveColumnNames(String loadedDatabase) {
 		// TODO Auto-generated method stub
-		ReactionsMetaColumnManager manager = new ReactionsMetaColumnManager();
-    	ArrayList<String> columnNames = manager.getColumnNames(loadedDatabase);
-    	//System.out.println("columnNames = " + columnNames);
-    	//columnList.removeAllItems();
-    	/*
-    	for(int i = 0; i < columnNames.size(); i++) {
-    		columnList.addItem(columnNames.get(i));
-    	}
-    	*/
+    	ArrayList<String> columnNames = metaManager.getColumnNames(loadedDatabase);
+		for (int i = 0; i < columnNames.size(); i++) {
+			columnList.addItem(columnNames.get(i));
+			reactionNameDBColumnMapping.put(columnNames.get(i), "meta_" + (columnList.getItemCount() - 4));
+		}
+	}
+
+	public void addObjectiveColumnName(String columnName) {
+		// TODO Auto-generated method stub
+    	columnList.addItem(columnName);
+    	reactionNameDBColumnMapping.put(columnName, "meta_" + (columnList.getItemCount() - 4));
+    	System.out.println("reactionNameDBColumnMapping.get(columnName) = "
+				+ reactionNameDBColumnMapping.get(columnName));
+	}
+	
+	public JComboBox<String> getColumnList() {
+		return columnList;
+	}
+
+	public void setColumnList(JComboBox<String> columnList) {
+		this.columnList = columnList;
 	}
 }

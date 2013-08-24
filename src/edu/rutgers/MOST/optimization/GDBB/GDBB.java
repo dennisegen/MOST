@@ -444,7 +444,7 @@ public class GDBB extends Thread {
 				
 		GDBB gdbb = new GDBB();
 		
-		GDBBModel model = new GDBBModel(databaseName);
+		GDBBModel model = new GDBBModel(databaseName, "");
 		gdbb.setGDBBModel(model);
 		 
 //		ArrayList<Double> variables = gdbb.run();

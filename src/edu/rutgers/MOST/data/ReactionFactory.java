@@ -15,7 +15,7 @@ import edu.rutgers.MOST.presentation.GraphicalInterfaceConstants;
 public class ReactionFactory {
 	private String sourceType;
 	private String databaseName;
-	private static String columnName;
+	private String columnName;
 	
 	public ReactionFactory(String sourceType, String databaseName) {
 		this.sourceType = sourceType;
@@ -189,7 +189,7 @@ public class ReactionFactory {
 			conn.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			e.printStackTrace();
 		}		
 	}
 
@@ -224,24 +224,12 @@ public class ReactionFactory {
 				
 				if(kVector.get(i).doubleValue() != 0.0) {
 					queryKVector += " when " + (i + 1) + " then " + "\"" + GraphicalInterfaceConstants.BOOLEAN_VALUES[1] + "\"";
+				} else {
+					queryKVector += " when " + (i + 1) + " then " + "\"" + GraphicalInterfaceConstants.BOOLEAN_VALUES[0] + "\"";
 				}
 			}
 			
-//			for (int i = 0; i < uniqueGeneAssociations.size(); i++) {
-//				if (knockouts.get(i).doubleValue() != 0) {
-//					knockoutGenes.add(uniqueGeneAssociations.elementAt(i));
-////					System.out.println(uniqueGeneAssociations.elementAt(i));
-//				}
-//			}
-			
-			conn = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db"); 
-
-//			String queryKVector = "";
-//			for (int i = 0; i < geneAssocaitons.size(); i++) {
-//				if(kVector.get(i).doubleValue() != 0.0) {
-//					queryKVector += " when " + (i + 1) + " then " + kVector.get(i);
-//				}
-//			}
+			conn = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db");
 			
 			if (queryKVector.length() != 0) {
 				Statement stat = conn.createStatement();
@@ -258,7 +246,7 @@ public class ReactionFactory {
 		
 		return knockoutGenes;
 	}
-
+	
 	/**
 	 * @param args
 	 */
@@ -314,7 +302,7 @@ public class ReactionFactory {
 				Statement stat = conn.createStatement();
 				ResultSet rs = stat.executeQuery("select distinct gene_associations from reactions where length(reaction_abbreviation) > 0;");
 
-				//System.out.println(rs.getRow());
+				System.out.println(rs.getRow());
 				
 				while (rs.next()) {
 					geneAssociations.add(rs.getString("gene_associations")); 
@@ -347,13 +335,13 @@ public class ReactionFactory {
 				conn = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db"); 
 
 				Statement stat = conn.createStatement();
-				ResultSet rs = stat.executeQuery("select synthetic_objective from reactions;");
+//				ResultSet rs = stat.executeQuery("select synthetic_objective from reactions;");
 				//System.out.println("ReactionFactory, columnName = " + columnName);
-//				ResultSet rs = stat.executeQuery("select " + columnName + " from reactions;");
+				ResultSet rs = stat.executeQuery("select " + columnName + " from reactions;");
 
 				while (rs.next()) {
-					syntheticObjectiveVector.add(rs.getDouble("synthetic_objective"));
-//					syntheticObjectiveVector.add(rs.getDouble(columnName));
+//					syntheticObjectiveVector.add(rs.getDouble("synthetic_objective"));
+					syntheticObjectiveVector.add(rs.getDouble(columnName));
 				}
 				rs.close();
 				conn.close();
@@ -367,12 +355,12 @@ public class ReactionFactory {
 		return syntheticObjectiveVector;
 	}
 	
-	public static String getColumnName() {
+	public String getColumnName() {
 		return columnName;
 	}
 
-	public static void setColumnName(String columnName) {
-		ReactionFactory.columnName = columnName;
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
 	}
 
 	public static void main(String[] args) {

@@ -16,6 +16,7 @@ public class GDBBModel extends FBAModel {
 	private double timeLimit;
 	private int threadNum;
 	private Vector<Double> syntheticObjectiveVector;
+	private ReactionFactory rFactory;
 	
 	public double getD() {
 		return D;
@@ -33,11 +34,11 @@ public class GDBBModel extends FBAModel {
 		C = c;
 	}
 
-	public GDBBModel(String databaseName) {
+	public GDBBModel(String databaseName, String columnName) {
 		super(databaseName);
 		
-		ReactionFactory rFactory = new ReactionFactory("SBML", databaseName);
-		
+		rFactory = new ReactionFactory("SBML", databaseName);
+		rFactory.setColumnName(columnName);
 		this.geneAssociations = rFactory.getGeneAssociations();
 		this.distinctGeneAssociations = rFactory.getUniqueGeneAssociations();		
 		this.syntheticObjectiveVector = rFactory.getSyntheticObjectiveVector();
@@ -87,6 +88,14 @@ public class GDBBModel extends FBAModel {
 				syntheticObjective.add(1.0);
 			}
 		}
+	}
+
+	public ReactionFactory getrFactory() {
+		return rFactory;
+	}
+
+	public void setrFactory(ReactionFactory rFactory) {
+		this.rFactory = rFactory;
 	}
 
 	public Vector<Double> getSyntheticObjective() {

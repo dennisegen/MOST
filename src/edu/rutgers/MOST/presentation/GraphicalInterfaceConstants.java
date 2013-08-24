@@ -158,7 +158,9 @@ public class GraphicalInterfaceConstants {
     
     public static final String OPTIMIZATION_PREFIX = "OPT_";
     
-    public static final String MIP_SUFFIX = "_MIP"; 
+    public static final String MIP_SUFFIX = "_MIP";
+	
+	public static final String GDBB_PREFIX = "GDBB_";
     
     /*****************************************************************************/
     //metabolite column filtering names
